@@ -21,6 +21,7 @@ venv
 docs.zip
 archive.zip
 .venv
+weather_requests.py
 
 # vim temporary files
 *~
