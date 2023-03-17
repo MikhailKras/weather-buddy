@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Search weather city{% endblock %}
+
+{% block head %}
+  <script>
+    const searchForOperation = (event) => {
+      event.preventDefault();
+      const searchInputValue = document.getElementById("city").value;
+      window.location.href = `/weather/${searchInputValue}`;
+    }
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <h1>Search for Weather</h1>
+    <p>Use the form below to search for weather information of any city in the world:</p>
+    <div class="row justify-content-center">
+      <div class="col-md-7">
+        <form onsubmit="searchForOperation(event)">
+          <div class="input-group mb-3">
+            <input id="city" type="text" class="form-control" placeholder="Enter a city name" required>
+            <button class="btn btn-primary" type="submit">Get Weather</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

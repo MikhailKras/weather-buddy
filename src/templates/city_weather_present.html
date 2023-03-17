@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Weather for {{ weather_data.location }}{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <h1>Weather for {{ weather_data.location }}</h1>
+    <table class="table">
+      <tbody>
+        <tr>
+          <th scope="row">Temperature</th>
+          <td>{{ weather_data.temperature }}°C</td>
+        </tr>
+        <tr>
+          <th scope="row">Weather Condition</th>
+          <td>{{ weather_data.weather_condition }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+
+

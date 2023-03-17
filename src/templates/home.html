@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}WeatherBuddy{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <img src="{{ url_for('static', path='logo_weather_buddy.png') }}" alt="WeatherBuddy logo" class="img-fluid">
+        <h1 class="mt-3">Welcome to WeatherBuddy</h1>
+        <p class="lead">Get up-to-date weather information for any city in the world!</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
