@@ -1,6 +1,6 @@
 import aiohttp
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
@@ -29,10 +29,18 @@ async def get_city_weather(request: Request, city: str):
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, params=params) as response:
             data = await response.json()
+            if data.get('error'):
+                return templates.TemplateResponse(
+                    'city_weather_error.html', status_code=404, context={
+                        "request": request,
+                        "message": data['error']['message'],
+                        "status_code": 404
+                    }
+                )
             weather_data = {
                 'location': data['location']['name'],
                 'temperature': data['current']['temp_c'],
-                'weather_condition': data['current']['condition']['text']
+                'weather_condition': data['current']['condition']['text'],
             }
             return templates.TemplateResponse('city_weather_present.html', context={"request": request, "weather_data": weather_data})
 
