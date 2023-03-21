@@ -6,10 +6,12 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
 from weather_service.router import router as router_weather
+from auth.router import router as router_auth
 
 app = FastAPI(title='Weather Buddy')
 
 app.include_router(router_weather)
+app.include_router(router_auth)
 
 app.mount('/static', StaticFiles(directory='static'), name='static')
 
