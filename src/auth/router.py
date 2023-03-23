@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.models import User
-from src.auth.schemas import UserCreate
+from src.auth.models import user
+from src.auth.schemas import UserCreate, UserResponse
 from src.auth.security import get_password_hash
 from src.database import get_async_session
 
@@ -12,19 +13,23 @@ router = APIRouter(
 )
 
 
-@router.post('/register')
+@router.post('/register', response_model=UserResponse)
 async def register_user(
-        user: UserCreate,
+        user_data: UserCreate,
         session: AsyncSession = Depends(get_async_session)
 ):
-    db_user = User(
-        username=user.username,
-        email=user.email,
-        hashed_password=get_password_hash(user.password),
-        city=user.city,
+    insert_query = insert(user).values(
+        username=user_data.username,
+        email=user_data.email,
+        hashed_password=get_password_hash(user_data.password),
+        city=user_data.city,
     )
-
-    session.add(db_user)
+    await session.execute(insert_query)
     await session.commit()
-    await session.refresh(db_user)
-    return db_user
+
+    response = {
+        'username': user_data.username,
+        'email': user_data.email,
+        'city': user_data.city,
+    }
+    return response

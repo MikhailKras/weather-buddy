@@ -9,9 +9,15 @@ class UserCreate(BaseModel):
     city: str
 
     @validator('city')
-    def city_must_be_valid(cls, city_input):
+    def city_must_be_valid(cls, city_input: str):
         gc = geonamescache.GeonamesCache()
         city_info = gc.get_cities_by_name(city_input.title())
         if not city_info:
             raise ValueError('Invalid city')
-        return city_input
+        return city_input.title()
+
+
+class UserResponse(BaseModel):
+    username: str
+    email: str
+    city: str
