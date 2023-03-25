@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.models import user
 from src.auth.schemas import UserCreate, UserResponse
 from src.auth.security import get_password_hash
+from src.auth.utils import get_user_by_username, get_user_by_email
 from src.database import get_async_session
 
 router = APIRouter(
@@ -18,6 +19,14 @@ async def register_user(
         user_data: UserCreate,
         session: AsyncSession = Depends(get_async_session)
 ):
+    if await get_user_by_username(user_data.username, session=session):
+        raise HTTPException(status_code=422,
+                            detail='This username is already registered!')
+
+    if await get_user_by_email(user_data.email, session=session):
+        raise HTTPException(status_code=422,
+                            detail='This email is already registered!')
+
     insert_query = insert(user).values(
         username=user_data.username,
         email=user_data.email,
