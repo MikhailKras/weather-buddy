@@ -2,7 +2,7 @@ import re
 
 from fastapi import HTTPException
 
-from pydantic import BaseModel, validator, EmailStr, Field
+from pydantic import BaseModel, validator, EmailStr
 
 import geonamescache
 
@@ -12,7 +12,7 @@ PASSWORD_PATTERN = re.compile(r'(?=.*\d+.*)(?=.*[a-zA-Z]+.*)')
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
-    password: str = Field(min_length=7, max_length=128)
+    password: str
     city: str
 
     @validator('password')
@@ -22,8 +22,12 @@ class UserCreate(BaseModel):
                 status_code=400,
                 detail='Password must contain at least'
                        'one digit, at least one letter'
-                       'and it is length must be more'
-                       'than 6 characters')
+            )
+        if len(password) < 7:
+            raise HTTPException(
+                status_code=400,
+                detail='Length of password must be more than 6 characters'
+            )
         return password
 
     @validator('city')
