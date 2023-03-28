@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.post('/register', response_model=UserResponse)
+@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 async def register_user(
         user_data: UserCreate,
         session: AsyncSession = Depends(get_async_session)
