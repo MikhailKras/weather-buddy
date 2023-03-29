@@ -1,6 +1,6 @@
 import re
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
 from pydantic import BaseModel, validator, EmailStr
 
@@ -19,13 +19,13 @@ class UserCreate(BaseModel):
     def valid_password(cls, password: str) -> str:
         if not re.match(PASSWORD_PATTERN, password):
             raise HTTPException(
-                status_code=400,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail='Password must contain at least'
                        'one digit, at least one letter'
             )
         if len(password) < 7:
             raise HTTPException(
-                status_code=400,
+                status_code=status.HTTP_400_BAD_REQUEST,
                 detail='Length of password must be more than 6 characters'
             )
         return password
@@ -35,7 +35,7 @@ class UserCreate(BaseModel):
         gc = geonamescache.GeonamesCache()
         city_info = gc.get_cities_by_name(city.title())
         if not city_info:
-            raise HTTPException(status_code=400, detail='Invalid city!')
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
         return city.title()
 
 
