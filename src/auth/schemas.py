@@ -1,3 +1,4 @@
+import datetime
 import re
 
 from fastapi import HTTPException, status
@@ -43,3 +44,13 @@ class UserResponse(BaseModel):
     username: str
     email: EmailStr
     city: str
+
+
+class UserInDB(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    hashed_password: str
+    city: str
+    registered_at: datetime.datetime
+    disabled: bool
