@@ -1,9 +1,10 @@
 from fastapi import Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.models import user
-from src.auth.schemas import UserInDB, AuthUser
+from src.auth.schemas import UserInDB
 from src.auth.security import verify_password
 from src.database import get_async_session
 
@@ -31,12 +32,12 @@ async def get_user_by_email(
 
 
 def authenticate_user(
-        auth_data: AuthUser,
+        form_data: OAuth2PasswordRequestForm = Depends(),
         session: AsyncSession = Depends(get_async_session)
 ):
-    user_data = await get_user_by_username(auth_data.username, session=session)
+    user_data = await get_user_by_username(form_data.username, session=session)
     if not user_data:
         return False
-    if not verify_password(auth_data.password, user_data.hashed_password):
+    if not verify_password(form_data.password, user_data.hashed_password):
         return False
     return user_data
