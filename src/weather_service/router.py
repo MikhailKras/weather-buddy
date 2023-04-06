@@ -11,7 +11,7 @@ router = APIRouter(
     tags=['Weather-service']
 )
 
-templates = Jinja2Templates(directory='templates')
+templates = Jinja2Templates(directory='src/templates')
 
 
 @router.get('/search', response_class=HTMLResponse)
