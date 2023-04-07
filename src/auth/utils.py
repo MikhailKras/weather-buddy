@@ -31,7 +31,7 @@ async def get_user_by_email(
     return UserInDB(**user_dict)
 
 
-def authenticate_user(
+async def authenticate_user(
         form_data: OAuth2PasswordRequestForm = Depends(),
         session: AsyncSession = Depends(get_async_session)
 ):
