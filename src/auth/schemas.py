@@ -54,3 +54,8 @@ class UserInDB(BaseModel):
     city: str
     registered_at: datetime.datetime
     disabled: bool
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
