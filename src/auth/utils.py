@@ -16,7 +16,10 @@ async def get_user_by_username(
     column_names = [column.name for column in user.columns]
     select_query = select(user).where(user.c.username == username)
     result = await session.execute(select_query)
-    user_dict = {column_name: value for column_name, value in zip(column_names, result.fetchone().tuple())}
+    row = result.fetchone()
+    if not row:
+        return
+    user_dict = {column_name: value for column_name, value in zip(column_names, row.tuple())}
     return UserInDB(**user_dict)
 
 
@@ -27,7 +30,10 @@ async def get_user_by_email(
     column_names = [column.name for column in user.columns]
     select_query = select(user).where(user.c.email == email)
     result = await session.execute(select_query)
-    user_dict = {column_name: value for column_name, value in zip(column_names, result.fetchone().tuple())}
+    row = result.fetchone()
+    if not row:
+        return
+    user_dict = {column_name: value for column_name, value in zip(column_names, row.tuple())}
     return UserInDB(**user_dict)
 
 
