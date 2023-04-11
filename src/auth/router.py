@@ -10,9 +10,8 @@ from src.auth.models import user
 from src.auth.schemas import UserCreate, UserResponse, Token
 from src.auth.security import get_password_hash
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
+from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
-
-ACCESS_TOKEN_EXPIRE_MINUTES = 10
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/token")
 
