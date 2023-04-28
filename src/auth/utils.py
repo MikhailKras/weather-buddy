@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordRequestForm
@@ -42,7 +42,7 @@ async def get_user_by_email(
 async def authenticate_user(
         form_data: OAuth2PasswordRequestForm = Depends(),
         session: AsyncSession = Depends(get_async_session)
-) -> Optional[UserInDB, bool]:
+) -> Union[UserInDB, bool]:
     user_data = await get_user_by_username(form_data.username, session=session)
     if not user_data:
         return False
