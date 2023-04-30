@@ -21,7 +21,7 @@ class UserCreate(BaseModel):
         if not re.match(PASSWORD_PATTERN, password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail='Password must contain at least'
+                detail='Password must contain at least '
                        'one digit, at least one letter'
             )
         if len(password) < 7:
