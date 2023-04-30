@@ -7,6 +7,7 @@ from pydantic import BaseModel, validator, EmailStr
 
 import geonamescache
 
+USERNAME_PATTERN = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
 PASSWORD_PATTERN = re.compile(r'(?=.*\d+.*)(?=.*[a-zA-Z]+.*)')
 
 
@@ -15,6 +16,16 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     city: str
+
+    @validator('username')
+    def valid_username(cls, username: str):
+        if not re.match(USERNAME_PATTERN, username):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Username must be between 3 and 20 characters long and '
+                       'can only contain alphanumeric characters, underscores, and hyphens'
+            )
+        return username
 
     @validator('password')
     def valid_password(cls, password: str) -> str:
