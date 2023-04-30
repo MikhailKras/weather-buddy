@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-0">
+            <h3 class="card-title text-center my-3">Sign up to WeatherBuddy</h3>
+          </div>
+          <div class="card-body">
+            <form id="register-form">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                <label for="username">Username</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                <label for="email">Email address</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                <label for="password">Password</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="city" id="city" placeholder="City" required>
+                <label for="city">City</label>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Sign up!</button>
+              </div>
+            </form>
+            <div id="error-message" class="alert alert-danger" role="alert" style="display: none;"></div>
+            <div id="success-message" class="alert alert-success" role="alert" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script>
+        const form = document.getElementById('register-form');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message')
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = form.elements.username.value;
+            const email = form.elements.email.value;
+            const password = form.elements.password.value;
+            const city = form.elements.city.value;
+
+            try {
+                const response = await fetch('/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                        city: city
+                    })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(`${data.detail}`);
+                } else {
+                    errorMessage.style.display = 'none'
+                    successMessage.style.display = 'block'
+                    successMessage.innerHTML = `Your registration was successful!<br>
+                    Your username is <strong>${data.username}</strong><br>
+                    Your email is <strong>${data.email}</strong><br>
+                    Your city is <strong>${data.city}</strong>`
+                }
+                
+
+                // Do something with the response, such as displaying a success message
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+{% endblock %}
