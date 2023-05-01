@@ -57,6 +57,11 @@ async def register_user(
     return response
 
 
+@router.get('/login')
+async def register_user_get_form(request: Request):
+    return templates.TemplateResponse('auth/login.html', context={"request": request})
+
+
 @router.post('/token', response_model=Token)
 async def login_for_access_token(
         form_data: OAuth2PasswordRequestForm = Depends(),
