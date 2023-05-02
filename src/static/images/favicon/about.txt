@@ -1,0 +1,6 @@
+This favicon was generated using the following font:
+
+- Font Title: Konkhmer Sleokchher
+- Font Author: Copyright 2022 The Konkhmer Sleokchher Project Authors (https://github.com/suonmaysophanith7/KonKhmer_SleokChher)
+- Font Source: http://fonts.gstatic.com/s/konkhmersleokchher/v2/_Xmw-GE-rjmabA_M-aPOZOsCrUv825LFI3507E0d-W0.ttf
+- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))
