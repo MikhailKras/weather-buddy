@@ -84,6 +84,15 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/me", response_model=UserInDB)
-async def read_users_me(user_data: UserInDB = Depends(get_current_user)) -> UserInDB:
-    return user_data
+@router.get("/me", response_class=HTMLResponse)
+async def read_users_me(
+        request: Request,
+        user_data: UserInDB = Depends(get_current_user)
+):
+    data = {
+        'username': user_data.username,
+        'email': user_data.email,
+        'city': user_data.city,
+        'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
+    }
+    return templates.TemplateResponse('auth/user_data.html', context={"request": request, "user_data": data})

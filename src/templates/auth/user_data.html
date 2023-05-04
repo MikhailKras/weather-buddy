@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}My data{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h1>My data</h1>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Username</th>
+        <td>{{ user_data.username }}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ user_data.email }}</td>
+      </tr>
+      <tr>
+        <th>City</th>
+        <td>{{ user_data.city }}</td>
+      </tr>
+      <tr>
+        <th>Registered at</th>
+        <td>{{ user_data.registered_at }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}
