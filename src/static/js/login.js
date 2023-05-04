@@ -28,13 +28,11 @@ loginForm.addEventListener('submit', (event) => {
       return response.json();
     })
     .then((data) => {
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('token_type', data.token_type);
       successMessage.style.display = 'block';
       successMessage.textContent = 'Successfully logged in!';
       errorMessage.style.display = 'none';
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = '/users/me';
       }, 2000);
     })
     .catch((error) => {

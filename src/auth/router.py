@@ -1,6 +1,7 @@
 from datetime import timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
+from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import insert
@@ -22,7 +23,7 @@ router = APIRouter(
 templates = Jinja2Templates(directory='src/templates')
 
 
-@router.get('/register')
+@router.get('/register', response_class=HTMLResponse)
 async def register_user_get_form(request: Request):
     return templates.TemplateResponse('auth/register.html', context={"request": request})
 
@@ -57,13 +58,14 @@ async def register_user(
     return response
 
 
-@router.get('/login')
+@router.get('/login', response_class=HTMLResponse)
 async def register_user_get_form(request: Request):
     return templates.TemplateResponse('auth/login.html', context={"request": request})
 
 
 @router.post('/token', response_model=Token)
 async def login_for_access_token(
+        response: Response,
         form_data: OAuth2PasswordRequestForm = Depends(),
         session: AsyncSession = Depends(get_async_session)
 ) -> dict[str, str]:
@@ -78,6 +80,7 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={'sub': user_data.username}, expires_delta=access_token_expires
     )
+    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True, path="users/me")
     return {"access_token": access_token, "token_type": "bearer"}
 
 
