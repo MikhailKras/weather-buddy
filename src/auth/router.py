@@ -61,7 +61,7 @@ async def register_user(
 
 
 @router.get('/login', response_class=HTMLResponse)
-async def register_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
+async def login_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
     if is_auth:
         return RedirectResponse('/users/me')
     return templates.TemplateResponse('auth/login.html', context={"request": request})
