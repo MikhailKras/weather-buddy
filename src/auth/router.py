@@ -1,13 +1,13 @@
 from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.jwt import create_access_token, get_current_user
+from src.auth.jwt import create_access_token, get_current_user, is_authenticated
 from src.auth.models import user
 from src.auth.schemas import UserCreate, UserResponse, Token, UserInDB
 from src.auth.security import get_password_hash
@@ -24,7 +24,9 @@ templates = Jinja2Templates(directory='src/templates')
 
 
 @router.get('/register', response_class=HTMLResponse)
-async def register_user_get_form(request: Request):
+async def register_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
+    if is_auth:
+        return RedirectResponse('/users/me')
     return templates.TemplateResponse('auth/register.html', context={"request": request})
 
 
@@ -59,7 +61,9 @@ async def register_user(
 
 
 @router.get('/login', response_class=HTMLResponse)
-async def register_user_get_form(request: Request):
+async def register_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
+    if is_auth:
+        return RedirectResponse('/users/me')
     return templates.TemplateResponse('auth/login.html', context={"request": request})
 
 
