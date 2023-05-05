@@ -10,6 +10,11 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', path='images/favicon/favicon-16x16.png') }}">
   <link rel="manifest" href="{{ url_for('static', path='images/favicon/site.webmanifest') }}">
   <style>
+    body {
+      background-image: url("{{ url_for('static', path='images/pexels-eva-bronzini-7629313.jpg') }}");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
     .navbar {
       height: 80px;
       font-size: 1.4rem;
@@ -19,7 +24,6 @@
   </style>
   {% block head %}{% endblock %}
 </head>
-
 <body>
     <nav class="navbar navbar-expand-sm bg-body-tertiary">
       <div class="container-fluid">
