@@ -100,3 +100,11 @@ async def read_users_me(
         'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
     }
     return templates.TemplateResponse('auth/user_data.html', context={"request": request, "user_data": data})
+
+
+@router.get("/logout", response_class=RedirectResponse)
+async def logout(is_auth: bool = Depends(is_authenticated)):
+    response = RedirectResponse("/users/login")
+    if is_auth:
+        response.delete_cookie(key="access_token")
+    return response
