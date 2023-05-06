@@ -108,3 +108,17 @@ async def logout(is_auth: bool = Depends(is_authenticated)):
     if is_auth:
         response.delete_cookie(key="access_token")
     return response
+
+
+@router.get("/settings", response_class=HTMLResponse)
+async def get_account_settings(
+        request: Request,
+        user_data: UserInDB = Depends(get_current_user)
+):
+    data = {
+        'username': user_data.username,
+        'email': user_data.email,
+        'city': user_data.city,
+        'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
+    }
+    return templates.TemplateResponse('auth/settings.html', context={"request": request, "user_data": data})
