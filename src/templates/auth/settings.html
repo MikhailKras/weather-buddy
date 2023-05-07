@@ -17,7 +17,7 @@
           <div class="tab-pane fade show active" id="change-data-tab" role="tabpanel" aria-labelledby="change-data-tab">
             <h3 class="mt-3">Change account data</h3>
             <hr>
-            <form>
+            <form id="change-data-form">
               <div class="form-floating mb-3">
                 <input type="text" class="form-control bg-dark text-white" id="username" placeholder="Username" value="{{ user_data.username }}">
                 <label for="name">Username</label>
@@ -34,6 +34,8 @@
                 <button type="submit" class="btn btn-primary btn-lg">Save changes</button>
               </div>
             </form>
+            <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
+            <div id="success-message" class="alert alert-success bg-success text-white" role="alert" style="display: none;"></div>
           </div>
           <div class="tab-pane fade" id="change-password-tab" role="tabpanel" aria-labelledby="change-password-tab">
             <h3 class="mt-3">Change password</h3>
@@ -64,4 +66,7 @@
       </div>
     </div>
   </div>
+
+  <script src="{{ url_for('static', path='js/update_data.js') }}"></script>
+
 {% endblock %}

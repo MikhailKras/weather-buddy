@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import insert
+from sqlalchemy import insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated
 from src.auth.models import user
-from src.auth.schemas import UserCreate, UserResponse, Token, UserInDB
+from src.auth.schemas import UserCreate, UserResponse, Token, UserInDB, UserUpdate
 from src.auth.security import get_password_hash
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -122,3 +122,35 @@ async def get_account_settings(
         'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
     }
     return templates.TemplateResponse('auth/settings.html', context={"request": request, "user_data": data})
+
+
+@router.patch("/settings/update_data", response_model=UserResponse, status_code=status.HTTP_200_OK)
+async def update_user_data(
+        response: Response,
+        new_data: UserUpdate,
+        current_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+) -> UserResponse:
+
+    async def update_user_field(field_name: str):
+        current_value, new_value = getattr(current_data, field_name), getattr(new_data, field_name)
+        if current_value != new_value:
+            if field_name == 'username':
+                if await get_user_by_username(new_value, session=session):
+                    raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                        detail='This username is already registered!')
+                new_access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
+                new_access_token = create_access_token(data={"sub": new_data.username}, expires_delta=new_access_token_expires)
+                response.set_cookie(key='access_token', value=f"Bearer {new_access_token}", httponly=True)
+            elif field_name == 'email':
+                if await get_user_by_email(new_value, session=session):
+                    raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                        detail='This email is already registered!')
+            update_query = update(user).where(user.c.username == current_data.username).values(**{field_name: new_value})
+            await session.execute(update_query)
+            await session.commit()
+
+    for field in new_data.__fields__:
+        await update_user_field(field)
+
+    return UserResponse(**new_data.dict())
