@@ -59,7 +59,7 @@
             <hr>
             <p>Are you sure you want to delete your account? This action is irreversible.</p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <a href="#" class="btn btn-danger me-md-2">Delete account</a>
+              <button id="delete-btn" class="btn btn-danger me-md-2">Delete account</button>
             </div>
           </div>
         </div>
@@ -68,5 +68,5 @@
   </div>
 
   <script src="{{ url_for('static', path='js/update_data.js') }}"></script>
-
+  <script src="{{ url_for('static', path='js/delete_user.js') }}"></script>
 {% endblock %}

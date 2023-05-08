@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import insert, update
+from sqlalchemy import insert, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated
@@ -154,3 +154,18 @@ async def update_user_data(
         await update_user_field(field)
 
     return UserResponse(**new_data.dict())
+
+
+@router.delete("/settings/delete_user", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_user(
+        response: Response,
+        user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session),
+):
+    delete_query = delete(user).where(user.c.username == user_data.username)
+    await session.execute(delete_query)
+    await session.commit()
+
+    response.delete_cookie("access_token")
+
+    return {"message': 'User deleted successfully"}
