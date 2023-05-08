@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated
 from src.auth.models import user
-from src.auth.schemas import UserCreate, UserResponse, Token, UserInDB, UserUpdate
-from src.auth.security import get_password_hash
+from src.auth.schemas import UserCreate, UserResponse, Token, UserInDB, UserUpdate, PasswordChange
+from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from src.database import get_async_session
@@ -156,6 +156,22 @@ async def update_user_data(
     return UserResponse(**new_data.dict())
 
 
+@router.patch("/settings/change_password", status_code=status.HTTP_204_NO_CONTENT)
+async def change_password(
+        passwords: PasswordChange,
+        user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session),
+):
+    if not verify_password(passwords.current_password, user_data.hashed_password):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail='Current password is incorrect')
+    update_query = update(user).where(user.c.username == user_data.username).values(
+        hashed_password=get_password_hash(passwords.new_password)
+    )
+    await session.execute(update_query)
+    await session.commit()
+
+
 @router.delete("/settings/delete_user", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(
         response: Response,
@@ -167,5 +183,3 @@ async def delete_user(
     await session.commit()
 
     response.delete_cookie("access_token")
-
-    return {"message': 'User deleted successfully"}

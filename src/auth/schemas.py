@@ -3,7 +3,7 @@ import re
 
 from fastapi import HTTPException, status
 
-from pydantic import BaseModel, validator, EmailStr
+from pydantic import BaseModel, validator, EmailStr, root_validator
 
 import geonamescache
 
@@ -98,3 +98,37 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class PasswordChange(BaseModel):
+    current_password: str
+    repeat_password: str
+    new_password: str
+
+    @root_validator
+    def check_passwords_match(cls, values):
+        current_password = values.get('current_password')
+        repeat_password = values.get('repeat_password')
+        new_password = values.get('new_password')
+        if current_password != repeat_password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='The provided passwords do not match'
+            )
+        if current_password == new_password:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='New password must be different from current password'
+            )
+        if not re.match(PASSWORD_PATTERN, new_password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='New password must contain at least '
+                       'one digit, at least one letter'
+            )
+        if len(new_password) < 7:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Length of new password must be more than 6 characters'
+            )
+        return values
