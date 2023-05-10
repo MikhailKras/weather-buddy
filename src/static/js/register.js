@@ -33,6 +33,9 @@ form.addEventListener('submit', async (event) => {
             Your username is <strong>${data.username}</strong><br>
             Your email is <strong>${data.email}</strong><br>
             Your city is <strong>${data.city}</strong>`
+            setTimeout(() => {
+                window.location.href = '/users/login';
+              }, 2000);
         }
     } catch (error) {
         errorMessage.textContent = error.message;
