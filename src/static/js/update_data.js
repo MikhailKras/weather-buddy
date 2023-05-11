@@ -11,6 +11,8 @@ changeDataForm.addEventListener('submit', (event) => {
     city: changeDataForm.elements.city.value
   };
 
+  errorMessage.style.display = "none";
+
   fetch('/users/settings/update_data', {
     method: 'PATCH',
     headers: {

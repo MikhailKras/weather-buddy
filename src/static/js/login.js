@@ -8,6 +8,8 @@ loginForm.addEventListener('submit', (event) => {
   const username = loginForm.elements.username.value;
   const password = loginForm.elements.password.value;
 
+  errorMessage.style.display = "none";
+
   fetch('/users/token', {
     method: 'POST',
     body: new URLSearchParams({

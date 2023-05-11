@@ -10,6 +10,8 @@ form.addEventListener('submit', async (event) => {
     const password = form.elements.password.value;
     const city = form.elements.city.value;
 
+    errorMessage.style.display = "none";
+
     try {
         const response = await fetch('/users/register', {
             method: 'POST',

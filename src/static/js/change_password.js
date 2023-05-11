@@ -11,6 +11,8 @@ changePasswordForm.addEventListener('submit', (event) => {
     new_password: changePasswordForm.elements['new-password'].value
   };
 
+  errorMessagePassword.style.display = "none";
+
   fetch('/users/settings/change_password', {
     method: 'PATCH',
     headers: {
