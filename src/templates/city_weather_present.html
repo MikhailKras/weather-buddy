@@ -4,24 +4,20 @@
   {% extends 'base.html' %}
 {% endif %}
 
-{% block title %}Weather for {{ weather_data.location }}{% endblock %}
+{% block title %}Weather for {{ location_data.location }}, {{ location_data.country }}{% endblock %}
 
 {% block content %}
   <div class="container my-5">
-    <h1>Weather for {{ weather_data.location }}</h1>
+    <h1>Weather for {{ location_data.location }}, {{ location_data.country }}</h1>
     <table class="table text-white">
       <tbody>
+        {% for key, value in weather_data.items() %}
         <tr>
-          <th scope="row">Temperature</th>
-          <td>{{ weather_data.temperature }}°C</td>
+          <td>{{ key.capitalize() }}</td>
+          <td>{{ value }}</td>
         </tr>
-        <tr>
-          <th scope="row">Weather Condition</th>
-          <td>{{ weather_data.weather_condition }}</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
 {% endblock %}
-
-

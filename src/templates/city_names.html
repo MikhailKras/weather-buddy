@@ -1,0 +1,35 @@
+{% if is_auth %}
+  {% extends 'auth/base.html' %}
+{% else %}
+  {% extends 'base.html' %}
+{% endif %}
+
+{% block title %}City Weather{% endblock %}
+
+{% block content %}
+  <div class="container my-5">
+    <h1>Choose your city</h1>
+    <table class="table text-white">
+      <thead>
+        <tr class="table-info">
+          <th scope="col">City</th>
+          <th scope="col">Country</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for city in data.cities %}
+          <tr onclick="redirectToCity('{{ city.name }}', '{{ city.country }}');">
+            <td>{{ city.name }}</td>
+            <td>{{ city.country }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function redirectToCity(cityName, countryName) {
+      window.location.href = "/weather/info?city=" + encodeURIComponent(cityName) + "&country=" + encodeURIComponent(countryName);
+    }
+  </script>
+{% endblock %}

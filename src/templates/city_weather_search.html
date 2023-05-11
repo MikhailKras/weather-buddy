@@ -6,16 +6,6 @@
 
 {% block title %}Search weather city{% endblock %}
 
-{% block head %}
-  <script>
-    const searchForOperation = (event) => {
-      event.preventDefault();
-      const searchInputValue = document.getElementById("city").value;
-      window.location.href = `/weather/${searchInputValue}`;
-    }
-  </script>
-{% endblock %}
-
 {% block content %}
   <div class="container my-5">
     <h1>Search for Weather</h1>
@@ -28,7 +18,10 @@
             <button class="btn btn-primary" type="submit">Get Weather</button>
           </div>
         </form>
+        <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
       </div>
     </div>
   </div>
+
+  <script src="{{ url_for('static', path='js/weather_service/search.js') }}"></script>
 {% endblock %}
