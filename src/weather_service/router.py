@@ -39,7 +39,15 @@ async def find_city_name_matches(request: Request, city_input: str, is_auth: boo
 
 
 @router.get('/info', response_class=HTMLResponse)
-async def get_city_weather(request: Request, latitude: float, longitude: float, is_auth: bool = Depends(is_authenticated)):
+async def get_city_weather(
+        request: Request,
+        latitude: float,
+        longitude: float,
+        city: str,
+        is_auth: bool = Depends(is_authenticated)
+):
+    if not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid coordinates!')
     url = 'http://api.weatherapi.com/v1/current.json'
     params = {
         'key': WEATHER_API_KEY,
@@ -50,32 +58,43 @@ async def get_city_weather(request: Request, latitude: float, longitude: float, 
             data = await response.json()
             if 'error' in data:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
-            location_data = {
-                'location': data['location']['name'],
-                'region': data['location']['region'],
-                'country': data['location']['country'],
-                'latitude': data['location']['lat'],
-                'longitude': data['location']['lon'],
-                'timezone': data['location']['tz_id'],
-                'local time': data['location']['localtime']
-            }
-            weather_data = {
-                'temperature, °C': data['current']['temp_c'],
-                'feels like, °C': data['current']['feelslike_c'],
-                'weather condition': data['current']['condition']['text'],
-                'last updated': data['current']['last_updated'],
-                'wind, kph': data['current']['wind_kph'],
-                'humidity, %': data['current']['humidity'],
-                'cloudiness, %': data['current']['cloud'],
+            if city == 'search_by_coordinates':
+                if not(
+                        latitude - 1 < float(data['location']['lat']) < latitude + 1 and
+                        longitude - 1 < float(data['location']['lon']) < longitude + 1
+                ):
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='No information found for given coordinates')
+        if city != 'search_by_coordinates' and data['location']['name'] != city:
+            params.update(q=city)
+            async with session.get(url=url, params=params) as response:
+                data = await response.json()
 
-            }
+    location_data = {
+        'location': data['location']['name'],
+        'region': data['location']['region'],
+        'country': data['location']['country'],
+        'latitude': data['location']['lat'],
+        'longitude': data['location']['lon'],
+        'timezone': data['location']['tz_id'],
+        'local time': data['location']['localtime']
+    }
+    weather_data = {
+        'temperature, °C': data['current']['temp_c'],
+        'feels like, °C': data['current']['feelslike_c'],
+        'weather condition': data['current']['condition']['text'],
+        'last updated': data['current']['last_updated'],
+        'wind, kph': data['current']['wind_kph'],
+        'humidity, %': data['current']['humidity'],
+        'cloudiness, %': data['current']['cloud'],
 
-            return templates.TemplateResponse(
-                'city_weather_present.html', context={
-                    "request": request,
-                    "weather_data": weather_data,
-                    "location_data": location_data,
-                    "is_auth": is_auth,
-                }
-            )
+    }
+
+    return templates.TemplateResponse(
+        'city_weather_present.html', context={
+            "request": request,
+            "weather_data": weather_data,
+            "location_data": location_data,
+            "is_auth": is_auth,
+        }
+    )
 

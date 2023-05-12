@@ -37,8 +37,26 @@
           <div class="col-md-7">
             <form onsubmit="searchByCoords(event)">
               <div class="input-group mb-3">
-                <input id="latitude" type="text" class="form-control" placeholder="Enter latitude" required>
-                <input id="longitude" type="text" class="form-control" placeholder="Enter longitude" required>
+                <input
+                  id="latitude"
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter latitude"
+                  required
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Latitude: The valid latitude values range from -90 degrees (south pole) to +90 degrees (north pole). The equator is at 0 degrees latitude."
+                >
+                <input
+                  id="longitude"
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter longitude"
+                  required
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Longitude: The valid longitude values range from -180 degrees to +180 degrees. The prime meridian is at 0 degrees longitude."
+                >
                 <button class="btn btn-primary" type="submit">Get Weather</button>
               </div>
             </form>
@@ -50,4 +68,12 @@
   </div>
 
   <script src="{{ url_for('static', path='js/weather_service/search.js') }}"></script>
+
+  <script>
+    // Enable Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  </script>
 {% endblock %}
