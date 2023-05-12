@@ -25,7 +25,7 @@
               {% for key, value in weather_data.items() %}
               <tr>
                 <td>{{ key.capitalize() }}</td>
-                <td>{{ value|default('No data', true) }}</td>
+                <td>{{ value|default('No data') }}</td>
               </tr>
               {% endfor %}
             </tbody>
