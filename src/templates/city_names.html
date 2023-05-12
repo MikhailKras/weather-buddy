@@ -7,9 +7,14 @@
 {% block title %}City Weather{% endblock %}
 
 {% block content %}
+  <style>
+    .table-hover-cursor:hover {
+      cursor: pointer;
+    }
+  </style>
   <div class="container my-5">
     <h1>Choose your city</h1>
-    <table class="table text-white">
+    <table class="table text-white table-hover-cursor">
       <thead>
         <tr class="table-info">
           <th scope="col">City</th>
