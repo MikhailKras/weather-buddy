@@ -8,17 +8,43 @@
 
 {% block content %}
   <div class="container my-5">
-    <h1>Search for Weather</h1>
-    <p>Use the form below to search for weather information of any city in the world:</p>
-    <div class="row justify-content-center">
-      <div class="col-md-7">
-        <form onsubmit="searchForOperation(event)">
-          <div class="input-group mb-3">
-            <input id="city" type="text" class="form-control" placeholder="Enter a city name" required>
-            <button class="btn btn-primary" type="submit">Get Weather</button>
+    <ul class="nav nav-tabs" id="weatherTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="cityTab" data-bs-toggle="tab" data-bs-target="#cityTabContent" type="button" role="tab" aria-controls="cityTabContent" aria-selected="true">Search by City</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="coordsTab" data-bs-toggle="tab" data-bs-target="#coordsTabContent" type="button" role="tab" aria-controls="coordsTabContent" aria-selected="false">Search by Coordinates</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="weatherTabsContent">
+      <div class="tab-pane fade show active" id="cityTabContent" role="tabpanel" aria-labelledby="cityTab">
+        <p>Use the form below to search for weather information of any city in the world:</p>
+        <div class="row justify-content-center">
+          <div class="col-md-7">
+            <form onsubmit="searchByCity(event)">
+              <div class="input-group mb-3">
+                <input id="city" type="text" class="form-control" placeholder="Enter a city name" required>
+                <button class="btn btn-primary" type="submit">Get Weather</button>
+              </div>
+            </form>
+            <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
           </div>
-        </form>
-        <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="coordsTabContent" role="tabpanel" aria-labelledby="coordsTab">
+        <p>Use the form below to search for weather information using latitude and longitude:</p>
+        <div class="row justify-content-center">
+          <div class="col-md-7">
+            <form onsubmit="searchByCoords(event)">
+              <div class="input-group mb-3">
+                <input id="latitude" type="text" class="form-control" placeholder="Enter latitude" required>
+                <input id="longitude" type="text" class="form-control" placeholder="Enter longitude" required>
+                <button class="btn btn-primary" type="submit">Get Weather</button>
+              </div>
+            </form>
+            <div id="error-message-coords" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

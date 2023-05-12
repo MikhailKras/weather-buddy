@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         {% for city in data.cities %}
-          <tr onclick="redirectToCity('{{ city.name }}', '{{ city.country }}');">
+          <tr onclick="redirectToCity('{{ city.coordinates.latitude }}', '{{ city.coordinates.longitude }}');">
             <td>{{ city.name }}</td>
             <td>{{ city.country }}</td>
           </tr>
@@ -28,8 +28,8 @@
   </div>
 
   <script>
-    function redirectToCity(cityName, countryName) {
-      window.location.href = "/weather/info?city=" + encodeURIComponent(cityName) + "&country=" + encodeURIComponent(countryName);
+    function redirectToCity(cityLatitude, countryLongitude) {
+      window.location.href = "/weather/info?latitude=" + encodeURIComponent(cityLatitude) + "&longitude=" + encodeURIComponent(countryLongitude);
     }
   </script>
 {% endblock %}
