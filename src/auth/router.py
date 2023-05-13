@@ -98,36 +98,6 @@ async def register_step_2_submit(
     return {'message': 'Registration successful'}
 
 
-# @router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
-# async def register_user(
-#         user_data: UserCreateStep2,
-#         session: AsyncSession = Depends(get_async_session)
-# ) -> dict[str, str]:
-#     if await get_user_by_username(user_data.username, session=session):
-#         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                             detail='This username is already registered!')
-#
-#     if await get_user_by_email(user_data.email, session=session):
-#         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-#                             detail='This email is already registered!')
-#
-#     insert_query = insert(user).values(
-#         username=user_data.username,
-#         email=user_data.email,
-#         hashed_password=get_password_hash(user_data.password),
-#         city=user_data.city,
-#     )
-#     await session.execute(insert_query)
-#     await session.commit()
-#
-#     response = {
-#         'username': user_data.username,
-#         'email': user_data.email,
-#         'city': user_data.city,
-#     }
-#     return response
-
-
 @router.get('/login', response_class=HTMLResponse)
 async def login_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
     if is_auth:
