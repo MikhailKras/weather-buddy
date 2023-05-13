@@ -11,11 +11,15 @@ USERNAME_PATTERN = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
 PASSWORD_PATTERN = re.compile(r'(?=.*\d+.*)(?=.*[a-zA-Z]+.*)')
 
 
-class UserCreate(BaseModel):
+class UserCreateStep1(BaseModel):
+    city: str
+    country: str
+
+
+class UserCreateStep2(BaseModel):
     username: str
     email: EmailStr
     password: str
-    city: str
 
     @validator('username')
     def valid_username(cls, username: str):
@@ -41,14 +45,6 @@ class UserCreate(BaseModel):
                 detail='Length of password must be more than 6 characters'
             )
         return password
-
-    @validator('city')
-    def valid_city(cls, city: str) -> str:
-        gc = geonamescache.GeonamesCache()
-        city_info = gc.search_cities(city.title())
-        if not city_info:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
-        return city_info[0]['name']
 
 
 class UserUpdate(BaseModel):

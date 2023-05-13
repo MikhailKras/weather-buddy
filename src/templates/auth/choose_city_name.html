@@ -1,0 +1,59 @@
+{% if is_auth %}
+  {% extends 'auth/base.html' %}
+{% else %}
+  {% extends 'base.html' %}
+{% endif %}
+
+{% block title %}Step 1 - Select City{% endblock %}
+
+{% block content %}
+  <style>
+    .table-hover-cursor:hover {
+      cursor: pointer;
+    }
+  </style>
+  <div class="container my-5">
+    <h1>Choose your city</h1>
+    <table class="table text-white table-hover-cursor">
+      <thead>
+        <tr class="table-info">
+          <th scope="col">City</th>
+          <th scope="col">Country</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for city in data.cities %}
+          <tr onclick="redirectToCity('{{ city.name }}', '{{ city.country }}');">
+            <td>{{ city.name }}</td>
+            <td>{{ city.country }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function redirectToCity(cityName, countryName) {
+      const data = {
+        city: cityName,
+        country: countryName
+      };
+  
+      const redirectUrl = "/users/register/city";
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      };
+  
+      fetch(redirectUrl, options)
+        .then(response => {
+          window.location.href = response.url;
+        })
+    }
+  </script>
+  
+  
+{% endblock %}

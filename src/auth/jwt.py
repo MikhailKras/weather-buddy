@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
-from fastapi import status, HTTPException, Depends
+from fastapi import status, HTTPException, Depends, Cookie
 from jose import jwt, JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.schemas import TokenData
+from src.auth.schemas import TokenData, UserCreateStep1
 from src.auth.utils import get_user_by_username, OAuth2PasswordBearerWithCookie
-from src.config import SECRET_KEY, ALGORITHM
+from src.config import SECRET_KEY, ALGORITHM, SECRET_KEY_REG
 from src.database import get_async_session
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="users/token", auto_error=False)
@@ -69,3 +70,33 @@ async def is_authenticated(
         return False
     user = await get_user_by_username(token_data.username, session=session)
     return bool(user)
+
+
+def create_registration_token(
+        city: str,
+        country: str,
+        expires_delta: timedelta | None = None
+) -> str:
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=20)
+    to_encode = {
+        "city": city,
+        "country": country,
+        "exp": expire
+    }
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY_REG, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def get_current_city_data(
+        registration_token: Optional[str] = Cookie(None)
+) -> UserCreateStep1:
+    try:
+        if registration_token is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Registration token not found")
+        payload = jwt.decode(registration_token, SECRET_KEY_REG, algorithms=[ALGORITHM])
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid registration token")
+    return UserCreateStep1(**payload)

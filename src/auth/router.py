@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import geonamescache
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -7,9 +8,9 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import insert, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.jwt import create_access_token, get_current_user, is_authenticated
+from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data
 from src.auth.models import user
-from src.auth.schemas import UserCreate, UserResponse, Token, UserInDB, UserUpdate, PasswordChange
+from src.auth.schemas import UserCreateStep2, UserResponse, Token, UserInDB, UserUpdate, PasswordChange, UserCreateStep1
 from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -23,18 +24,56 @@ router = APIRouter(
 templates = Jinja2Templates(directory='src/templates')
 
 
-@router.get('/register', response_class=HTMLResponse)
-async def register_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
+@router.get('/register/city', response_class=HTMLResponse)
+async def register_step_1(request: Request, is_auth: bool = Depends(is_authenticated)):
     if is_auth:
         return RedirectResponse('/users/me')
-    return templates.TemplateResponse('auth/register.html', context={"request": request})
+    return templates.TemplateResponse('auth/register_step_1_city.html', context={"request": request})
 
 
-@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
-async def register_user(
-        user_data: UserCreate,
+@router.get('/register/city/choose_city_name', response_class=HTMLResponse)
+async def find_city_name_matches(request: Request, city_input: str, is_auth: bool = Depends(is_authenticated)):
+    gc = geonamescache.GeonamesCache()
+    city_info = gc.search_cities(city_input.title())
+    if not city_info:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
+    city_names = [city_info[x]['name'] for x in range(len(city_info))]
+    country_codes = [city_info[x]['countrycode'] for x in range(len(city_info))]
+    countries_info: dict = gc.get_countries()
+    country_names = [countries_info.get(country_code)['name'] for country_code in country_codes]
+    coordinates = [{'latitude': city_info[x]['latitude'], 'longitude': city_info[x]['longitude']} for x in range(len(city_info))]
+    data = {'cities': [{'name': name, 'country': country, 'coordinates': coords} for name, country, coords in zip(city_names, country_names, coordinates)]}
+    return templates.TemplateResponse(
+        'auth/choose_city_name.html', context={"request": request, "data": data, "is_auth": is_auth}
+    )
+
+
+@router.post('/register/city', response_class=RedirectResponse)
+async def register_step_1_submit(
+        city_data: UserCreateStep1
+):
+    registration_token = create_registration_token(city_data.city, city_data.country)
+    redirect_url = '/users/register/details'
+    response = RedirectResponse(redirect_url, status_code=status.HTTP_302_FOUND)
+    response.set_cookie(key="registration_token", value=registration_token, httponly=True)
+    return response
+
+
+@router.get('/register/details', response_class=HTMLResponse)
+async def register_step_2(request: Request):
+    registration_token = request.cookies.get("registration_token")
+    if registration_token is None:
+        return RedirectResponse('/users/register/city')
+    return templates.TemplateResponse('auth/register_step_2_user_data.html', {'request': request})
+
+
+@router.post('/register/details', status_code=status.HTTP_201_CREATED)
+async def register_step_2_submit(
+        response: Response,
+        user_data: UserCreateStep2,
+        city_data: UserCreateStep1 = Depends(get_current_city_data),
         session: AsyncSession = Depends(get_async_session)
-) -> dict[str, str]:
+):
     if await get_user_by_username(user_data.username, session=session):
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                             detail='This username is already registered!')
@@ -47,17 +86,46 @@ async def register_user(
         username=user_data.username,
         email=user_data.email,
         hashed_password=get_password_hash(user_data.password),
-        city=user_data.city,
+        city=city_data.city,
+        country=city_data.country
     )
+
     await session.execute(insert_query)
     await session.commit()
 
-    response = {
-        'username': user_data.username,
-        'email': user_data.email,
-        'city': user_data.city,
-    }
-    return response
+    response.delete_cookie(key="registration_cookie")
+
+    return {'message': 'Registration successful'}
+
+
+# @router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
+# async def register_user(
+#         user_data: UserCreateStep2,
+#         session: AsyncSession = Depends(get_async_session)
+# ) -> dict[str, str]:
+#     if await get_user_by_username(user_data.username, session=session):
+#         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+#                             detail='This username is already registered!')
+#
+#     if await get_user_by_email(user_data.email, session=session):
+#         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+#                             detail='This email is already registered!')
+#
+#     insert_query = insert(user).values(
+#         username=user_data.username,
+#         email=user_data.email,
+#         hashed_password=get_password_hash(user_data.password),
+#         city=user_data.city,
+#     )
+#     await session.execute(insert_query)
+#     await session.commit()
+#
+#     response = {
+#         'username': user_data.username,
+#         'email': user_data.email,
+#         'city': user_data.city,
+#     }
+#     return response
 
 
 @router.get('/login', response_class=HTMLResponse)

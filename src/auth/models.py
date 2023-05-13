@@ -12,6 +12,7 @@ user = Table(
     Column('email', String, nullable=False),
     Column('hashed_password', String, nullable=False),
     Column('city', String, nullable=False),
+    Column('country', String, nullable=False, default='No data'),
     Column('disabled', Boolean, nullable=False, default=False),
     Column('registered_at', TIMESTAMP, default=datetime.utcnow),
 )
