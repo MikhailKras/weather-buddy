@@ -134,7 +134,8 @@ async def read_users_me(
         'username': user_data.username,
         'email': user_data.email,
         'city': user_data.city,
-        'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
+        'country': user_data.country,
+        'registered at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
     }
     return templates.TemplateResponse('auth/user_data.html', context={"request": request, "user_data": data})
 

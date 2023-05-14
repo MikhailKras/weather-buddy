@@ -83,6 +83,7 @@ class UserInDB(BaseModel):
     email: EmailStr
     hashed_password: str
     city: str
+    country: str
     registered_at: datetime.datetime
     disabled: bool
 
