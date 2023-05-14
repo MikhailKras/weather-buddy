@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data
 from src.auth.models import user
-from src.auth.schemas import UserCreateStep2, UserResponse, Token, UserInDB, UserUpdate, PasswordChange, UserCreateStep1
+from src.auth.schemas import UserCreateStep2, UserResponse, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity
 from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
@@ -31,8 +31,10 @@ async def register_step_1(request: Request, is_auth: bool = Depends(is_authentic
     return templates.TemplateResponse('auth/register_step_1_city.html', context={"request": request})
 
 
-@router.get('/register/city/choose_city_name', response_class=HTMLResponse)
-async def find_city_name_matches(request: Request, city_input: str, is_auth: bool = Depends(is_authenticated)):
+@router.get('/{purpose}/city/choose_city_name', response_class=HTMLResponse)
+async def find_city_name_matches(request: Request, purpose: str, city_input: str, is_auth: bool = Depends(is_authenticated)):
+    if purpose not in ('register', 'settings'):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid purpose!')
     gc = geonamescache.GeonamesCache()
     city_info = gc.search_cities(city_input.title())
     if not city_info:
@@ -44,7 +46,7 @@ async def find_city_name_matches(request: Request, city_input: str, is_auth: boo
     coordinates = [{'latitude': city_info[x]['latitude'], 'longitude': city_info[x]['longitude']} for x in range(len(city_info))]
     data = {'cities': [{'name': name, 'country': country, 'coordinates': coords} for name, country, coords in zip(city_names, country_names, coordinates)]}
     return templates.TemplateResponse(
-        'auth/choose_city_name.html', context={"request": request, "data": data, "is_auth": is_auth}
+        'auth/choose_city_name.html', context={"request": request, "data": data, "is_auth": is_auth, "purpose": purpose}
     )
 
 
@@ -157,18 +159,19 @@ async def get_account_settings(
         'username': user_data.username,
         'email': user_data.email,
         'city': user_data.city,
+        'country': user_data.country,
         'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
     }
     return templates.TemplateResponse('auth/settings.html', context={"request": request, "user_data": data})
 
 
-@router.patch("/settings/update_data", response_model=UserResponse, status_code=status.HTTP_200_OK)
+@router.patch("/settings/update_data", status_code=status.HTTP_200_OK)
 async def update_user_data(
         response: Response,
-        new_data: UserUpdate,
+        new_data: UserUpdateData,
         current_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
-) -> UserResponse:
+):
 
     async def update_user_field(field_name: str):
         current_value, new_value = getattr(current_data, field_name), getattr(new_data, field_name)
@@ -191,10 +194,34 @@ async def update_user_data(
     for field in new_data.__fields__:
         await update_user_field(field)
 
-    return UserResponse(**new_data.dict())
+    return {"message": "Data changed successfully!"}
 
 
-@router.patch("/settings/change_password", status_code=status.HTTP_204_NO_CONTENT)
+@router.patch("/settings/change_city_data")
+async def change_city_data(
+        city_data: UserUpdateCity,
+        user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session),
+):
+
+    if city_data.city == user_data.city and city_data.country == user_data.country:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="City already chosen"
+        )
+
+    update_query = update(user).where(user.c.username == user_data.username).values(
+        city=city_data.city,
+        country=city_data.country
+    )
+
+    await session.execute(update_query)
+    await session.commit()
+
+    return {"message": "City changed successfully!"}
+
+
+@router.patch("/settings/change_password", status_code=status.HTTP_200_OK)
 async def change_password(
         passwords: PasswordChange,
         user_data: UserInDB = Depends(get_current_user),
@@ -208,6 +235,8 @@ async def change_password(
     )
     await session.execute(update_query)
     await session.commit()
+
+    return {"message": "Password changed successfully!"}
 
 
 @router.delete("/settings/delete_user", status_code=status.HTTP_204_NO_CONTENT)

@@ -1,0 +1,135 @@
+const changeDataForm = document.getElementById('change-data-form');
+const errorMessage = document.getElementById('error-message');
+const successMessage = document.getElementById('success-message');
+
+changeDataForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const userData = {
+    username: changeDataForm.elements.username.value,
+    email: changeDataForm.elements.email.value,
+  };
+
+  errorMessage.style.display = "none";
+
+  fetch('/users/settings/update_data', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(userData)
+  })
+  .then((response) => {
+    if (!response.ok) {
+      return response.json().then((data) => {
+        throw new Error(data.detail);
+      });
+    }
+    return response.json();
+  })
+  .then((data) => {
+    successMessage.style.display = 'block';
+    successMessage.textContent = data.message;
+    errorMessage.style.display = 'none';
+    setTimeout(() => {
+      window.location.href = '/users/me';
+    }, 2000);
+  })
+  .catch((error) => {
+    errorMessage.textContent = error.message;
+    errorMessage.style.display = 'block';
+  });
+});
+
+
+const changeCityForm = document.getElementById('change-city-data-form');
+const errorMessageCity = document.getElementById('error-message-city');
+const successMessageCity = document.getElementById('success-message-city');
+
+changeCityForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const cityInput = changeCityForm.elements.city.value;
+
+  fetch(`/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`)
+  .then((response) => {
+    if (!response.ok) {
+      return response.json().then((data) => {
+        throw new Error(data.detail);
+      });
+    }
+    window.location.href = `/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`;
+  })
+  .catch((error) => {
+    errorMessage.textContent = error.message;
+    errorMessage.style.display = "block";
+  });
+
+})
+
+
+const changePasswordForm = document.getElementById('change-password-form');
+const errorMessagePassword = document.getElementById('error-message-password');
+const successMessagePassword = document.getElementById('success-message-password');
+
+changePasswordForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const passwords = {
+    current_password: changePasswordForm.elements['current-password'].value,
+    repeat_password: changePasswordForm.elements['repeat-password'].value,
+    new_password: changePasswordForm.elements['new-password'].value
+  };
+
+  errorMessagePassword.style.display = "none";
+
+  fetch('/users/settings/change_password', {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(passwords)
+  })
+  .then((response) => {
+    if (!response.ok) {
+      return response.json().then((data) => {
+        throw new Error(data.detail);
+      });
+    }
+    return response.json();
+  })
+  .then((data) => {
+    successMessagePassword.style.display = 'block';
+    successMessagePassword.textContent = data.message;
+    errorMessagePassword.style.display = 'none';
+    setTimeout(() => {
+      window.location.href = '/users/me';
+    }, 2000);
+  })
+  .catch((error) => {
+    errorMessagePassword.textContent = error.message;
+    errorMessagePassword.style.display = 'block';
+  });
+});
+
+const deleteBtn = document.getElementById('delete-btn');
+deleteBtn.addEventListener('click', async () => {
+    const response = await fetch('/users/settings/delete_user', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            // Optional body payload
+        })
+    });
+
+    if (response.ok) {
+        setTimeout(() => {
+            window.location.href = '/users/login';
+          }, 2000);
+    } else {
+        // Handle error response
+        console.error(`Error deleting account: ${response.statusText}`);
+    }
+});

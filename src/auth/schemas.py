@@ -47,28 +47,14 @@ class UserCreateStep2(BaseModel):
         return password
 
 
-class UserUpdate(BaseModel):
+class UserUpdateData(BaseModel):
     username: str
     email: EmailStr
+
+
+class UserUpdateCity(BaseModel):
     city: str
-
-    @validator('username')
-    def valid_username(cls, username: str):
-        if not re.match(USERNAME_PATTERN, username):
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail='Username must be between 3 and 20 characters long and '
-                       'can only contain alphanumeric characters, underscores, and hyphens'
-            )
-        return username
-
-    @validator('city')
-    def valid_city(cls, city: str) -> str:
-        gc = geonamescache.GeonamesCache()
-        city_info = gc.search_cities(city.title())
-        if not city_info:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
-        return city_info[0]['name']
+    country: str
 
 
 class UserResponse(BaseModel):

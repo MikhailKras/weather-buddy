@@ -1,59 +1,111 @@
 {% if is_auth %}
-  {% extends 'auth/base.html' %}
+{% extends 'auth/base.html' %}
 {% else %}
-  {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% endif %}
 
-{% block title %}Step 1 - Select City{% endblock %}
+{% block title %}
+{% if purpose == 'register' %}
+Step 1 - Select City
+{% elif purpose == 'settings' %}
+Select City
+{% endif %}
+{% endblock %}
 
 {% block content %}
-  <style>
-    .table-hover-cursor:hover {
-      cursor: pointer;
-    }
-  </style>
-  <div class="container my-5">
-    <h1>Choose your city</h1>
-    <table class="table text-white table-hover-cursor">
-      <thead>
-        <tr class="table-info">
-          <th scope="col">City</th>
-          <th scope="col">Country</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for city in data.cities %}
-          <tr onclick="redirectToCity('{{ city.name }}', '{{ city.country }}');">
-            <td>{{ city.name }}</td>
-            <td>{{ city.country }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<style>
+  .table-hover-cursor:hover {
+    cursor: pointer;
+  }
+</style>
+<div class="container my-5">
+  <h1>Choose your city</h1>
+  <table class="table text-white table-hover-cursor">
+    <thead>
+      <tr class="table-info">
+        <th scope="col">City</th>
+        <th scope="col">Country</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for city in data.cities %}
+      <tr onclick="redirectToCity('{{ city.name }}', '{{ city.country }}');">
+        <td>{{ city.name }}</td>
+        <td>{{ city.country }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div id="error-message-city" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;">
   </div>
+  <div id="success-message-city" class="alert alert-success bg-success text-white" role="alert" style="display: none;">
+  </div>
+</div>
 
-  <script>
-    function redirectToCity(cityName, countryName) {
-      const data = {
-        city: cityName,
-        country: countryName
-      };
-  
-      const redirectUrl = "/users/register/city";
-      const options = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      };
-  
+<script>
+  const purpose = "{{ purpose }}";
+  const errorMessageCity = document.getElementById('error-message-city');
+  const successMessageCity = document.getElementById('success-message-city');
+
+  function redirectToCity(cityName, countryName) {
+    const data = {
+      city: cityName,
+      country: countryName
+    };
+
+    errorMessageCity.style.display = "none";
+    
+    let redirectUrl;
+    let method;
+
+    if (purpose === "register") {
+      redirectUrl = "/users/register/city";
+      method = "POST";
+    } else if (purpose === "settings") {
+      redirectUrl = "/users/settings/change_city_data";
+      method = "PATCH";
+    }
+
+    const options = {
+      method: method,
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    };
+
+    if (purpose === "register") {
       fetch(redirectUrl, options)
         .then(response => {
           window.location.href = response.url;
         })
+    } else if (purpose === "settings") {
+      fetch(redirectUrl, options)
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((data) => {
+              throw new Error(data.detail);
+            });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          successMessageCity.style.display = 'block';
+          successMessageCity.textContent = data.message;
+          errorMessageCity.style.display = 'none';
+          setTimeout(() => {
+            window.location.href = '/users/me';
+          }, 2000);
+        })
+        .catch((error) => {
+          errorMessageCity.textContent = error.message;
+          errorMessageCity.style.display = 'block';
+        });
     }
-  </script>
-  
-  
+
+
+  }
+</script>
+
+
 {% endblock %}
