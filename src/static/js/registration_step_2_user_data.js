@@ -8,7 +8,6 @@ form.addEventListener('submit', async (event) => {
     const username = form.elements.username.value;
     const email = form.elements.email.value;
     const password = form.elements.password.value;
-    const city = form.elements.city.value;
 
     errorMessage.style.display = "none";
 

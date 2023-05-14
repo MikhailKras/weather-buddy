@@ -69,7 +69,6 @@ async def register_step_2(request: Request):
 
 @router.post('/register/details', status_code=status.HTTP_201_CREATED)
 async def register_step_2_submit(
-        response: Response,
         user_data: UserCreateStep2,
         city_data: UserCreateStep1 = Depends(get_current_city_data),
         session: AsyncSession = Depends(get_async_session)
@@ -93,8 +92,6 @@ async def register_step_2_submit(
     await session.execute(insert_query)
     await session.commit()
 
-    response.delete_cookie(key="registration_cookie")
-
     return {'message': 'Registration successful'}
 
 
@@ -102,7 +99,9 @@ async def register_step_2_submit(
 async def login_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
     if is_auth:
         return RedirectResponse('/users/me')
-    return templates.TemplateResponse('auth/login.html', context={"request": request})
+    response = templates.TemplateResponse('auth/login.html', context={"request": request})
+    response.delete_cookie(key="registration_token")
+    return response
 
 
 @router.post('/token', response_model=Token)
