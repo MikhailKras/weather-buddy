@@ -260,3 +260,13 @@ async def delete_user(
     await session.commit()
 
     response.delete_cookie("access_token")
+
+
+@router.get("/my_city_info", response_class=RedirectResponse)
+async def get_my_city_info(
+    user_data: UserInDB = Depends(get_current_user),
+):
+    url = f"/weather/info?latitude={user_data.latitude}&longitude={user_data.longitude}&city={user_data.city}"
+    response = RedirectResponse(url)
+
+    return response
