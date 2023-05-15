@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import MetaData, Table, Column, Integer, String, Boolean, TIMESTAMP
+from sqlalchemy import MetaData, Table, Column, Integer, String, Boolean, TIMESTAMP, Float, CheckConstraint
 
 metadata = MetaData()
 
@@ -15,4 +15,6 @@ user = Table(
     Column('country', String, nullable=False, default='No data'),
     Column('disabled', Boolean, nullable=False, default=False),
     Column('registered_at', TIMESTAMP, default=datetime.utcnow),
+    Column('latitude', Float, CheckConstraint('latitude >= -90.0 AND latitude <= 90.0')),
+    Column('longitude', Float, CheckConstraint('longitude >= -180.0 AND longitude <= 180.0'))
 )

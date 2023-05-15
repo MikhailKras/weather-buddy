@@ -56,6 +56,16 @@
                 value="{{ user_data.country }}" disabled>
               <label for="country">Country</label>
             </div>
+            <div class="form-floating mb-3">
+              <input type="latitude" class="form-control bg-dark text-muted" id="latitude" placeholder="Latitude"
+                value="{{ user_data.latitude }}" disabled>
+              <label for="latitude">Latitude</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="longitude" class="form-control bg-dark text-muted" id="longitude" placeholder="Longitude"
+                value="{{ user_data.longitude }}" disabled>
+              <label for="longitude">Longitude</label>
+            </div>
             <div class="d-grid">
               <button type="submit" class="btn btn-primary btn-lg">Go to city selection</button>
             </div>

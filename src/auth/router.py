@@ -54,7 +54,7 @@ async def find_city_name_matches(request: Request, purpose: str, city_input: str
 async def register_step_1_submit(
         city_data: UserCreateStep1
 ):
-    registration_token = create_registration_token(city_data.city, city_data.country)
+    registration_token = create_registration_token(city_data.city, city_data.country, city_data.latitude, city_data.longitude)
     redirect_url = '/users/register/details'
     response = RedirectResponse(redirect_url, status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="registration_token", value=registration_token, httponly=True)
@@ -88,7 +88,9 @@ async def register_step_2_submit(
         email=user_data.email,
         hashed_password=get_password_hash(user_data.password),
         city=city_data.city,
-        country=city_data.country
+        country=city_data.country,
+        latitude=city_data.latitude,
+        longitude=city_data.longitude
     )
 
     await session.execute(insert_query)
@@ -137,7 +139,9 @@ async def read_users_me(
         'email': user_data.email,
         'city': user_data.city,
         'country': user_data.country,
-        'registered at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
+        'latitude': round(user_data.latitude, 2),
+        'longitude': round(user_data.longitude, 2),
+        'registered at': user_data.registered_at.strftime("%B %d, %Y at %H:%M, UTC time"),
     }
     return templates.TemplateResponse('auth/user_data.html', context={"request": request, "user_data": data})
 
@@ -160,7 +164,9 @@ async def get_account_settings(
         'email': user_data.email,
         'city': user_data.city,
         'country': user_data.country,
-        'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p")
+        'latitude': user_data.latitude,
+        'longitude': user_data.longitude,
+        'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p"),
     }
     return templates.TemplateResponse('auth/settings.html', context={"request": request, "user_data": data})
 
@@ -214,7 +220,9 @@ async def change_city_data(
 
     update_query = update(user).where(user.c.username == user_data.username).values(
         city=city_data.city,
-        country=city_data.country
+        country=city_data.country,
+        latitude=float(city_data.latitude),
+        longitude=float(city_data.longitude)
     )
 
     await session.execute(update_query)

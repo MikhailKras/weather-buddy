@@ -5,8 +5,6 @@ from fastapi import HTTPException, status
 
 from pydantic import BaseModel, validator, EmailStr, root_validator
 
-import geonamescache
-
 USERNAME_PATTERN = re.compile(r'^[a-zA-Z0-9_-]{3,20}$')
 PASSWORD_PATTERN = re.compile(r'(?=.*\d+.*)(?=.*[a-zA-Z]+.*)')
 
@@ -14,6 +12,8 @@ PASSWORD_PATTERN = re.compile(r'(?=.*\d+.*)(?=.*[a-zA-Z]+.*)')
 class UserCreateStep1(BaseModel):
     city: str
     country: str
+    latitude: float
+    longitude: float
 
 
 class UserCreateStep2(BaseModel):
@@ -55,6 +55,8 @@ class UserUpdateData(BaseModel):
 class UserUpdateCity(BaseModel):
     city: str
     country: str
+    latitude: str
+    longitude: str
 
 
 class UserInDB(BaseModel):
@@ -66,6 +68,8 @@ class UserInDB(BaseModel):
     country: str
     registered_at: datetime.datetime
     disabled: bool
+    latitude: float
+    longitude: float
 
 
 class Token(BaseModel):
