@@ -190,6 +190,8 @@ async def update_user_data(
             update_query = update(user).where(user.c.username == current_data.username).values(**{field_name: new_value})
             await session.execute(update_query)
             await session.commit()
+        else:
+            raise HTTPException(status_code=400, detail="No changes detected")
 
     for field in new_data.__fields__:
         await update_user_field(field)
