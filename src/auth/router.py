@@ -172,6 +172,8 @@ async def update_user_data(
         current_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
 ):
+    if (new_data.username, new_data.email) == (current_data.username, current_data.email):
+        raise HTTPException(status_code=400, detail="No changes detected")
 
     async def update_user_field(field_name: str):
         current_value, new_value = getattr(current_data, field_name), getattr(new_data, field_name)
@@ -190,8 +192,6 @@ async def update_user_data(
             update_query = update(user).where(user.c.username == current_data.username).values(**{field_name: new_value})
             await session.execute(update_query)
             await session.commit()
-        else:
-            raise HTTPException(status_code=400, detail="No changes detected")
 
     for field in new_data.__fields__:
         await update_user_field(field)
