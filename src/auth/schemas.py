@@ -57,12 +57,6 @@ class UserUpdateCity(BaseModel):
     country: str
 
 
-class UserResponse(BaseModel):
-    username: str
-    email: EmailStr
-    city: str
-
-
 class UserInDB(BaseModel):
     id: int
     username: str

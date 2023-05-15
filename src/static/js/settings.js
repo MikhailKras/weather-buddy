@@ -1,3 +1,20 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const errorMessage = document.getElementById('error-message');
+  const errorMessageCity = document.getElementById('error-message-city');
+  const errorMessagePassword = document.getElementById('error-message-password');
+
+  const tabLinks = document.querySelectorAll('.nav-link');
+
+  const hideErrorMessages = () => {
+    errorMessage.style.display = 'none';
+    errorMessageCity.style.display = 'none';
+    errorMessagePassword.style.display = 'none';
+  };
+  tabLinks.forEach(tab => {
+    tab.addEventListener('click', hideErrorMessages);
+  });
+});
+
 const changeDataForm = document.getElementById('change-data-form');
 const errorMessage = document.getElementById('error-message');
 const successMessage = document.getElementById('success-message');
@@ -19,26 +36,26 @@ changeDataForm.addEventListener('submit', (event) => {
     },
     body: JSON.stringify(userData)
   })
-  .then((response) => {
-    if (!response.ok) {
-      return response.json().then((data) => {
-        throw new Error(data.detail);
-      });
-    }
-    return response.json();
-  })
-  .then((data) => {
-    successMessage.style.display = 'block';
-    successMessage.textContent = data.message;
-    errorMessage.style.display = 'none';
-    setTimeout(() => {
-      window.location.href = '/users/me';
-    }, 2000);
-  })
-  .catch((error) => {
-    errorMessage.textContent = error.message;
-    errorMessage.style.display = 'block';
-  });
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          throw new Error(data.detail);
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      successMessage.style.display = 'block';
+      successMessage.textContent = data.message;
+      errorMessage.style.display = 'none';
+      setTimeout(() => {
+        window.location.href = '/users/me';
+      }, 2000);
+    })
+    .catch((error) => {
+      errorMessage.textContent = error.message;
+      errorMessage.style.display = 'block';
+    });
 });
 
 
@@ -52,18 +69,18 @@ changeCityForm.addEventListener('submit', (event) => {
   const cityInput = changeCityForm.elements.city.value;
 
   fetch(`/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`)
-  .then((response) => {
-    if (!response.ok) {
-      return response.json().then((data) => {
-        throw new Error(data.detail);
-      });
-    }
-    window.location.href = `/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`;
-  })
-  .catch((error) => {
-    errorMessage.textContent = error.message;
-    errorMessage.style.display = "block";
-  });
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          throw new Error(data.detail);
+        });
+      }
+      window.location.href = `/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`;
+    })
+    .catch((error) => {
+      errorMessageCity.textContent = error.message;
+      errorMessageCity.style.display = "block";
+    });
 
 })
 
@@ -90,46 +107,46 @@ changePasswordForm.addEventListener('submit', (event) => {
     },
     body: JSON.stringify(passwords)
   })
-  .then((response) => {
-    if (!response.ok) {
-      return response.json().then((data) => {
-        throw new Error(data.detail);
-      });
-    }
-    return response.json();
-  })
-  .then((data) => {
-    successMessagePassword.style.display = 'block';
-    successMessagePassword.textContent = data.message;
-    errorMessagePassword.style.display = 'none';
-    setTimeout(() => {
-      window.location.href = '/users/me';
-    }, 2000);
-  })
-  .catch((error) => {
-    errorMessagePassword.textContent = error.message;
-    errorMessagePassword.style.display = 'block';
-  });
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          throw new Error(data.detail);
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      successMessagePassword.style.display = 'block';
+      successMessagePassword.textContent = data.message;
+      errorMessagePassword.style.display = 'none';
+      setTimeout(() => {
+        window.location.href = '/users/me';
+      }, 2000);
+    })
+    .catch((error) => {
+      errorMessagePassword.textContent = error.message;
+      errorMessagePassword.style.display = 'block';
+    });
 });
 
 const deleteBtn = document.getElementById('delete-btn');
 deleteBtn.addEventListener('click', async () => {
-    const response = await fetch('/users/settings/delete_user', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            // Optional body payload
-        })
-    });
+  const response = await fetch('/users/settings/delete_user', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      // Optional body payload
+    })
+  });
 
-    if (response.ok) {
-        setTimeout(() => {
-            window.location.href = '/users/login';
-          }, 2000);
-    } else {
-        // Handle error response
-        console.error(`Error deleting account: ${response.statusText}`);
-    }
+  if (response.ok) {
+    setTimeout(() => {
+      window.location.href = '/users/login';
+    }, 2000);
+  } else {
+    // Handle error response
+    console.error(`Error deleting account: ${response.statusText}`);
+  }
 });

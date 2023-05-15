@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data
 from src.auth.models import user
-from src.auth.schemas import UserCreateStep2, UserResponse, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity
+from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity
 from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
