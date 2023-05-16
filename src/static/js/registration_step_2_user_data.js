@@ -27,12 +27,8 @@ form.addEventListener('submit', async (event) => {
         if (!response.ok) {
             throw new Error(`${data.detail}`);
         } else {
-            errorMessage.style.display = 'none'
-            successMessage.style.display = 'block'
-            successMessage.textContent = data.message
-            setTimeout(() => {
-                window.location.href = '/users/login';
-              }, 2000);
+            const message = data.message;
+            window.location.href = `/users/register/success?message=${encodeURIComponent(message)}`;
         }
     } catch (error) {
         errorMessage.textContent = error.message;

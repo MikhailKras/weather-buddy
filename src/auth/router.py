@@ -114,7 +114,14 @@ async def register_step_2_submit(
     url = f"{CLIENT_ORIGIN}/users/verify-email/{verification_token}"
     await Email(user_data.username, url, [user_data.email]).send_verification_code()
 
-    return {'message': 'Registration successful. Please check your email for verification instructions.'}
+    return {'message': 'Registration successful. Please verify your email to gain full access.'}
+
+
+@router.get("/register/success", response_class=HTMLResponse)
+def register_success(request: Request, message: str):
+    response = templates.TemplateResponse("auth/registration_success.html", {"request": request, "message": message})
+    response.delete_cookie(key="registration_token")
+    return response
 
 
 @router.get('/verify-email/{token}')
@@ -163,7 +170,6 @@ async def login_user_get_form(request: Request, is_auth: bool = Depends(is_authe
     if is_auth:
         return RedirectResponse('/users/me')
     response = templates.TemplateResponse('auth/login.html', context={"request": request})
-    response.delete_cookie(key="registration_token")
     return response
 
 
