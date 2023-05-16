@@ -140,7 +140,7 @@ async def verify_email(
             detail="Email already verified"
         )
 
-    user_data = get_user_by_email(email, session=session)
+    user_data = await get_user_by_email(email, session=session)
 
     if user_data is None:
         raise HTTPException(
