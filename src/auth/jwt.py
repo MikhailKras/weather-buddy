@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import TokenData, UserCreateStep1
 from src.auth.utils import get_user_by_username, OAuth2PasswordBearerWithCookie
-from src.config import SECRET_KEY, ALGORITHM, SECRET_KEY_REG
+from src.config import SECRET_KEY, ALGORITHM, SECRET_KEY_REG, SECRET_KEY_EMAIL_VERIFICATION
 from src.database import get_async_session
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="users/token", auto_error=False)
@@ -104,3 +104,27 @@ def get_current_city_data(
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid registration token")
     return UserCreateStep1(**payload)
+
+
+def create_email_verification_token(email: str) -> str:
+    expire = datetime.utcnow() + timedelta(minutes=10)
+    to_encode = {"email": email, "exp": expire}
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY_EMAIL_VERIFICATION, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def get_email_from_token(token: str) -> str:
+    try:
+        payload = jwt.decode(token, SECRET_KEY_EMAIL_VERIFICATION, algorithms=ALGORITHM)
+        email = payload.get("email")
+        if email is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+            )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
+    return email

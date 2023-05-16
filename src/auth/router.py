@@ -5,15 +5,17 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import insert, update, delete
+from sqlalchemy import insert, update, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data
-from src.auth.models import user
+from src.auth.email import Email
+from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data, \
+    create_email_verification_token, get_email_from_token
+from src.auth.models import user, email_verification
 from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity
 from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
-from src.config import ACCESS_TOKEN_EXPIRE_MINUTES
+from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
 
 router = APIRouter(
@@ -91,12 +93,69 @@ async def register_step_2_submit(
         country=city_data.country,
         latitude=city_data.latitude,
         longitude=city_data.longitude
-    )
+    ).returning(user.c.id)
 
-    await session.execute(insert_query)
+    result = await session.execute(insert_query)
     await session.commit()
 
-    return {'message': 'Registration successful'}
+    inserted_row = result.fetchone()
+    user_id = inserted_row.id
+
+    verification_token = create_email_verification_token(user_data.email)
+
+    insert_verification_query = insert(email_verification).values(
+        user_id=user_id,
+        token=verification_token
+    )
+
+    await session.execute(insert_verification_query)
+    await session.commit()
+
+    url = f"{CLIENT_ORIGIN}/users/verify-email/{verification_token}"
+    await Email(user_data.username, url, [user_data.email]).send_verification_code()
+
+    return {'message': 'Registration successful. Please check your email for verification instructions.'}
+
+
+@router.get('/verify-email/{token}')
+async def verify_email(
+        token: str,
+        session: AsyncSession = Depends(get_async_session)
+):
+    email = get_email_from_token(token)
+
+    select_verification_query = select(email_verification).where(email_verification.c.token == token)
+    existing_verification = await session.execute(select_verification_query)
+    verification = existing_verification.fetchone()
+
+    if verification is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Email verification token not found"
+        )
+
+    if verification.verified:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already verified"
+        )
+
+    user_data = get_user_by_email(email, session=session)
+
+    if user_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    update_verification_query = update(email_verification).where(email_verification.c.token == token).values(
+        verified=True
+    )
+
+    await session.execute(update_verification_query)
+    await session.commit()
+
+    return {"message": "Email verification successful"}
 
 
 @router.get('/login', response_class=HTMLResponse)
@@ -255,8 +314,14 @@ async def delete_user(
         user_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session),
 ):
-    delete_query = delete(user).where(user.c.username == user_data.username)
-    await session.execute(delete_query)
+    user_id = user_data.id
+
+    delete_verification_query = delete(email_verification).where(email_verification.c.user_id == user_id)
+    await session.execute(delete_verification_query)
+
+    delete_user_query = delete(user).where(user.c.id == user_id)
+    await session.execute(delete_user_query)
+
     await session.commit()
 
     response.delete_cookie("access_token")
