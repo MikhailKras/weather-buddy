@@ -111,7 +111,7 @@ async def register_step_2_submit(
     await session.execute(insert_verification_query)
     await session.commit()
 
-    url = f"{CLIENT_ORIGIN}/users/verify-email/{verification_token}"
+    url = f"{CLIENT_ORIGIN}/users/verify-email-page/{verification_token}"
     await Email(user_data.username, url, [user_data.email]).send_verification_code()
 
     return {'message': 'Registration successful. Please verify your email to gain full access.'}
@@ -122,6 +122,14 @@ def register_success(request: Request, message: str):
     response = templates.TemplateResponse("auth/registration_success.html", {"request": request, "message": message})
     response.delete_cookie(key="registration_token")
     return response
+
+
+@router.get('/verify-email-page/{token}')
+def verify_email_page(
+        request: Request,
+        token: str
+):
+    return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token})
 
 
 @router.get('/verify-email/{token}')

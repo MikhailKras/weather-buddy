@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
-from pydantic import EmailStr, BaseModel
+from pydantic import EmailStr
 from jinja2 import Environment, select_autoescape, PackageLoader
 
 from src.config import EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_FROM, EMAIL_PORT, EMAIL_HOST
@@ -15,7 +15,7 @@ env = Environment(
 class Email:
     def __init__(self, username: str, url: str, email: List[EmailStr]):
         self.username = username
-        self.sender = 'Codevo <admin@admin.com>'
+        self.sender = '<weather_buddy@example.com>'
         self.email = email
         self.url = url
         pass
@@ -42,7 +42,6 @@ class Email:
             subject=subject
         )
 
-        # Define the message options
         message = MessageSchema(
             subject=subject,
             recipients=self.email,
@@ -50,9 +49,8 @@ class Email:
             subtype="html"
         )
 
-        # Send the email
         fm = FastMail(conf)
         await fm.send_message(message)
 
     async def send_verification_code(self):
-        await self.send_mail('Your verification code (Valid for 10min)', 'auth/verification.html')
+        await self.send_mail('Email Verification for WeatherBuddy (valid for 10 minutes)', 'auth/verification_message.html')
