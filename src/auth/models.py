@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import MetaData, Table, Column, Integer, String, Boolean, TIMESTAMP, Float, CheckConstraint, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Boolean, TIMESTAMP, Float, CheckConstraint, ForeignKey
 
-metadata = MetaData()
+from src.database import metadata
 
 user = Table(
     'user',
