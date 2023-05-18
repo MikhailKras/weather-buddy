@@ -118,14 +118,14 @@ async def register_step_2_submit(
 
 
 @router.get("/register/success", response_class=HTMLResponse)
-def register_success(request: Request, message: str):
+async def register_success(request: Request, message: str):
     response = templates.TemplateResponse("auth/registration_success.html", {"request": request, "message": message})
     response.delete_cookie(key="registration_token")
     return response
 
 
 @router.get('/verify-email-page/{token}')
-def verify_email_page(
+async def verify_email_page(
         request: Request,
         token: str
 ):
