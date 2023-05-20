@@ -74,18 +74,6 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
         yield ac
 
 
-def override_get_current_city_data():
-    return UserCreateStep1(
-        city="Brussels",
-        country="Belgium",
-        latitude=50.85045,
-        longitude=4.34878
-    )
-
-
-app.dependency_overrides[get_current_city_data] = override_get_current_city_data
-
-
 @pytest.fixture
 async def existing_user():
     async with async_session_maker() as session:
@@ -153,21 +141,3 @@ async def existing_verifications():
             )
             await session.execute(insert_query_verification)
         await session.commit()
-
-
-async def override_get_current_user():
-    return UserInDB(
-        id=1,
-        username="my_user",
-        email="my_user@gmail.com",
-        hashed_password="test",
-        registered_at=datetime.datetime.utcnow(),
-        disabled=False,
-        city="Brussels",
-        country="Belgium",
-        latitude=50.85045,
-        longitude=4.34878
-    )
-
-
-app.dependency_overrides[get_current_user] = override_get_current_user

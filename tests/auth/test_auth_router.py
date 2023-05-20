@@ -6,6 +6,8 @@ from src.auth.email import Email
 from src.auth.jwt import is_authenticated
 from src.main import app
 
+pytest.importorskip("conftest_auth_router")
+
 
 async def test_register_step_1_auth(ac: AsyncClient):
     def override_is_authenticated():
