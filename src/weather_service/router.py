@@ -1,16 +1,40 @@
+from typing import Callable
+
 import aiohttp
 import geonamescache
 
 from fastapi import APIRouter, Request, Depends, HTTPException, status
-from fastapi.responses import HTMLResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, Response
+from fastapi.routing import APIRoute
 from fastapi.templating import Jinja2Templates
 
 from src.auth.jwt import is_authenticated
 from src.config import WEATHER_API_KEY
 
+
+class ValidationErrorLoggingRoute(APIRoute):
+    def get_route_handler(self) -> Callable:
+        original_route_handler = super().get_route_handler()
+
+        async def custom_route_handler(request: Request) -> Response:
+            try:
+                return await original_route_handler(request)
+            except RequestValidationError as exc:
+                errors = exc.errors()
+                error_messages = []
+                for error in errors:
+                    error_messages.append(error['msg'].replace('value', error['loc'][1]).capitalize())
+                detail = '. '.join(error_messages)
+                raise HTTPException(status_code=400, detail=detail)
+
+        return custom_route_handler
+
+
 router = APIRouter(
     prefix='/weather',
-    tags=['Weather-service']
+    tags=['Weather-service'],
+    route_class=ValidationErrorLoggingRoute
 )
 
 templates = Jinja2Templates(directory='src/templates')
