@@ -26,5 +26,4 @@ email_verification = Table(
     Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
     Column('token', String, nullable=False),
     Column('verified', Boolean, nullable=False, default=False),
-    Column('created_at', TIMESTAMP, default=datetime.utcnow)
 )
