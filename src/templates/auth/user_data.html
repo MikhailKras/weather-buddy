@@ -10,7 +10,7 @@
       {% for key, value in user_data.items() %}
       <tr>
         <th>{{ key.capitalize() }}</th>
-        <td>{{ value }}</td>
+        <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody>

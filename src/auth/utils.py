@@ -7,8 +7,8 @@ from fastapi.security.utils import get_authorization_scheme_param
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.models import user
-from src.auth.schemas import UserInDB
+from src.auth.models import user, email_verification
+from src.auth.schemas import UserInDB, UserEmailVerificationInfo
 from src.auth.security import verify_password
 from src.database import get_async_session
 
@@ -85,3 +85,17 @@ async def authenticate_user(
     if not verify_password(form_data.password, user_data.hashed_password):
         return False
     return user_data
+
+
+async def get_user_email_verification_info(
+        user_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    column_names = [column.name for column in email_verification.columns]
+    select_query = select(email_verification).where(email_verification.c.user_id == user_id)
+    result = await session.execute(select_query)
+    row = result.fetchone()
+    if not row:
+        return
+    user_email_verification_info_dict = {column_name: value for column_name, value in zip(column_names, row.tuple())}
+    return UserEmailVerificationInfo(**user_email_verification_info_dict)

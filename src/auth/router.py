@@ -12,9 +12,10 @@ from src.auth.email import Email
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data, \
     create_email_verification_token, get_email_from_token
 from src.auth.models import user, email_verification
-from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity
+from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity, \
+    UserEmailVerificationInfo
 from src.auth.security import get_password_hash, verify_password
-from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user
+from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
 
@@ -205,11 +206,14 @@ async def login_for_access_token(
 @router.get("/me", response_class=HTMLResponse)
 async def read_users_me(
         request: Request,
-        user_data: UserInDB = Depends(get_current_user)
+        user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session),
 ):
+    user_email_verification_info: UserEmailVerificationInfo = await get_user_email_verification_info(user_data.id, session=session)
     data = {
         'username': user_data.username,
         'email': user_data.email,
+        'is email verified': user_email_verification_info.verified,
         'city': user_data.city,
         'country': user_data.country,
         'latitude': round(user_data.latitude, 2),
@@ -230,7 +234,7 @@ async def logout(is_auth: bool = Depends(is_authenticated)):
 @router.get("/settings", response_class=HTMLResponse)
 async def get_account_settings(
         request: Request,
-        user_data: UserInDB = Depends(get_current_user)
+        user_data: UserInDB = Depends(get_current_user),
 ):
     data = {
         'username': user_data.username,

@@ -72,6 +72,13 @@ class UserInDB(BaseModel):
     longitude: float
 
 
+class UserEmailVerificationInfo(BaseModel):
+    id: int
+    user_id: int
+    token: str
+    verified: bool
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
