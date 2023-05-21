@@ -46,7 +46,7 @@ async def test_find_city_name_matches(
         expected_detail,
         expected_content_type
 ):
-    response = await ac.get(f"/users/{purpose}/city/choose_city_name?city_input={city_input}")
+    response = await ac.get(f"/users/{purpose}/city/choose_city_name", params={"city_input": city_input})
 
     assert response.status_code == expected_status
     if expected_detail:
@@ -136,7 +136,7 @@ async def test_register_step_2_submit_existing_email(ac: AsyncClient, existing_u
 
 async def test_register_success(ac: AsyncClient):
     message = "Registration successful!"
-    response = await ac.get(f"/users/register/success?message={message}")
+    response = await ac.get(f"/users/register/success", params={"message": message})
 
     assert response.status_code == 200
     assert "registration_token" in response.headers["set-cookie"]

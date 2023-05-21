@@ -19,7 +19,7 @@ async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyP
     assert response.status_code == status.HTTP_200_OK
     assert "text/html" in response.headers["content-type"]
 
-    response = await ac.get(f"/users/register/city/choose_city_name?city_input={city_data['city']}")
+    response = await ac.get(f"/users/register/city/choose_city_name", params={"city_input": city_data["city"]})
 
     assert response.status_code == status.HTTP_200_OK
     assert "text/html" in response.headers["content-type"]
@@ -55,7 +55,7 @@ async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyP
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json()["message"] == "Registration successful. Please verify your email to gain full access."
 
-    response = await ac.get("/users/register/success?message=message")
+    response = await ac.get("/users/register/success", params={"message": "message"})
 
     assert response.status_code == status.HTTP_200_OK
     assert "message" in response.text

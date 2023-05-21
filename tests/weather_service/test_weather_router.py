@@ -24,7 +24,7 @@ async def test_find_city_name_matches(
         detail,
         content_type
 ):
-    response = await ac.get(f"/weather/city_names?city_input={city_input}")
+    response = await ac.get(f"/weather/city_names", params={"city_input": city_input})
 
     assert response.status_code == expected_status
 
@@ -55,7 +55,7 @@ async def test_get_city_weather(
         expected_status,
         detail
 ):
-    response = await ac.get(f"/weather/info?latitude={latitude}&longitude={longitude}&city={city}")
+    response = await ac.get(f"/weather/info", params={"latitude": latitude, "longitude": longitude, "city": city})
 
     assert response.status_code == expected_status
 
