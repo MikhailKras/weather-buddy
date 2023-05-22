@@ -174,6 +174,42 @@ async def verify_email(
     return {"message": "Email verification successful"}
 
 
+@router.get('/email-verification')
+async def get_send_verification_email_page(request: Request):
+    return templates.TemplateResponse("auth/email_verification_form.html", {"request": request})
+
+
+@router.post('/email-verification')
+async def send_verification_email(
+        user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    user_email_verification_info: UserEmailVerificationInfo = await get_user_email_verification_info(user_data.id, session=session)
+
+    if user_email_verification_info.verified:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Email already verified")
+
+    verification_token = create_email_verification_token(user_data.email)
+
+    update_query = update(email_verification).where(email_verification.c.user_id == user_data.id).values(
+        token=verification_token
+    )
+
+    await session.execute(update_query)
+    await session.commit()
+
+    url = f"{CLIENT_ORIGIN}/users/verify-email-page/{verification_token}"
+
+    try:
+        await Email(user_data.username, url, [user_data.email]).send_verification_code()
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Failed to send verification email. Please try again later.")
+
+    return {"message": "Verification email sent successfully"}
+
+
 @router.get('/login', response_class=HTMLResponse)
 async def login_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
     if is_auth:
@@ -272,6 +308,10 @@ async def update_user_data(
                 if await get_user_by_email(new_value, session=session):
                     raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                         detail='This email is already registered!')
+                update_verification_query = update(email_verification).where(email_verification.c.user_id == current_data.id).values(
+                    verified=False
+                )
+                await session.execute(update_verification_query)
             update_query = update(user).where(user.c.username == current_data.username).values(**{field_name: new_value})
             await session.execute(update_query)
             await session.commit()
