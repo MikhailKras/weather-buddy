@@ -4,6 +4,7 @@ from httpx import AsyncClient
 import src
 from src.auth.email import Email
 from src.auth.jwt import is_authenticated
+from src.auth.schemas import UserEmailVerificationInfo
 from src.main import app
 
 pytest.importorskip("conftest_auth_router")
@@ -181,6 +182,49 @@ async def test_verify_email(ac: AsyncClient,
         assert response.json()["detail"] == expected_detail
     if expected_message:
         assert response.json()["message"] == expected_message
+
+
+async def test_get_send_verification_email_page(ac: AsyncClient):
+    response = await ac.get("/users/email-verification")
+
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+
+
+@pytest.mark.parametrize(
+    "user_id, verified, expected_status, detail, message",
+    [
+        (1, False, 200, None, "Verification email sent successfully"),
+        (2, True, 400, "Email already verified", None),
+        (3, False, 500, "Failed to send verification email. Please try again later.", None)
+    ]
+)
+async def test_send_verification_email(ac: AsyncClient,
+                                       existing_verifications,
+                                       user_id,
+                                       verified,
+                                       expected_status,
+                                       detail,
+                                       message,
+                                       monkeypatch: pytest.MonkeyPatch,
+                                       ):
+    async def get_user_email_verification_info_mock(*args, **kwargs):
+        return UserEmailVerificationInfo(id=user_id, user_id=user_id, token="test_token", verified=verified)
+
+    async def send_verification_code_mock(*args, **kwargs):
+        if user_id == 3:
+            raise Exception
+        pass
+
+    monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
+    monkeypatch.setattr(Email, "send_verification_code", send_verification_code_mock)
+    response = await ac.post("/users/email-verification")
+
+    assert response.status_code == expected_status
+    if detail:
+        assert response.json()["detail"] == detail
+    if message:
+        assert response.json()["message"] == message
 
 
 @pytest.mark.parametrize(
