@@ -27,3 +27,12 @@ email_verification = Table(
     Column('token', String, nullable=False),
     Column('verified', Boolean, nullable=False, default=False),
 )
+
+city = Table(
+    'city',
+    metadata,
+    Column('id', Integer, primary_key=True),
+    Column('name', String, nullable=False),
+    Column('region', String),
+    Column('country', String, nullable=False)
+)
