@@ -5,7 +5,7 @@ import aiohttp
 import geonamescache
 from sqlalchemy import insert, select
 
-from src.auth.models import city
+from src.models import city
 from src.config import WEATHER_API_KEY
 from src.database import get_async_session
 
