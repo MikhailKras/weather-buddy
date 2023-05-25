@@ -1,40 +1,54 @@
 {% if is_auth %}
-  {% extends 'auth/base.html' %}
+{% extends 'auth/base.html' %}
 {% else %}
-  {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% endif %}
 
 {% block title %}City Weather{% endblock %}
 
 {% block content %}
-  <style>
-    .table-hover-cursor:hover {
-      cursor: pointer;
-    }
-  </style>
-  <div class="container my-5">
-    <h1>Choose your city</h1>
-    <table class="table text-white table-hover-cursor">
-      <thead>
-        <tr class="table-info">
-          <th scope="col">City</th>
-          <th scope="col">Country</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for city in data.cities %}
-          <tr onclick="redirectToCity('{{ city.coordinates.latitude }}', '{{ city.coordinates.longitude }}', '{{ city.name }}');">
-            <td>{{ city.name }}</td>
-            <td>{{ city.country }}</td>
-          </tr>
+<style>
+  .table-hover-cursor:hover {
+    cursor: pointer;
+  }
+</style>
+<div class="container my-5">
+  <h1>Choose your city</h1>
+  <table class="table text-white table-hover-cursor">
+    <thead>
+      <tr class="table-info">
+        {% for column in data.cities[0].keys() %}
+        {% if column != 'id' %}
+        <th scope="col">{{ column.capitalize() }}</th>
+        {% endif %}
         {% endfor %}
-      </tbody>
-    </table>
-  </div>
+      </tr>
+    </thead>
+    <tbody>
+      {% for city in data.cities %}
+      <tr onclick="redirectToCity('{{ city.id }}');">
+        {% for key, value in city.items() %}
+        {% if key != 'id' %}
+        <td>
+          {% if value is number %}
+          {{ value|round(2) }}
+          {% else %}
+          {{ value|default('No data') }}
+          {% endif %}
+        </td>
+        {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
 
-  <script>
-    function redirectToCity(cityLatitude, cityLongitude, cityName) {
-      window.location.href = "/weather/info?latitude=" + encodeURIComponent(cityLatitude) + "&longitude=" + encodeURIComponent(cityLongitude) + "&city=" + encodeURIComponent(cityName);
-    }
-  </script>
+  </table>
+
+</div>
+
+<script>
+  function redirectToCity(cityId) {
+    window.location.href = "/weather/info?city_id=" + encodeURIComponent(cityId);
+  }
+</script>
 {% endblock %}

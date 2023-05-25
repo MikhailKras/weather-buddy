@@ -28,7 +28,7 @@ function searchByCoords(event) {
 
   errorMessage.style.display = "none";
 
-  redirect_url = "/weather/info?latitude=" + encodeURIComponent(latitudeInput) + "&longitude=" + encodeURIComponent(longitudeInput) + "&city=" + encodeURIComponent('search_by_coordinates');
+  redirect_url = "/weather/info/by_coordinates?latitude=" + encodeURIComponent(latitudeInput) + "&longitude=" + encodeURIComponent(longitudeInput);
   fetch(redirect_url)
     .then((response) => {
       if (!response.ok) {
