@@ -13,7 +13,7 @@ async def test_get_page_weather_search(ac: AsyncClient):
 @pytest.mark.parametrize(
     "city_input, expected_status, detail, content_type",
     [
-        ("London", 200, None, "text/html"),
+        ("Brussels", 200, None, "text/html"),
         ("Invalid_city", 400, "Invalid city!", None)
     ]
 )
@@ -22,7 +22,8 @@ async def test_find_city_name_matches(
         city_input,
         expected_status,
         detail,
-        content_type
+        content_type,
+        fill_city_table
 ):
     response = await ac.get(f"/weather/city_names", params={"city_input": city_input})
 

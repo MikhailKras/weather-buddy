@@ -14,6 +14,7 @@ from src.auth.schemas import UserCreateStep1, UserInDB
 from src.config import DB_USER_TEST, DB_PASS_TEST, DB_HOST_TEST, DB_PORT_TEST, DB_NAME_TEST
 from src.database import metadata, get_async_session
 from src.main import app
+from src.models import city
 
 DATABASE_URL_TEST = f"postgresql+asyncpg://{DB_USER_TEST}:{DB_PASS_TEST}@{DB_HOST_TEST}:{DB_PORT_TEST}/{DB_NAME_TEST}"
 
@@ -51,11 +52,27 @@ def event_loop(request):
 @pytest.fixture(scope="session")
 def city_data():
     return {
-        "city": "Brussels",
+        "id": 1,
+        "name": "Brussels",
+        "region": "",
         "country": "Belgium",
         "latitude": 50.85045,
-        "longitude": 4.34878
+        "longitude": 4.34878,
+        "population": 1019022,
+        "timezone": "Europe/Brussels",
+        "alternatenames": ["Brussel", "Brisel", "BRU"]
     }
+
+
+@pytest.fixture(scope="session")
+async def fill_city_table(city_data):
+    async with async_session_maker() as session:
+        insert_query = insert(city).values(
+            **city_data
+        )
+
+        await session.execute(insert_query)
+        await session.commit()
 
 
 @pytest.fixture(scope="session")
