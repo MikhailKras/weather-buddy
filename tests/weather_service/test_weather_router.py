@@ -37,28 +37,34 @@ async def test_find_city_name_matches(
 
 
 @pytest.mark.parametrize(
-    "latitude, longitude, city, expected_status, detail",
+    "latitude, longitude, expected_status, detail",
     [
-        (50.85045, 4.34878, "Brussels", 200, None),
-        ("not float", "not float", "search_by_coordinates", 400, "Latitude is not a valid float. Longitude is not a valid float"),
-        ("not float", 4.34878, "search_by_coordinates", 400, "Latitude is not a valid float"),
-        (50.85045, "not float", "search_by_coordinates", 400, "Longitude is not a valid float"),
-        (-100, 200, "search_by_coordinates", 400, "Invalid coordinates!"),
-        (0, 0, "search_by_coordinates", 400, "No matching location found."),
-        (1, 1, "search_by_coordinates", 400, "No information found for given coordinates"),
+        (50.85045, 4.34878, 200, None),
+        ("not float", "not float", 400, "Latitude is not a valid float. Longitude is not a valid float"),
+        ("not float", 4.34878, 400, "Latitude is not a valid float"),
+        (50.85045, "not float", 400, "Longitude is not a valid float"),
+        (-100, 200, 400, "Invalid coordinates!"),
+        (0, 0, 400, "No matching location found."),
+        (1, 1, 400, "No information found for given coordinates"),
     ]
 )
-async def test_get_city_weather(
+async def test_get_id_by_coordinates(
         ac: AsyncClient,
         latitude,
         longitude,
-        city,
         expected_status,
-        detail
+        detail,
 ):
-    response = await ac.get(f"/weather/info", params={"latitude": latitude, "longitude": longitude, "city": city})
-
+    response = await ac.get(f"/weather/info/by_coordinates", params={"latitude": latitude, "longitude": longitude})
     assert response.status_code == expected_status
-
     if detail:
         assert response.json()["detail"] == detail
+
+
+async def test_get_city_weather(
+        ac: AsyncClient,
+        fill_city_table
+):
+    response = await ac.get(f"/weather/info", params={"city_id": 1})
+
+    assert response.status_code == 200
