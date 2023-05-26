@@ -11,12 +11,9 @@ user = Table(
     Column('username', String, nullable=False),
     Column('email', String, nullable=False),
     Column('hashed_password', String, nullable=False),
-    Column('city', String, nullable=False),
-    Column('country', String, nullable=False, default='No data'),
+    Column('city_id', Integer, ForeignKey('city.id'), nullable=False),
     Column('disabled', Boolean, nullable=False, default=False),
     Column('registered_at', TIMESTAMP, default=datetime.utcnow),
-    Column('latitude', Float, CheckConstraint('latitude >= -90.0 AND latitude <= 90.0')),
-    Column('longitude', Float, CheckConstraint('longitude >= -180.0 AND longitude <= 180.0'))
 )
 
 email_verification = Table(
@@ -27,4 +24,3 @@ email_verification = Table(
     Column('token', String, nullable=False),
     Column('verified', Boolean, nullable=False, default=False),
 )
-
