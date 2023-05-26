@@ -34,10 +34,10 @@ async def test_register_step_1_not_auth(ac: AsyncClient):
 @pytest.mark.parametrize(
     "purpose, city_input, expected_status, expected_detail, expected_content_type",
     [
-        ("not_purpose", "london", 400, "Invalid purpose!", None),
+        ("not_purpose", "brussels", 400, "Invalid purpose!", None),
         ("register", "not_city", 400, "Invalid city!", None),
-        ("register", "london", 200, None, "text/html"),
-        ("settings", "london", 200, None, "text/html")
+        ("register", "brussels", 200, None, "text/html"),
+        ("settings", "brussels", 200, None, "text/html")
     ]
 )
 async def test_find_city_name_matches(
@@ -45,7 +45,8 @@ async def test_find_city_name_matches(
         city_input,
         expected_status,
         expected_detail,
-        expected_content_type
+        expected_content_type,
+        fill_city_table
 ):
     response = await ac.get(f"/users/{purpose}/city/choose_city_name", params={"city_input": city_input})
 
@@ -57,7 +58,7 @@ async def test_find_city_name_matches(
 
 
 async def test_register_step_1_submit(ac: AsyncClient, city_data, registration_token):
-    response = await ac.post("users/register/city", json=city_data)
+    response = await ac.post("users/register/city", json={"city_id": city_data["id"]})
 
     assert response.status_code == 302
     assert response.headers["location"] == "/users/register/details"
@@ -97,7 +98,10 @@ async def test_register_step_2(
     ac.cookies.delete("registration_token")
 
 
-async def test_register_step_2_submit(ac: AsyncClient, monkeypatch: pytest.MonkeyPatch):
+async def test_register_step_2_submit(
+        ac: AsyncClient,
+        fill_city_table,
+        monkeypatch: pytest.MonkeyPatch):
     async def send_verification_code_mock(*args, **kwargs):
         pass
 
@@ -113,7 +117,7 @@ async def test_register_step_2_submit(ac: AsyncClient, monkeypatch: pytest.Monke
     assert response.json()["message"] == "Registration successful. Please verify your email to gain full access."
 
 
-async def test_register_step_2_submit_existing_username(ac: AsyncClient, existing_user):
+async def test_register_step_2_submit_existing_username(ac: AsyncClient, existing_user, fill_city_table):
     response = await ac.post("/users/register/details", json={
         "username": existing_user["username"],
         "password": "string1",
@@ -166,6 +170,7 @@ async def test_verify_email(ac: AsyncClient,
                             expected_detail,
                             expected_message,
                             user_data,
+                            fill_city_table,
                             monkeypatch: pytest.MonkeyPatch
                             ):
     def get_email_from_token_mock(*args, **kwargs):
@@ -206,6 +211,7 @@ async def test_send_verification_email(ac: AsyncClient,
                                        expected_status,
                                        detail,
                                        message,
+                                       fill_city_table,
                                        monkeypatch: pytest.MonkeyPatch,
                                        ):
     async def get_user_email_verification_info_mock(*args, **kwargs):
@@ -303,7 +309,10 @@ async def test_login_for_access_token(
         assert response.json()["token_type"] == "bearer"
 
 
-async def test_read_users_me(ac: AsyncClient):
+async def test_read_users_me(ac: AsyncClient, fill_city_table, monkeypatch: pytest.MonkeyPatch):
+    async def get_user_email_verification_info_mock(*args, **kwargs):
+        return UserEmailVerificationInfo(id=1, user_id=1, token="test_token", verified=False)
+    monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
     response = await ac.get("/users/me")
 
     assert response.status_code == 200
@@ -369,20 +378,20 @@ async def test_update_user_data(
 
 
 @pytest.mark.parametrize(
-    "new_city_data, expected_status, detail, message",
+    "city_id, expected_status, detail, message",
     [
-        ({"city": "Berlin", "country": "Germany", "latitude": 52.52, "longitude": 13.41}, 200, None, "City changed successfully!"),
-        ({"city": "Brussels", "country": "Belgium", "latitude": 52.52, "longitude": 13.41}, 400, "City already chosen", None),
+        (2, 200, None, "City changed successfully!"),
+        (1, 400, "City already chosen", None),
     ]
 )
 async def test_change_city_data(
         ac: AsyncClient,
-        new_city_data,
+        city_id,
         expected_status,
         detail,
-        message
+        message,
 ):
-    response = await ac.patch("/users/settings/change_city_data", json=new_city_data)
+    response = await ac.patch("/users/settings/change_city_data", json={"city_id": city_id})
 
     if detail:
         assert response.json()["detail"] == detail
@@ -461,5 +470,4 @@ async def test_get_my_city_info(ac: AsyncClient, city_data):
     response = await ac.get("/users/my_city_info")
 
     assert response.status_code == 307
-    assert response.headers["location"] == \
-           f"/weather/info?latitude={city_data['latitude']}&longitude={city_data['longitude']}&city={city_data['city']}"
+    assert response.headers["location"] == f"/weather/info?city_id={city_data['id']}"

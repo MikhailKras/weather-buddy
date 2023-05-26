@@ -6,32 +6,22 @@ from src.auth.email import Email
 from src.auth.jwt import create_registration_token
 
 
-async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyPatch):
-    city_data = {
-        "city": "Brussels",
-        "country": "Belgium",
-        "latitude": 50.85045,
-        "longitude": 4.34878
-    }
-
+async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyPatch, city_data, fill_city_table):
     response = await ac.get("/users/register/city")
 
     assert response.status_code == status.HTTP_200_OK
     assert "text/html" in response.headers["content-type"]
 
-    response = await ac.get(f"/users/register/city/choose_city_name", params={"city_input": city_data["city"]})
+    response = await ac.get(f"/users/register/city/choose_city_name", params={"city_input": city_data["name"]})
 
     assert response.status_code == status.HTTP_200_OK
     assert "text/html" in response.headers["content-type"]
 
-    response = await ac.post("/users/register/city", json=city_data)
+    response = await ac.post("/users/register/city", json={"city_id": city_data["id"]})
 
     assert response.status_code == status.HTTP_302_FOUND
     assert response.cookies.get("registration_token") == create_registration_token(
-        city_data["city"],
-        city_data["country"],
-        city_data["latitude"],
-        city_data["longitude"]
+        city_data["id"]
     )
 
     response = await ac.get("/users/register/details")

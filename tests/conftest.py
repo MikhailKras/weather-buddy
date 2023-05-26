@@ -70,7 +70,6 @@ async def fill_city_table(city_data):
         insert_query = insert(city).values(
             **city_data
         )
-
         await session.execute(insert_query)
         await session.commit()
 
@@ -78,10 +77,7 @@ async def fill_city_table(city_data):
 @pytest.fixture(scope="session")
 def registration_token(city_data):
     return create_registration_token(
-        city_data["city"],
-        city_data["country"],
-        city_data["latitude"],
-        city_data["longitude"]
+        city_id=1
     )
 
 
@@ -92,7 +88,7 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
-async def existing_user():
+async def existing_user(city_data):
     async with async_session_maker() as session:
         existing_user_data = {
             "username": "test_user",
@@ -102,10 +98,7 @@ async def existing_user():
             username=existing_user_data["username"],
             email=existing_user_data["email"],
             hashed_password="test",
-            city="test",
-            country="test",
-            latitude=0.0,
-            longitude=0.0
+            city_id=city_data["id"]
         )
         await session.execute(insert_query)
         await session.commit()
@@ -114,7 +107,7 @@ async def existing_user():
 
 
 @pytest.fixture
-async def existing_verifications():
+async def existing_verifications(city_data):
     async with async_session_maker() as session:
         data = [
             {
@@ -144,10 +137,7 @@ async def existing_verifications():
                 username=row["username"],
                 email=row["email"],
                 hashed_password="test",
-                city="test",
-                country="test",
-                latitude=0.0,
-                longitude=0.0
+                city_id=city_data["id"]
             )
             await session.execute(insert_query_user)
 
