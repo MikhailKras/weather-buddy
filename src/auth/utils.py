@@ -8,9 +8,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.models import user, email_verification
-from src.auth.schemas import UserInDB, UserEmailVerificationInfo
+from src.auth.schemas import UserInDB, UserEmailVerificationInfo, CityInDB
 from src.auth.security import verify_password
 from src.database import get_async_session
+from src.models import city
 
 
 class OAuth2PasswordBearerWithCookie(OAuth2):
@@ -99,3 +100,17 @@ async def get_user_email_verification_info(
         return
     user_email_verification_info_dict = {column_name: value for column_name, value in zip(column_names, row.tuple())}
     return UserEmailVerificationInfo(**user_email_verification_info_dict)
+
+
+async def get_user_city_data(
+        city_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    column_names = [column.name for column in city.columns]
+    select_query = select(city).where(city.c.id == city_id)
+    result = await session.execute(select_query)
+    row = result.fetchone()
+    if not row:
+        return
+    user_city_data_dict = {column_name: value for column_name, value in zip(column_names, row.tuple())}
+    return CityInDB(**user_city_data_dict)

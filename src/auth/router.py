@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import List
 
 import geonamescache
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
@@ -15,9 +16,11 @@ from src.auth.models import user, email_verification
 from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity, \
     UserEmailVerificationInfo
 from src.auth.security import get_password_hash, verify_password
-from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info
+from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
+from src.weather_service.schemas import CityInDB
+from src.weather_service.utils import search_cities_db
 
 router = APIRouter(
     prefix='/users',
@@ -35,19 +38,31 @@ async def register_step_1(request: Request, is_auth: bool = Depends(is_authentic
 
 
 @router.get('/{purpose}/city/choose_city_name', response_class=HTMLResponse)
-async def find_city_name_matches(request: Request, purpose: str, city_input: str, is_auth: bool = Depends(is_authenticated)):
+async def find_city_name_matches(
+        request: Request,
+        purpose: str,
+        city_input: str,
+        session: AsyncSession = Depends(get_async_session),
+        is_auth: bool = Depends(is_authenticated)
+):
     if purpose not in ('register', 'settings'):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid purpose!')
-    gc = geonamescache.GeonamesCache()
-    city_info = gc.search_cities(city_input.title())
+    city_info: List[CityInDB] = await search_cities_db(city_input.title(), session=session)
     if not city_info:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
-    city_names = [city_info[x]['name'] for x in range(len(city_info))]
-    country_codes = [city_info[x]['countrycode'] for x in range(len(city_info))]
-    countries_info: dict = gc.get_countries()
-    country_names = [countries_info.get(country_code)['name'] for country_code in country_codes]
-    coordinates = [{'latitude': city_info[x]['latitude'], 'longitude': city_info[x]['longitude']} for x in range(len(city_info))]
-    data = {'cities': [{'name': name, 'country': country, 'coordinates': coords} for name, country, coords in zip(city_names, country_names, coordinates)]}
+    data = {
+        "cities": [
+            {
+                "name": city_info[x].name,
+                "country": city_info[x].country,
+                "region": city_info[x].region,
+                "latitude": city_info[x].latitude,
+                "longitude": city_info[x].longitude,
+                "id": city_info[x].id
+            }
+            for x in range(len(city_info))
+        ]
+    }
     return templates.TemplateResponse(
         'auth/choose_city_name.html', context={"request": request, "data": data, "is_auth": is_auth, "purpose": purpose}
     )
@@ -57,7 +72,7 @@ async def find_city_name_matches(request: Request, purpose: str, city_input: str
 async def register_step_1_submit(
         city_data: UserCreateStep1
 ):
-    registration_token = create_registration_token(city_data.city, city_data.country, city_data.latitude, city_data.longitude)
+    registration_token = create_registration_token(city_data.city_id)
     redirect_url = '/users/register/details'
     response = RedirectResponse(redirect_url, status_code=status.HTTP_302_FOUND)
     response.set_cookie(key="registration_token", value=registration_token, httponly=True)
@@ -90,10 +105,7 @@ async def register_step_2_submit(
         username=user_data.username,
         email=user_data.email,
         hashed_password=get_password_hash(user_data.password),
-        city=city_data.city,
-        country=city_data.country,
-        latitude=city_data.latitude,
-        longitude=city_data.longitude
+        city_id=city_data.city_id
     ).returning(user.c.id)
 
     result = await session.execute(insert_query)
@@ -245,15 +257,18 @@ async def read_users_me(
         user_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session),
 ):
+    user_city_data: CityInDB = await get_user_city_data(user_data.city_id, session=session)
     user_email_verification_info: UserEmailVerificationInfo = await get_user_email_verification_info(user_data.id, session=session)
     data = {
         'username': user_data.username,
         'email': user_data.email,
         'is email verified': user_email_verification_info.verified,
-        'city': user_data.city,
-        'country': user_data.country,
-        'latitude': round(user_data.latitude, 2),
-        'longitude': round(user_data.longitude, 2),
+        'city': user_city_data.name,
+        'region': user_city_data.region,
+        'country': user_city_data.country,
+        'population': user_city_data.population,
+        'latitude': round(user_city_data.latitude, 2),
+        'longitude': round(user_city_data.longitude, 2),
         'registered at': user_data.registered_at.strftime("%B %d, %Y at %H:%M, UTC time"),
     }
     return templates.TemplateResponse('auth/user_data.html', context={"request": request, "user_data": data})
@@ -271,14 +286,18 @@ async def logout(is_auth: bool = Depends(is_authenticated)):
 async def get_account_settings(
         request: Request,
         user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session),
 ):
+    user_city_data: CityInDB = await get_user_city_data(user_data.city_id, session=session)
     data = {
         'username': user_data.username,
         'email': user_data.email,
-        'city': user_data.city,
-        'country': user_data.country,
-        'latitude': user_data.latitude,
-        'longitude': user_data.longitude,
+        'city': user_city_data.name,
+        'region': user_city_data.region,
+        'country': user_city_data.country,
+        'population': user_city_data.population,
+        'latitude': user_city_data.latitude,
+        'longitude': user_city_data.longitude,
         'registered_at': user_data.registered_at.strftime("%B %d, %Y at %I:%M %p"),
     }
     return templates.TemplateResponse('auth/settings.html', context={"request": request, "user_data": data})
@@ -329,17 +348,14 @@ async def change_city_data(
         session: AsyncSession = Depends(get_async_session),
 ):
 
-    if city_data.city == user_data.city and city_data.country == user_data.country:
+    if city_data.city_id == user_data.city_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="City already chosen"
         )
 
     update_query = update(user).where(user.c.username == user_data.username).values(
-        city=city_data.city,
-        country=city_data.country,
-        latitude=float(city_data.latitude),
-        longitude=float(city_data.longitude)
+        city_id=city_data.city_id
     )
 
     await session.execute(update_query)
@@ -389,7 +405,7 @@ async def delete_user(
 async def get_my_city_info(
     user_data: UserInDB = Depends(get_current_user),
 ):
-    url = f"/weather/info?latitude={user_data.latitude}&longitude={user_data.longitude}&city={user_data.city}"
+    url = f"/weather/info?city_id={user_data.city_id}"
     response = RedirectResponse(url)
 
     return response

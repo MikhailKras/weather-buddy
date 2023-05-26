@@ -1,5 +1,6 @@
 import datetime
 import re
+from typing import List
 
 from fastapi import HTTPException, status
 
@@ -10,10 +11,7 @@ PASSWORD_PATTERN = re.compile(r'(?=.*\d+.*)(?=.*[a-zA-Z]+.*)')
 
 
 class UserCreateStep1(BaseModel):
-    city: str
-    country: str
-    latitude: float
-    longitude: float
+    city_id: int
 
 
 class UserCreateStep2(BaseModel):
@@ -53,10 +51,7 @@ class UserUpdateData(BaseModel):
 
 
 class UserUpdateCity(BaseModel):
-    city: str
-    country: str
-    latitude: str
-    longitude: str
+    city_id: int
 
 
 class UserInDB(BaseModel):
@@ -64,12 +59,9 @@ class UserInDB(BaseModel):
     username: str
     email: EmailStr
     hashed_password: str
-    city: str
-    country: str
+    city_id: int
     registered_at: datetime.datetime
     disabled: bool
-    latitude: float
-    longitude: float
 
 
 class UserEmailVerificationInfo(BaseModel):
@@ -120,3 +112,15 @@ class PasswordChange(BaseModel):
                 detail='Length of new password must be more than 6 characters'
             )
         return values
+
+
+class CityInDB(BaseModel):
+    id: int
+    name: str
+    region: str
+    country: str
+    latitude: float
+    longitude: float
+    population: int
+    timezone: str
+    alternatenames: List[str]

@@ -23,18 +23,31 @@ Select City
   <table class="table text-white table-hover-cursor">
     <thead>
       <tr class="table-info">
-        <th scope="col">City</th>
-        <th scope="col">Country</th>
+        {% for column in data.cities[0].keys() %}
+        {% if column != 'id' %}
+        <th scope="col">{{ column.capitalize() }}</th>
+        {% endif %}
+        {% endfor %}
       </tr>
     </thead>
     <tbody>
       {% for city in data.cities %}
-      <tr onclick="redirectToCity('{{ city.name }}', '{{ city.country }}', '{{ city.coordinates.latitude }}', '{{ city.coordinates.longitude }}');">
-        <td>{{ city.name }}</td>
-        <td>{{ city.country }}</td>
+      <tr onclick="redirectToCity('{{ city.id }}');">
+        {% for key, value in city.items() %}
+        {% if key != 'id' %}
+        <td>
+          {% if value is number %}
+          {{ value|round(2) }}
+          {% else %}
+          {{ value|default('No data') }}
+          {% endif %}
+        </td>
+        {% endif %}
+        {% endfor %}
       </tr>
       {% endfor %}
     </tbody>
+
   </table>
   <div id="error-message-city" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;">
   </div>
@@ -47,16 +60,13 @@ Select City
   const errorMessageCity = document.getElementById('error-message-city');
   const successMessageCity = document.getElementById('success-message-city');
 
-  function redirectToCity(cityName, countryName, cityLatitude, cityLongitude) {
+  function redirectToCity(cityId) {
     const data = {
-      city: cityName,
-      country: countryName,
-      latitude: cityLatitude,
-      longitude: cityLongitude
+      city_id: cityId
     };
 
     errorMessageCity.style.display = "none";
-    
+
     let redirectUrl;
     let method;
 

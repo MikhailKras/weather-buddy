@@ -73,10 +73,7 @@ async def is_authenticated(
 
 
 def create_registration_token(
-        city: str,
-        country: str,
-        latitude: float,
-        longitude: float,
+        city_id: int,
         expires_delta: timedelta | None = None
 ) -> str:
     if expires_delta:
@@ -84,10 +81,7 @@ def create_registration_token(
     else:
         expire = datetime.utcnow() + timedelta(minutes=20)
     to_encode = {
-        "city": city,
-        "country": country,
-        "latitude": latitude,
-        "longitude": longitude,
+        "city_id": city_id,
         "exp": expire
     }
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY_REG, algorithm=ALGORITHM)

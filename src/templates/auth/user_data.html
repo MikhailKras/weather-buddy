@@ -4,16 +4,65 @@
 
 {% block content %}
 <div class="container my-4">
-  <h1>My data</h1>
-  <table class="table text-white">
-    <tbody>
-      {% for key, value in user_data.items() %}
-      <tr>
-        <th>{{ key.capitalize() }}</th>
-        <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <ul class="nav nav-tabs" id="userDataTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="dataTab" data-bs-toggle="tab" data-bs-target="#dataTabContent" type="button" role="tab" aria-controls="dataTabContent" aria-selected="true">Data</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="cityTab" data-bs-toggle="tab" data-bs-target="#cityTabContent" type="button" role="tab" aria-controls="cityTabContent" aria-selected="false">City</button>
+    </li>
+  </ul>
+  <div class="tab-content" id="userDataTabsContent">
+    <div class="tab-pane fade show active" id="dataTabContent" role="tabpanel" aria-labelledby="dataTab">
+      <div class="container my-5">
+        <h1>My Data</h1>
+        <table class="table text-white">
+          <tbody>
+            {% for key, value in user_data.items() %}
+            {% if key != 'city' and key != 'region' and key != 'country' and key != 'population' and key != 'latitude' and key != 'longitude' %}
+            <tr>
+              <th>{{ key.capitalize() }}</th>
+              <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="cityTabContent" role="tabpanel" aria-labelledby="cityTab">
+      <div class="container my-5">
+        <h1>City Information</h1>
+        <table class="table text-white">
+          <tbody>
+            <tr>
+              <th>City</th>
+              <td>{{ user_data.city }}</td>
+            </tr>
+            <tr>
+              <th>Region</th>
+              <td>{{ user_data.region|default('No data') }}</td>
+            </tr>
+            <tr>
+              <th>Country</th>
+              <td>{{ user_data.country|default('No data') }}</td>
+            </tr>
+            <tr>
+              <th>Population</th>
+              <td>{{ user_data.population|default('No data') }}</td>
+            </tr>
+            <tr>
+              <th>Latitude</th>
+              <td>{{ user_data.latitude|default('No data') }}</td>
+            </tr>
+            <tr>
+              <th>Longitude</th>
+              <td>{{ user_data.longitude|default('No data') }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
