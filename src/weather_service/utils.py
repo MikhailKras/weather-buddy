@@ -38,23 +38,25 @@ async def get_city_data_by_id(
     return CityInDB(**city_dict)
 
 
-async def process_weather_data(data):
+async def process_weather_data(weatherapi_data: dict, db_city_data: CityInDB = None):
     location_data = {
-        'location': data['location']['name'],
-        'region': data['location']['region'],
-        'country': data['location']['country'],
-        'latitude': data['location']['lat'],
-        'longitude': data['location']['lon'],
-        'timezone': data['location']['tz_id'],
-        'local time': data['location']['localtime'],
+        'location': weatherapi_data['location']['name'],
+        'region': weatherapi_data['location']['region'],
+        'country': weatherapi_data['location']['country'],
+        'latitude': weatherapi_data['location']['lat'],
+        'longitude': weatherapi_data['location']['lon'],
+        'timezone': weatherapi_data['location']['tz_id'],
+        'local time': weatherapi_data['location']['localtime'],
     }
     weather_data = {
-        'temperature, °C': data['current']['temp_c'],
-        'feels like, °C': data['current']['feelslike_c'],
-        'weather condition': data['current']['condition']['text'],
-        'last updated': data['current']['last_updated'],
-        'wind, kph': data['current']['wind_kph'],
-        'humidity, %': data['current']['humidity'],
-        'cloudiness, %': data['current']['cloud'],
+        'temperature, °C': weatherapi_data['current']['temp_c'],
+        'feels like, °C': weatherapi_data['current']['feelslike_c'],
+        'weather condition': weatherapi_data['current']['condition']['text'],
+        'last updated': weatherapi_data['current']['last_updated'],
+        'wind, kph': weatherapi_data['current']['wind_kph'],
+        'humidity, %': weatherapi_data['current']['humidity'],
+        'cloudiness, %': weatherapi_data['current']['cloud'],
     }
+    if db_city_data:
+        location_data.update(population=db_city_data.population)
     return location_data, weather_data

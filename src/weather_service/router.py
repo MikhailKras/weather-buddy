@@ -141,7 +141,7 @@ async def get_city_weather(
                 if 'error' in data:
                     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
 
-    location_data, weather_data = await process_weather_data(data)
+    location_data, weather_data = await process_weather_data(data, city_data)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
