@@ -18,13 +18,11 @@
         <h1>My Data</h1>
         <table class="table text-white">
           <tbody>
-            {% for key, value in user_data.items() %}
-            {% if key != 'city' and key != 'region' and key != 'country' and key != 'population' and key != 'latitude' and key != 'longitude' %}
+            {% for key, value in personal_data.items() %}
             <tr>
               <th>{{ key.capitalize() }}</th>
               <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
             </tr>
-            {% endif %}
             {% endfor %}
           </tbody>
         </table>
@@ -35,30 +33,12 @@
         <h1>City Information</h1>
         <table class="table text-white">
           <tbody>
+            {% for key, value in city_data.items() %}
             <tr>
-              <th>City</th>
-              <td>{{ user_data.city }}</td>
+              <th>{{ key.capitalize() }}</th>
+              <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
             </tr>
-            <tr>
-              <th>Region</th>
-              <td>{{ user_data.region|default('No data') }}</td>
-            </tr>
-            <tr>
-              <th>Country</th>
-              <td>{{ user_data.country|default('No data') }}</td>
-            </tr>
-            <tr>
-              <th>Population</th>
-              <td>{{ user_data.population|default('No data') }}</td>
-            </tr>
-            <tr>
-              <th>Latitude</th>
-              <td>{{ user_data.latitude|default('No data') }}</td>
-            </tr>
-            <tr>
-              <th>Longitude</th>
-              <td>{{ user_data.longitude|default('No data') }}</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>

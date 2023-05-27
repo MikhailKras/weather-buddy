@@ -259,19 +259,25 @@ async def read_users_me(
 ):
     user_city_data: CityInDB = await get_user_city_data(user_data.city_id, session=session)
     user_email_verification_info: UserEmailVerificationInfo = await get_user_email_verification_info(user_data.id, session=session)
-    data = {
+    personal_data = {
         'username': user_data.username,
         'email': user_data.email,
         'is email verified': user_email_verification_info.verified,
+        'registered at': user_data.registered_at.strftime("%B %d, %Y at %H:%M, UTC time"),
+    }
+    city_data = {
         'city': user_city_data.name,
         'region': user_city_data.region,
         'country': user_city_data.country,
         'population': user_city_data.population,
         'latitude': round(user_city_data.latitude, 2),
         'longitude': round(user_city_data.longitude, 2),
-        'registered at': user_data.registered_at.strftime("%B %d, %Y at %H:%M, UTC time"),
     }
-    return templates.TemplateResponse('auth/user_data.html', context={"request": request, "user_data": data})
+    return templates.TemplateResponse('auth/user_data.html', context={
+        "request": request,
+        "personal_data": personal_data,
+        "city_data": city_data
+    })
 
 
 @router.get("/logout", response_class=RedirectResponse)
