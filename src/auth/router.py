@@ -1,11 +1,11 @@
 from datetime import timedelta
 from typing import List
 
-import geonamescache
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
+from fastapi_limiter.depends import RateLimiter
 from sqlalchemy import insert, update, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -19,6 +19,7 @@ from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
+from src.rate_limiter.callback import default_callback
 from src.weather_service.schemas import CityInDB
 from src.weather_service.utils import search_cities_db
 
@@ -145,7 +146,7 @@ async def verify_email_page(
     return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token})
 
 
-@router.get('/verify-email/{token}')
+@router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=default_callback))])
 async def verify_email(
         token: str,
         session: AsyncSession = Depends(get_async_session)
@@ -191,7 +192,7 @@ async def get_send_verification_email_page(request: Request):
     return templates.TemplateResponse("auth/email_verification_form.html", {"request": request})
 
 
-@router.post('/email-verification')
+@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=default_callback))])
 async def send_verification_email(
         user_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
