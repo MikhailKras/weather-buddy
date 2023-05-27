@@ -1,19 +1,18 @@
 import asyncio
-import datetime
 from typing import AsyncGenerator
 
 import pytest
+from fastapi_limiter.depends import RateLimiter
 from httpx import AsyncClient
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from src.auth.jwt import get_current_city_data, create_registration_token, get_current_user
+from src.auth.jwt import create_registration_token
 from src.auth.models import user, email_verification
-from src.auth.schemas import UserCreateStep1, UserInDB
 from src.config import DB_USER_TEST, DB_PASS_TEST, DB_HOST_TEST, DB_PORT_TEST, DB_NAME_TEST
 from src.database import metadata, get_async_session
-from src.main import app
+from src.main import app, startup
 from src.models import city
 
 DATABASE_URL_TEST = f"postgresql+asyncpg://{DB_USER_TEST}:{DB_PASS_TEST}@{DB_HOST_TEST}:{DB_PORT_TEST}/{DB_NAME_TEST}"
@@ -29,6 +28,11 @@ async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 app.dependency_overrides[get_async_session] = override_get_async_session
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def run_startup_event():
+    await startup()
 
 
 @pytest.fixture(autouse=True, scope='session')

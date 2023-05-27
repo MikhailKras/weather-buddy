@@ -1,10 +1,12 @@
 import pytest
+from fastapi_limiter.depends import RateLimiter
 from httpx import AsyncClient
 
 import src
 from src.auth.email import Email
 from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserEmailVerificationInfo
+from src.config import RATE_LIMITER_FLAG
 from src.main import app
 
 pytest.importorskip("conftest_auth_router")
@@ -181,7 +183,7 @@ async def test_verify_email(ac: AsyncClient,
 
     monkeypatch.setattr(src.auth.router, "get_email_from_token", get_email_from_token_mock)
     monkeypatch.setattr(src.auth.router, "get_user_by_email", get_user_by_email_mock)
-    response = await ac.get(f"/users/verify-email/{token}")
+    response = await ac.get(f"/users/verify-email/{token}", headers={"Rate-Limiter-Flag": RATE_LIMITER_FLAG})
     assert response.status_code == expected_status
     if expected_detail:
         assert response.json()["detail"] == expected_detail
@@ -214,6 +216,9 @@ async def test_send_verification_email(ac: AsyncClient,
                                        fill_city_table,
                                        monkeypatch: pytest.MonkeyPatch,
                                        ):
+    async def override_rate_limiter(*args, **kwargs):
+        pass
+
     async def get_user_email_verification_info_mock(*args, **kwargs):
         return UserEmailVerificationInfo(id=user_id, user_id=user_id, token="test_token", verified=verified)
 
@@ -222,9 +227,10 @@ async def test_send_verification_email(ac: AsyncClient,
             raise Exception
         pass
 
+    monkeypatch.setattr("src.auth.router.RateLimiter", override_rate_limiter)
     monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
     monkeypatch.setattr(Email, "send_verification_code", send_verification_code_mock)
-    response = await ac.post("/users/email-verification")
+    response = await ac.post("/users/email-verification", headers={"Rate-Limiter-Flag": RATE_LIMITER_FLAG})
 
     assert response.status_code == expected_status
     if detail:
