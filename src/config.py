@@ -20,6 +20,11 @@ DB_NAME_TEST = os.getenv("DB_NAME_TEST")
 DB_USER_TEST = os.getenv("DB_USER_TEST")
 DB_PASS_TEST = os.getenv("DB_PASS_TEST")
 
+REDIS_HOST = os.environ.get("REDIS_HOST")
+REDIS_PORT = os.environ.get("REDIS_PORT")
+
+RATE_LIMITER_FLAG = os.environ.get("RATE_LIMITER_FLAG")
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = os.getenv('ALGORITHM')
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')
