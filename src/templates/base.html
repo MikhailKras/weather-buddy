@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <title>{% block title %} {% endblock %}</title>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', path='images/favicon/apple-touch-icon.png') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', path='images/favicon/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', path='images/favicon/favicon-16x16.png') }}">
@@ -16,12 +16,8 @@
       background-size: cover;
       background-repeat: no-repeat;
       color: whitesmoke;
-    }
-    .navbar {
-      height: 80px;
-      font-size: 1.4rem;
-      color: var(--bs-text-opacity);
-      background-color: var(--bs-primary);
+      overflow-x: hidden;
+      height: 100vh;
     }
     [id^="error-message"],
     [id^="success-message"] {
@@ -35,12 +31,15 @@
   {% block head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-primary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand p-0" href="/">
           <img src="{{ url_for('static', path='images/logo_weather_buddy.png') }}" alt="Logo" width="50" height="50" class="d-inline-block rounded">
-          <span class="navbar-text">WeatherBuddy</span>
+          WeatherBuddy
         </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav me-auto">
             <a class="nav-link active navbar-text" aria-current="page" href="/">Home</a>
@@ -48,8 +47,8 @@
             <a class="nav-link navbar-text" href="/about">About</a>
           </div>
           <div class="navbar-nav">
-            <a class="btn btn-primary" href="/users/login">Sign in</a>
-            <a class="btn btn-primary" href="/users/register/city">Sign up</a>
+            <a class="nav-link active navbar-text" href="/users/login">Sign in</a>
+            <a class="nav-link active navbar-text" href="/users/register/city">Sign up</a>
           </div>
         </div>
       </div>
