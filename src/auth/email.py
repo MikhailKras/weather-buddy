@@ -54,3 +54,6 @@ class Email:
 
     async def send_verification_code(self):
         await self.send_mail('Email Verification for WeatherBuddy (valid for 10 minutes)', 'auth/verification_message.html')
+
+    async def send_reset_password_mail(self):
+        await self.send_mail('Reset Password email for WeatherBuddy (valid for 10 minutes)', 'auth/reset_password/email_message.html')

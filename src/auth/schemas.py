@@ -124,3 +124,34 @@ class CityInDB(BaseModel):
     population: int
     timezone: str
     alternatenames: List[str]
+
+
+class EmailPasswordReset(BaseModel):
+    email: EmailStr
+
+
+class PasswordReset(BaseModel):
+    password: str
+    password_confirm: str
+
+    @root_validator
+    def check_passwords_match(cls, values):
+        password = values.get('password')
+        password_confirm = values.get('password_confirm')
+        if password != password_confirm:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='The provided passwords do not match'
+            )
+        if not re.match(PASSWORD_PATTERN, password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='New password must contain at least '
+                       'one digit, at least one letter'
+            )
+        if len(password) < 7:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Length of new password must be more than 6 characters'
+            )
+        return values

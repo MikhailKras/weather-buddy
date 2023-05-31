@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.schemas import TokenData, UserCreateStep1
 from src.auth.utils import get_user_by_username, OAuth2PasswordBearerWithCookie
-from src.config import SECRET_KEY, ALGORITHM, SECRET_KEY_REG, SECRET_KEY_EMAIL_VERIFICATION
+from src.config import SECRET_KEY, ALGORITHM, SECRET_KEY_REG, SECRET_KEY_EMAIL_VERIFICATION, SECRET_KEY_RESET_PASSWORD
 from src.database import get_async_session
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(tokenUrl="users/token", auto_error=False)
@@ -122,3 +122,27 @@ def get_email_from_token(token: str) -> str:
             detail="Invalid token",
         )
     return email
+
+
+def create_reset_password_token(user_id: int) -> str:
+    expire = datetime.utcnow() + timedelta(minutes=10)
+    to_encode = {"user_id": user_id, "exp": expire}
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY_RESET_PASSWORD, algorithm=ALGORITHM)
+    return encoded_jwt
+
+
+def get_user_id_from_token(token: str) -> int:
+    try:
+        payload = jwt.decode(token, SECRET_KEY_RESET_PASSWORD, algorithms=ALGORITHM)
+        user_id = payload.get("user_id")
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+            )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
+    return user_id

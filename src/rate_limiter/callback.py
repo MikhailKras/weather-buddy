@@ -8,7 +8,7 @@ from fastapi.responses import Response
 from src.config import RATE_LIMITER_FLAG
 
 
-async def default_callback(request: Request, response: Response, pexpire: int):
+async def custom_callback(request: Request, response: Response, pexpire: int):
     """
     default callback when too many requests
     :param request:
@@ -23,5 +23,7 @@ async def default_callback(request: Request, response: Response, pexpire: int):
     expire = ceil(pexpire / 1000)
 
     raise HTTPException(
-        status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Too Many Requests", headers={"Retry-After": str(expire)}
+        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+        detail=f"Too many requests. Please try again after {expire} seconds.",
+        headers={"Retry-After": str(expire)}
     )

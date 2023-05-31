@@ -11,15 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.email import Email
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data, \
-    create_email_verification_token, get_email_from_token
+    create_email_verification_token, get_email_from_token, create_reset_password_token, get_user_id_from_token
 from src.auth.models import user, email_verification
 from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity, \
-    UserEmailVerificationInfo
+    UserEmailVerificationInfo, EmailPasswordReset, PasswordReset
 from src.auth.security import get_password_hash, verify_password
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
-from src.rate_limiter.callback import default_callback
+from src.rate_limiter.callback import custom_callback
 from src.weather_service.schemas import CityInDB
 from src.weather_service.utils import search_cities_db
 
@@ -146,7 +146,7 @@ async def verify_email_page(
     return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token})
 
 
-@router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=default_callback))])
+@router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
 async def verify_email(
         token: str,
         session: AsyncSession = Depends(get_async_session)
@@ -192,7 +192,7 @@ async def get_send_verification_email_page(request: Request):
     return templates.TemplateResponse("auth/email_verification_form.html", {"request": request})
 
 
-@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=default_callback))])
+@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
 async def send_verification_email(
         user_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
@@ -416,3 +416,73 @@ async def get_my_city_info(
     response = RedirectResponse(url)
 
     return response
+
+
+@router.get("/password-reset", response_class=HTMLResponse)
+async def get_password_reset_page_with_email(request: Request, is_auth: bool = Depends(is_authenticated)):
+    if is_auth:
+        return RedirectResponse('/users/me')
+    return templates.TemplateResponse('auth/reset_password/get_email.html', context={"request": request})
+
+
+@router.post("/password-reset", dependencies=[Depends(RateLimiter(times=1, seconds=30, callback=custom_callback))])
+async def post_email_for_password_reset(
+        response: Response,
+        email_data: EmailPasswordReset,
+        session: AsyncSession = Depends(get_async_session),
+):
+    user_data = await get_user_by_email(email_data.email, session=session)
+
+    if user_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    user_email_verification_info = await get_user_email_verification_info(user_data.id, session=session)
+
+    if not user_email_verification_info.verified:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Email not verified")
+
+    reset_password_token = create_reset_password_token(user_data.id)
+    response.set_cookie(key="reset_password_token", value=reset_password_token, httponly=True)
+    url = f"{CLIENT_ORIGIN}/users/password-reset/form"
+
+    try:
+        await Email(user_data.username, url, [user_data.email]).send_reset_password_mail()
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Failed to send reset password email. Please try again later.")
+
+    return {"message": "Reset password email sent successfully"}
+
+
+@router.get("/password-reset/form")
+async def get_password_reset_page_with_passwords(
+        request: Request,
+):
+    token = request.cookies.get("reset_password_token")
+    user_id = get_user_id_from_token(token)
+    if user_id:
+        return templates.TemplateResponse("auth/reset_password/get_passwords.html", {"request": request, "token": token})
+
+
+@router.patch("/password-reset/update")
+async def reset_password(
+        request: Request,
+        password_reset: PasswordReset,
+        session: AsyncSession = Depends(get_async_session),
+):
+    token = request.cookies.get("reset_password_token")
+    user_id = get_user_id_from_token(token)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    update_query = update(user).where(user.c.id == user_id).values(
+        hashed_password=get_password_hash(password_reset.password)
+    )
+    await session.execute(update_query)
+    await session.commit()
+
+    return {"message": "Password updated successfully"}
