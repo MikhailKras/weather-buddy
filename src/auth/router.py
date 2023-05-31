@@ -16,7 +16,8 @@ from src.auth.models import user, email_verification
 from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity, \
     UserEmailVerificationInfo, EmailPasswordReset, PasswordReset
 from src.auth.security import get_password_hash, verify_password
-from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data
+from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data, \
+    get_user_by_user_id
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
 from src.rate_limiter.callback import custom_callback
@@ -476,7 +477,10 @@ async def reset_password(
 ):
     token = request.cookies.get("reset_password_token")
     user_id = get_user_id_from_token(token)
-    if user is None:
+
+    user_data = await get_user_by_user_id(user_id, session=session)
+
+    if user_data is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     update_query = update(user).where(user.c.id == user_id).values(

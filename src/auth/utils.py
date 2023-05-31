@@ -76,6 +76,20 @@ async def get_user_by_email(
     return UserInDB(**user_dict)
 
 
+async def get_user_by_user_id(
+        user_id: int,
+        session: AsyncSession = Depends(get_async_session)
+) -> Optional[UserInDB]:
+    column_names = [column.name for column in user.columns]
+    select_query = select(user).where(user.c.id == user_id)
+    result = await session.execute(select_query)
+    row = result.fetchone()
+    if not row:
+        return
+    user_dict = {column_name: value for column_name, value in zip(column_names, row.tuple())}
+    return UserInDB(**user_dict)
+
+
 async def authenticate_user(
         form_data: OAuth2PasswordRequestForm = Depends(),
         session: AsyncSession = Depends(get_async_session)
