@@ -35,6 +35,9 @@
         <img src="{{ url_for('static', path='images/logo_weather_buddy.png') }}" alt="Logo" width="50" height="50" class="d-inline-block rounded">
         <span class="navbar-text">WeatherBuddy</span>
       </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav me-auto">
           <a class="nav-link active navbar-text" aria-current="page" href="/">Home</a>
@@ -57,6 +60,9 @@
               <li><a class="dropdown-item" href="/users/logout">Logout</a></li>
             </ul>
           </div>
+          <a class="nav-link active navbar-text" href="https://github.com/MikhailKras/weather-buddy">
+            <img src="{{ url_for('static', path='images/github-mark-white.png') }}" alt="GitHub" width="25" height="25" class="d-inline-block align-text-top">
+          </a>
         </div>
       </div>
     </div>
