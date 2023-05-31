@@ -2,13 +2,12 @@ import asyncio
 from typing import AsyncGenerator
 
 import pytest
-from fastapi_limiter.depends import RateLimiter
 from httpx import AsyncClient
 from sqlalchemy import insert
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from src.auth.jwt import create_registration_token
+from src.auth.jwt import create_registration_token, create_reset_password_token
 from src.auth.models import user, email_verification
 from src.config import DB_USER_TEST, DB_PASS_TEST, DB_HOST_TEST, DB_PORT_TEST, DB_NAME_TEST
 from src.database import metadata, get_async_session
@@ -116,21 +115,21 @@ async def existing_verifications(city_data):
         data = [
             {
                 "username": "test_user_1",
-                "email": "test_user_1@test.test",
+                "email": "test_user_1@test.com",
                 "user_id": 1,
                 "token": "test_token_1",
                 "verified": False
             },
             {
                 "username": "test_user_2",
-                "email": "test_user_2@test.test",
+                "email": "test_user_2@test.com",
                 "user_id": 2,
                 "token": "test_token_2",
                 "verified": True
             },
             {
                 "username": "test_user_3",
-                "email": "test_user_3@test.test",
+                "email": "test_user_3@test.com",
                 "user_id": 3,
                 "token": "test_token_3",
                 "verified": False

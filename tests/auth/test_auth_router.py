@@ -1,10 +1,9 @@
 import pytest
-from fastapi_limiter.depends import RateLimiter
 from httpx import AsyncClient
 
 import src
 from src.auth.email import Email
-from src.auth.jwt import is_authenticated
+from src.auth.jwt import is_authenticated, create_reset_password_token
 from src.auth.schemas import UserEmailVerificationInfo
 from src.config import RATE_LIMITER_FLAG
 from src.main import app
@@ -199,6 +198,123 @@ async def test_get_send_verification_email_page(ac: AsyncClient):
 
 
 @pytest.mark.parametrize(
+    "is_auth, expected_status, location, content_type",
+    [
+        (True, 307, "/users/me", None),
+        (False, 200, None, "text/html")
+    ]
+)
+async def test_get_password_reset_page_with_email(
+        ac: AsyncClient,
+        is_auth,
+        expected_status,
+        location,
+        content_type
+):
+    def override_is_authenticated():
+        return is_auth
+
+    app.dependency_overrides[is_authenticated] = override_is_authenticated
+
+    response = await ac.get("/users/password-reset")
+
+    assert response.status_code == expected_status
+
+    if location:
+        assert response.headers["location"] == location
+
+    if content_type:
+        assert content_type in response.headers["content-type"]
+
+
+@pytest.mark.parametrize(
+    "email_data, user_id, verified, expected_status, message, detail",
+    [
+        ({"email": "test_user_1@test.com"}, 1, False, 403, None, "Email not verified"),
+        ({"email": "test_user_2@test.com"}, 2, True, 200, "Reset password email sent successfully", None),
+        ({"email": "user_not_found@test.com"}, 3, False, 404, None, "User not found")
+    ]
+)
+async def test_post_email_for_password_reset(
+        ac: AsyncClient,
+        existing_verifications,
+        email_data,
+        user_id,
+        verified,
+        expected_status,
+        message,
+        detail,
+        fill_city_table,
+        monkeypatch: pytest.MonkeyPatch,
+):
+
+    async def send_reset_password_mail_mock(*args, **kwargs):
+        pass
+
+    async def get_user_email_verification_info_mock(*args, **kwargs):
+        return UserEmailVerificationInfo(id=user_id, user_id=user_id, token="test_token", verified=verified)
+
+    monkeypatch.setattr(Email, "send_reset_password_mail", send_reset_password_mail_mock)
+    monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
+
+    response = await ac.post("/users/password-reset", headers={"Rate-Limiter-Flag": RATE_LIMITER_FLAG}, json=email_data)
+
+    assert response.status_code == expected_status
+
+    if message:
+        assert response.json()["message"] == message
+
+    if detail:
+        assert response.json()["detail"] == detail
+
+
+async def test_get_password_reset_page_with_passwords(
+        ac: AsyncClient,
+):
+    reset_password_token_value = create_reset_password_token(
+        user_id=1
+    )
+    ac.cookies.set("reset_password_token", reset_password_token_value)
+    response = await ac.get("/users/password-reset/form")
+
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+
+
+@pytest.mark.parametrize(
+    "user_id, expected_status, detail, message",
+    [
+        (1, 200, None, "Password updated successfully"),
+        (1000, 404, "User not found", None)
+    ]
+)
+async def test_reset_password(
+        ac: AsyncClient,
+        existing_verifications,
+        user_id,
+        expected_status,
+        detail,
+        message,
+        fill_city_table
+):
+    reset_password_token_value = create_reset_password_token(
+        user_id=user_id
+    )
+    password_reset = {
+        "password": "string1",
+        "password_confirm": "string1"
+    }
+    ac.cookies.set("reset_password_token", reset_password_token_value)
+    response = await ac.patch("/users/password-reset/update", json=password_reset)
+
+    assert response.status_code == expected_status
+    if detail:
+        assert response.json()["detail"] == detail
+    if message:
+        assert response.json()["message"] == message
+
+
+@pytest.mark.parametrize(
     "user_id, verified, expected_status, detail, message",
     [
         (1, False, 200, None, "Verification email sent successfully"),
@@ -216,9 +332,6 @@ async def test_send_verification_email(ac: AsyncClient,
                                        fill_city_table,
                                        monkeypatch: pytest.MonkeyPatch,
                                        ):
-    async def override_rate_limiter(*args, **kwargs):
-        pass
-
     async def get_user_email_verification_info_mock(*args, **kwargs):
         return UserEmailVerificationInfo(id=user_id, user_id=user_id, token="test_token", verified=verified)
 
@@ -227,7 +340,6 @@ async def test_send_verification_email(ac: AsyncClient,
             raise Exception
         pass
 
-    monkeypatch.setattr("src.auth.router.RateLimiter", override_rate_limiter)
     monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
     monkeypatch.setattr(Email, "send_verification_code", send_verification_code_mock)
     response = await ac.post("/users/email-verification", headers={"Rate-Limiter-Flag": RATE_LIMITER_FLAG})
