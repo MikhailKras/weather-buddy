@@ -1,7 +1,6 @@
 from typing import Callable, List
 
 import aiohttp
-import geonamescache
 
 from fastapi import APIRouter, Request, Depends, HTTPException, status
 from fastapi.exceptions import RequestValidationError
