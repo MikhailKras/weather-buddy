@@ -274,8 +274,9 @@ async def test_get_password_reset_page_with_passwords(
     reset_password_token_value = create_reset_password_token(
         user_id=1
     )
-    ac.cookies.set("reset_password_token", reset_password_token_value)
-    response = await ac.get("/users/password-reset/form")
+    response = await ac.get(
+        f"/users/password-reset/form/{reset_password_token_value}"
+    )
 
     assert response.status_code == 200
     assert "text/html" in response.headers["content-type"]
@@ -304,8 +305,10 @@ async def test_reset_password(
         "password": "string1",
         "password_confirm": "string1"
     }
-    ac.cookies.set("reset_password_token", reset_password_token_value)
-    response = await ac.patch("/users/password-reset/update", json=password_reset)
+    response = await ac.patch(
+        f"/users/password-reset/update/{reset_password_token_value}",
+        json=password_reset
+    )
 
     assert response.status_code == expected_status
     if detail:
@@ -544,7 +547,7 @@ async def test_change_city_data(
             "current_password": "correct_password1",
             "repeat_password": "correct_password1",
             "new_password": "short1"
-        }, "correct_password1", 400, None, "Length of new password must be more than 6 characters"),
+        }, "correct_password1", 400, None, "Password must contain at least 7 characters"),
         ({
             "current_password": "incorrect_password1",
             "repeat_password": "incorrect_password1",
