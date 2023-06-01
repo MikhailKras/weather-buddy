@@ -26,3 +26,6 @@ weather_requests.py
 # vim temporary files
 *~
 .*.sw?
+
+# redis
+dump.rdb
