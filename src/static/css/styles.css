@@ -1,45 +1,44 @@
 body {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-color: #1C0459;
-    color: whitesmoke;
-    overflow-x: hidden;
-    height: 100vh;
-  }
-  
-  [id^="error-message"],
-  [id^="success-message"] {
-    margin-top: 20px;
-  }
-  
-  tr:hover {
-    background-color: rgb(0, 0, 0);
-  }
-  
-  .navbar-nav {
-    display: flex;
-    align-items: center;
-  }
-  
-  .vertical-line {
-    width: 1px;
-    height: 25px;
-    background-color: #fff;
-    margin: 0 10px;
-  }
-  
-  .frame-link {
-    border: 1px solid #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-  }
-  
-  .frame-link:hover {
-    background-color: #4A4A48;
-  }
-  
-  .navbar-text:hover {
-    color: #D8D8F6;
-  }
-  
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #1c0459;
+  color: whitesmoke;
+  overflow-x: hidden;
+  height: 100vh;
+}
+
+[id^="error-message"],
+[id^="success-message"] {
+  margin-top: 20px;
+}
+
+tr:hover {
+  background-color: rgb(0, 0, 0);
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.vertical-line {
+  width: 1px;
+  height: 25px;
+  background-color: #fff;
+  margin: 0 10px;
+}
+
+.frame-link {
+  border: 1px solid #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.frame-link:hover {
+  background-color: #4a4a48;
+}
+
+.navbar-text:hover {
+  color: #d8d8f6;
+}
