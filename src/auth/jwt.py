@@ -109,6 +109,8 @@ def create_email_verification_token(email: str) -> str:
 
 def get_email_from_token(token: str) -> str:
     try:
+        if token is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token not found")
         payload = jwt.decode(token, SECRET_KEY_EMAIL_VERIFICATION, algorithms=ALGORITHM)
         email = payload.get("email")
         if email is None:
@@ -133,6 +135,8 @@ def create_reset_password_token(user_id: int) -> str:
 
 def get_user_id_from_token(token: str) -> int:
     try:
+        if token is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token not found")
         payload = jwt.decode(token, SECRET_KEY_RESET_PASSWORD, algorithms=ALGORITHM)
         user_id = payload.get("user_id")
         if user_id is None:
