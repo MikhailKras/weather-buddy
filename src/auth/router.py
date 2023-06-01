@@ -447,8 +447,7 @@ async def post_email_for_password_reset(
                             detail="Email not verified")
 
     reset_password_token = create_reset_password_token(user_data.id)
-    response.set_cookie(key="reset_password_token", value=reset_password_token, httponly=True)
-    url = f"{CLIENT_ORIGIN}/users/password-reset/form"
+    url = f"{CLIENT_ORIGIN}/users/password-reset/form/{reset_password_token}"
 
     try:
         await Email(user_data.username, url, [user_data.email]).send_reset_password_mail()
@@ -459,23 +458,22 @@ async def post_email_for_password_reset(
     return {"message": "Reset password email sent successfully"}
 
 
-@router.get("/password-reset/form")
+@router.get("/password-reset/form/{token}")
 async def get_password_reset_page_with_passwords(
         request: Request,
+        token: str
 ):
-    token = request.cookies.get("reset_password_token")
     user_id = get_user_id_from_token(token)
     if user_id:
         return templates.TemplateResponse("auth/reset_password/get_passwords.html", {"request": request, "token": token})
 
 
-@router.patch("/password-reset/update")
+@router.patch("/password-reset/update/{token}")
 async def reset_password(
-        request: Request,
+        token: str,
         password_reset: PasswordReset,
         session: AsyncSession = Depends(get_async_session),
 ):
-    token = request.cookies.get("reset_password_token")
     user_id = get_user_id_from_token(token)
 
     user_data = await get_user_by_user_id(user_id, session=session)
