@@ -67,6 +67,7 @@ async def find_city_name_matches(
                 "region": city_info[x].region,
                 "latitude": city_info[x].latitude,
                 "longitude": city_info[x].longitude,
+                "population": city_info[x].population,
                 "id": city_info[x].id
             }
             for x in range(len(city_info))
