@@ -40,7 +40,7 @@ class UserCreateStep2(BaseModel):
         if len(password) < 7:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail='Length of password must be more than 6 characters'
+                detail='Password must contain at least 7 characters'
             )
         return password
 
@@ -109,7 +109,7 @@ class PasswordChange(BaseModel):
         if len(new_password) < 7:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail='Length of new password must be more than 6 characters'
+                detail='Password must contain at least 7 characters'
             )
         return values
 
@@ -152,6 +152,6 @@ class PasswordReset(BaseModel):
         if len(password) < 7:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail='Length of new password must be more than 6 characters'
+                detail='Password must contain at least 7 characters'
             )
         return values
