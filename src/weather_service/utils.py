@@ -14,7 +14,7 @@ async def search_cities_db(
         session: AsyncSession = Depends(get_async_session)
 ) -> List[CityInDB]:
     column_names = [column.name for column in city.columns]
-    select_query = select(city)
+    select_query = select(city).order_by(city.c.population.desc())
     result = await session.execute(select_query)
     cities_in_db = result.fetchall()
     cities_in_db_with_column_names = [{column_name: value for column_name, value in zip(column_names, row)} for row in cities_in_db]
