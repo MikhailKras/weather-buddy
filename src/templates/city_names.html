@@ -1,54 +1,37 @@
-{% if is_auth %}
-{% extends 'auth/base.html' %}
-{% else %}
-{% extends 'base.html' %}
-{% endif %}
-
-{% block title %}City Weather{% endblock %}
-
-{% block content %}
-<style>
-  .table-hover-cursor:hover {
-    cursor: pointer;
-  }
-</style>
+{% if is_auth %} {% extends 'auth/base.html' %} {% else %} {% extends
+'base.html' %} {% endif %} {% block title %}City Weather{% endblock %} {% block
+content %}
 <div class="container my-5">
   <h1>Choose your city</h1>
-  <table class="table text-white table-hover-cursor">
-    <thead>
-      <tr class="table-info">
-        {% for column in data.cities[0].keys() %}
-        {% if column != 'id' %}
-        <th scope="col">{{ column.capitalize() }}</th>
-        {% endif %}
+  <div class="table-responsive">
+    <table class="table table-dark table-hover-cursor table-hover">
+      <thead>
+        <tr class="table-info">
+          {% for column in data.cities[0].keys() %} {% if column != 'id' %}
+          <th scope="col">{{ column.capitalize() }}</th>
+          {% endif %} {% endfor %}
+        </tr>
+      </thead>
+      <tbody class="fs-5">
+        {% for city in data.cities %}
+        <tr onclick="redirectToCity('{{ city.id }}');">
+          {% for key, value in city.items() %} {% if key != 'id' %}
+          <td>
+            {% if value is number %} {{ value|round(2) }} {% else %} {{
+            value|default('No data') }} {% endif %}
+          </td>
+          {% endif %} {% endfor %}
+        </tr>
         {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for city in data.cities %}
-      <tr onclick="redirectToCity('{{ city.id }}');">
-        {% for key, value in city.items() %}
-        {% if key != 'id' %}
-        <td>
-          {% if value is number %}
-          {{ value|round(2) }}
-          {% else %}
-          {{ value|default('No data') }}
-          {% endif %}
-        </td>
-        {% endif %}
-        {% endfor %}
-      </tr>
-      {% endfor %}
-    </tbody>
-
-  </table>
-
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
   function redirectToCity(cityId) {
-    window.location.href = "/weather/info?city_id=" + encodeURIComponent(cityId);
+    window.location.href =
+      "/weather/info?city_id=" + encodeURIComponent(cityId);
   }
 </script>
 {% endblock %}
