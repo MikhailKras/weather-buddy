@@ -1,46 +1,103 @@
-{% extends "base.html" %}
-
-{% block title %}Sign in{% endblock %}
-
-{% block content %}
-  <div class="container my-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-6">
-        <div class="card border-0 shadow-sm bg-transparent text-white">
-          <div class="card-header bg-transparent border-0">
-            <h3 class="card-title text-center my-3">Sign in to WeatherBuddy</h3>
+{% extends "base.html" %} {% block title %}Sign in{% endblock %} {% block
+content %}
+<div
+  class="container-fluid container-login position-absolute top-50 start-50 translate-middle"
+>
+  <div class="">
+    <div class="card border-0 shadow-sm bg-transparent text-white">
+      <div class="card-header bg-transparent border-0">
+        <h3 class="card-title text-center my-3 fs-1">
+          Sign in to WeatherBuddy
+        </h3>
+      </div>
+      <div class="card-body">
+        <form id="login-form">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control bg-dark text-white"
+              name="username"
+              id="username"
+              placeholder="Username"
+              required
+            />
+            <label for="username" class="text-white">Username</label>
           </div>
-          <div class="card-body">
-            <form id="login-form">
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control bg-dark text-white" name="username" id="username" placeholder="Username" required>
-                <label for="username" class="text-white">Username</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="password" class="form-control bg-dark text-white" name="password" id="password" placeholder="Password" required>
-                <label for="password" class="text-white">Password</label>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Sign in!</button>
-              </div>
-            </form>
-            <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
-            <div id="success-message" class="alert alert-success bg-success text-white" role="alert" style="display: none;"></div>
-            <div class="text-center mt-3">
-              <a href="/users/password-reset" class="link-info link-opacity-75">Forgot password?</a>
+          <div class="input-group mb-3">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control bg-dark text-white"
+                name="password"
+                id="password"
+                placeholder="Password"
+                required
+              />
+              <label for="password" class="text-white">Password</label>
             </div>
+            <span class="input-group-text"
+              ><i class="bi bi-eye-slash" id="togglePassword"></i
+            ></span>
           </div>
-          <div class="card-footer bg-transparent border-0">
-            <div class="text-center">
-              <div class="container">
-                <p>New to WeatherBuddy? <a href="/users/register/city" class="link-info link-opacity-75">Create an account</a></p>
-              </div>
-            </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-bd-primary btn-lg">
+              Sign in!
+            </button>
+          </div>
+        </form>
+        <div
+          id="error-message"
+          class="alert alert-danger bg-danger text-white"
+          role="alert"
+          style="display: none"
+        ></div>
+        <div
+          id="success-message"
+          class="alert alert-success bg-success text-white"
+          role="alert"
+          style="display: none"
+        ></div>
+        <div class="text-center mt-3">
+          <a href="/users/password-reset" class="fs-5 link-info link-opacity-75"
+            >Forgot password?</a
+          >
+        </div>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <div class="text-center">
+          <div class="container fs-5">
+            <p>
+              New to WeatherBuddy?
+              <a href="/users/register/city" class="link-info link-opacity-75"
+                >Create an account</a
+              >
+            </p>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="{{ url_for('static', path='js/login.js') }}"></script>
+<style>
+  form i {
+    cursor: pointer;
+  }
+</style>
+
+<script src="{{ url_for('static', path='js/login.js') }}"></script>
+
+<script>
+  const togglePassword = document.querySelector("#togglePassword");
+  const password = document.querySelector("#password");
+  togglePassword.addEventListener("click", () => {
+    // Toggle the type attribute using
+    // getAttribure() method
+    const type =
+      password.getAttribute("type") === "password" ? "text" : "password";
+    password.setAttribute("type", type);
+    // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye");
+  });
+</script>
 {% endblock %}
