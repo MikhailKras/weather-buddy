@@ -59,3 +59,28 @@ tr:hover {
   left: 0;
   z-index: 1030;
 }
+
+.btn-bd-primary {
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: var(--bs-white);
+  --bs-btn-bg: #df2935;
+  --bs-btn-border-color: #df2935;
+  --bs-btn-hover-color: var(--bs-white);
+  --bs-btn-hover-bg: #b42029;
+  --bs-btn-hover-border-color: #b42029;
+  --bs-btn-focus-shadow-rgb: #df2935;
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: #8f1c24;
+  --bs-btn-active-border-color: #8f1c24;
+}
+
+.container-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media (max-height: 700px) {
+  .container-login {
+    margin-top: 100px;
+  }
+}
