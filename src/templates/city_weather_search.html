@@ -1,79 +1,160 @@
-{% if is_auth %}
-  {% extends 'auth/base.html' %}
-{% else %}
-  {% extends 'base.html' %}
-{% endif %}
-
-{% block title %}Search weather city{% endblock %}
-
-{% block content %}
-  <div class="container my-5">
-    <ul class="nav nav-tabs" id="weatherTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="cityTab" data-bs-toggle="tab" data-bs-target="#cityTabContent" type="button" role="tab" aria-controls="cityTabContent" aria-selected="true">Search by City</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="coordsTab" data-bs-toggle="tab" data-bs-target="#coordsTabContent" type="button" role="tab" aria-controls="coordsTabContent" aria-selected="false">Search by Coordinates</button>
-      </li>
-    </ul>
-    <div class="tab-content" id="weatherTabsContent">
-      <div class="tab-pane fade show active" id="cityTabContent" role="tabpanel" aria-labelledby="cityTab">
-        <p>Use the form below to search for weather information of any city in the world:</p>
+{% if is_auth %} {% extends 'auth/base.html' %} {% else %} {% extends
+'base.html' %} {% endif %} {% block title %}Search weather city{% endblock %} {%
+block content %}
+<div class="container-fluid h-100">
+  <ul
+    class="fs-3 nav nav-tabs border-bottom border-3 border-white"
+    id="weatherTabs"
+    role="tablist"
+  >
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="cityTab"
+        data-bs-toggle="tab"
+        data-bs-target="#cityTabContent"
+        type="button"
+        role="tab"
+        aria-controls="cityTabContent"
+        aria-selected="true"
+      >
+        Search by City
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="coordsTab"
+        data-bs-toggle="tab"
+        data-bs-target="#coordsTabContent"
+        type="button"
+        role="tab"
+        aria-controls="coordsTabContent"
+        aria-selected="false"
+      >
+        Search by Coordinates
+      </button>
+    </li>
+  </ul>
+  <div
+    class="tab-content mt-3 position-absolute top-50 start-50 translate-middle w-100"
+    id="weatherTabsContent"
+  >
+    <div
+      class="tab-pane fade show active"
+      id="cityTabContent"
+      role="tabpanel"
+      aria-labelledby="cityTab"
+    >
+      <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-7">
             <form onsubmit="searchByCity(event)">
               <div class="input-group mb-3">
-                <input id="city" type="text" class="form-control" placeholder="Enter a city name" required>
-                <button class="btn btn-primary" type="submit">Get Weather</button>
+                <span class="input-group-text fs-4">🔍</span>
+                <div class="form-floating">
+                  <input
+                    id="city"
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter a city name"
+                    required
+                  />
+                  <label for="city">City name</label>
+                </div>
+              </div>
+              <div class="d-grid">
+                <button
+                  class="btn btn-lg btn-block fs-3 btn-bd-primary"
+                  type="submit"
+                >
+                  Get Weather & Location
+                </button>
               </div>
             </form>
-            <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
+            <div
+              id="error-message"
+              class="alert alert-danger bg-danger text-white"
+              role="alert"
+              style="display: none"
+            ></div>
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="coordsTabContent" role="tabpanel" aria-labelledby="coordsTab">
-        <p>Use the form below to search for weather information using latitude and longitude:</p>
+    </div>
+    <div
+      class="tab-pane fade"
+      id="coordsTabContent"
+      role="tabpanel"
+      aria-labelledby="coordsTab"
+    >
+      <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-7">
             <form onsubmit="searchByCoords(event)">
-              <div class="input-group mb-3">
-                <input
-                  id="latitude"
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter latitude"
-                  required
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  title="Latitude: The valid latitude values range from -90 degrees (south pole) to +90 degrees (north pole). The equator is at 0 degrees latitude."
+              <div class="row mb-3">
+                <div class="col">
+                  <div class="form-floating">
+                    <input
+                      id="latitude"
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter latitude"
+                      required
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title="Latitude: The valid latitude values range from -90 degrees (south pole) to +90 degrees (north pole). The equator is at 0 degrees latitude."
+                    />
+                    <label for="latitude">Latitude</label>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-floating">
+                    <input
+                      id="longitude"
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter longitude"
+                      required
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title="Longitude: The valid longitude values range from -180 degrees to +180 degrees. The prime meridian is at 0 degrees longitude."
+                    />
+                    <label for="longitude">Longitude</label>
+                  </div>
+                </div>
+              </div>
+              <div class="d-grid">
+                <button
+                  class="btn btn-lg btn-block fs-3 btn-bd-primary"
+                  type="submit"
                 >
-                <input
-                  id="longitude"
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter longitude"
-                  required
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  title="Longitude: The valid longitude values range from -180 degrees to +180 degrees. The prime meridian is at 0 degrees longitude."
-                >
-                <button class="btn btn-primary" type="submit">Get Weather</button>
+                  Get Weather & Location
+                </button>
               </div>
             </form>
-            <div id="error-message-coords" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
+            <div
+              id="error-message-coords"
+              class="alert alert-danger bg-danger text-white"
+              role="alert"
+              style="display: none"
+            ></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="{{ url_for('static', path='js/weather_service/search.js') }}"></script>
+<script src="{{ url_for('static', path='js/weather_service/search.js') }}"></script>
 
-  <script>
-    // Enable Bootstrap tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-  </script>
+<script>
+  // Enable Bootstrap tooltips
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
 {% endblock %}
