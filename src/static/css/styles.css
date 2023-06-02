@@ -5,6 +5,7 @@ body {
   color: whitesmoke;
   overflow-x: hidden;
   height: 100vh;
+  padding-top: 70px;
 }
 
 [id^="error-message"],
@@ -41,4 +42,20 @@ tr:hover {
 
 .navbar-text:hover {
   color: #d8d8f6;
+}
+
+.feature-text {
+  color: whitesmoke;
+}
+
+.table-hover-cursor:hover {
+  cursor: pointer;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
 }
