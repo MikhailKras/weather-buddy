@@ -13,10 +13,6 @@ body {
   margin-top: 20px;
 }
 
-tr:hover {
-  background-color: rgb(0, 0, 0);
-}
-
 .navbar-nav {
   display: flex;
   align-items: center;
@@ -48,8 +44,12 @@ tr:hover {
   color: whitesmoke;
 }
 
-.table-hover-cursor:hover {
+.table-hover-cursor:hover tr {
   cursor: pointer;
+}
+
+.table-hover-cursor:hover th {
+  cursor: default;
 }
 
 .fixed-top {
@@ -86,7 +86,7 @@ tr:hover {
 }
 
 .header-margin-top {
-  margin-bottom: 70px;
+  margin-bottom: 30px;
 }
 
 form i {
@@ -112,4 +112,31 @@ a.my-link:visited {
 a.my-link:hover {
   text-decoration: underline;
   color: #d8d8f6;
+}
+
+.table-custom {
+  border-collapse: collapse;
+  background: linear-gradient(45deg, #1768ac, #db2955);
+}
+
+.table-custom td,
+.table-custom th {
+  border: 3px solid #50d8d7;
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+  color: white;
+}
+
+.table-custom tr {
+  font-size: 1.6rem;
+  font-style: italic;
+}
+
+.table-custom tr:hover {
+  background: linear-gradient(45deg, #1768ac, #ff6b35);
+}
+
+svg:hover {
+  fill: #eada5c;
 }
