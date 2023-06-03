@@ -1,42 +1,93 @@
-{% extends "auth/base.html" %}
-
-{% block title %}My data{% endblock %}
-
-{% block content %}
-<div class="container my-4">
-  <ul class="nav nav-tabs" id="userDataTabs" role="tablist">
+{% extends "auth/base.html" %} {% block title %}My data{% endblock %} {% block
+content %}
+<div class="container-fluid h-100">
+  <ul
+    class="fs-3 nav nav-tabs border-bottom border-3 border-white"
+    id="userDataTabs"
+    role="tablist"
+  >
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="dataTab" data-bs-toggle="tab" data-bs-target="#dataTabContent" type="button" role="tab" aria-controls="dataTabContent" aria-selected="true">Data</button>
+      <button
+        class="nav-link active"
+        id="dataTab"
+        data-bs-toggle="tab"
+        data-bs-target="#dataTabContent"
+        type="button"
+        role="tab"
+        aria-controls="dataTabContent"
+        aria-selected="true"
+      >
+        Data
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="cityTab" data-bs-toggle="tab" data-bs-target="#cityTabContent" type="button" role="tab" aria-controls="cityTabContent" aria-selected="false">City</button>
+      <button
+        class="nav-link"
+        id="cityTab"
+        data-bs-toggle="tab"
+        data-bs-target="#cityTabContent"
+        type="button"
+        role="tab"
+        aria-controls="cityTabContent"
+        aria-selected="false"
+      >
+        City
+      </button>
     </li>
   </ul>
   <div class="tab-content" id="userDataTabsContent">
-    <div class="tab-pane fade show active" id="dataTabContent" role="tabpanel" aria-labelledby="dataTab">
-      <div class="container my-5">
-        <h1>My Data</h1>
-        <table class="table text-white">
-          <tbody>
+    <div
+      class="tab-pane fade show active"
+      id="dataTabContent"
+      role="tabpanel"
+      aria-labelledby="dataTab"
+    >
+      <div class="container my-5 table-responsive">
+        <h1 class="d-flex justify-content-center">My Data</h1>
+        <table
+          class="table table-dark d-flex justify-content-center table-hover"
+        >
+          <tbody class="fs-3">
             {% for key, value in personal_data.items() %}
-            <tr>
+            <tr class="text-center">
               <th>{{ key.capitalize() }}</th>
-              <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
+              <td>
+                {% if value == True %}Yes{% elif value == False %}No{% else %}{{
+                value }}{% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
+        <div class="text-center">
+          <div class="container fs-4">
+            <p>
+              You can change the data
+              <a href="/users/settings" class="my-link ink-opacity-100">here</a>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="tab-pane fade" id="cityTabContent" role="tabpanel" aria-labelledby="cityTab">
-      <div class="container my-5">
-        <h1>City Information</h1>
-        <table class="table text-white">
-          <tbody>
+    <div
+      class="tab-pane fade"
+      id="cityTabContent"
+      role="tabpanel"
+      aria-labelledby="cityTab"
+    >
+      <div class="container my-5 table-responsive">
+        <h1 class="d-flex justify-content-center">City Information</h1>
+        <table
+          class="table table-dark d-flex justify-content-center table-hover"
+        >
+          <tbody class="fs-3">
             {% for key, value in city_data.items() %}
-            <tr>
+            <tr class="text-center">
               <th>{{ key.capitalize() }}</th>
-              <td>{% if value == True %}Yes{% elif value == False %}No{% else %}{{ value }}{% endif %}</td>
+              <td>
+                {% if value == True %}Yes{% elif value == False %}No{% else %}{{
+                value }}{% endif %}
+              </td>
             </tr>
             {% endfor %}
           </tbody>
