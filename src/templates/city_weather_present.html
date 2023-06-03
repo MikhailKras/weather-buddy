@@ -55,12 +55,10 @@ content %}
             >{{ weather_data["temperature, °C"] }} °C</span
           >
         </div>
-        <table
-          class="table table-dark d-flex justify-content-center table-hover"
-        >
-          <tbody class="fs-3">
+        <table class="table-custom mx-auto">
+          <tbody>
             {% for key, value in weather_data.items() %}
-            <tr class="text-center">
+            <tr>
               {% if key != "img url" %}
               <td>{{ key.capitalize() }}</td>
               <td>{{ value|default('No data') }}</td>
@@ -82,12 +80,10 @@ content %}
           Location Information for {{ location_data.location }}, {{
           location_data.country }}
         </h1>
-        <table
-          class="table table-dark d-flex justify-content-center table-hover"
-        >
-          <tbody class="fs-3">
+        <table class="table-custom mx-auto">
+          <tbody>
             {% for key, value in location_data.items() %}
-            <tr class="text-center">
+            <tr>
               <td>{{ key.capitalize() }}</td>
               <td>{{ value|default('No data', true) }}</td>
             </tr>

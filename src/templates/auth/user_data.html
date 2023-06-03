@@ -43,13 +43,11 @@ content %}
       aria-labelledby="dataTab"
     >
       <div class="container my-5 table-responsive">
-        <h1 class="d-flex justify-content-center">My Data</h1>
-        <table
-          class="table table-dark d-flex justify-content-center table-hover"
-        >
-          <tbody class="fs-3">
+        <h1 class="d-flex justify-content-center header-margin-top">My Data</h1>
+        <table class="table-custom mx-auto">
+          <tbody>
             {% for key, value in personal_data.items() %}
-            <tr class="text-center">
+            <tr>
               <th>{{ key.capitalize() }}</th>
               <td>
                 {% if value == True %}Yes{% elif value == False %}No{% else %}{{
@@ -61,7 +59,7 @@ content %}
         </table>
         <div class="text-center">
           <div class="container fs-4">
-            <p>
+            <p style="margin-top: 20px">
               You can change the data
               <a href="/users/settings" class="my-link ink-opacity-100">here</a>
             </p>
@@ -76,13 +74,13 @@ content %}
       aria-labelledby="cityTab"
     >
       <div class="container my-5 table-responsive">
-        <h1 class="d-flex justify-content-center">City Information</h1>
-        <table
-          class="table table-dark d-flex justify-content-center table-hover"
-        >
-          <tbody class="fs-3">
+        <h1 class="d-flex justify-content-center header-margin-top">
+          City Information
+        </h1>
+        <table class="table-custom mx-auto">
+          <tbody>
             {% for key, value in city_data.items() %}
-            <tr class="text-center">
+            <tr>
               <th>{{ key.capitalize() }}</th>
               <td>
                 {% if value == True %}Yes{% elif value == False %}No{% else %}{{
