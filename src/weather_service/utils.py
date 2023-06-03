@@ -56,6 +56,7 @@ async def process_weather_data(weatherapi_data: dict, db_city_data: CityInDB = N
         'wind, kph': weatherapi_data['current']['wind_kph'],
         'humidity, %': weatherapi_data['current']['humidity'],
         'cloudiness, %': weatherapi_data['current']['cloud'],
+        'img url': weatherapi_data['current']['condition']['icon']
     }
     if db_city_data:
         location_data.update(population=db_city_data.population)
