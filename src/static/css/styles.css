@@ -88,3 +88,28 @@ tr:hover {
 .header-margin-top {
   margin-bottom: 70px;
 }
+
+form i {
+  cursor: pointer;
+}
+
+form i:hover {
+  color: #eada5c;
+}
+
+a.my-link {
+  color: #eada5c;
+}
+
+a.my-link:link {
+  text-decoration: none;
+}
+
+a.my-link:visited {
+  text-decoration: none;
+}
+
+a.my-link:hover {
+  text-decoration: underline;
+  color: #d8d8f6;
+}
