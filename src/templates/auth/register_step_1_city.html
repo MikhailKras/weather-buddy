@@ -1,37 +1,49 @@
-{% extends "base.html" %}
-
-{% block title %}Step 1 - Select City{% endblock %}
-
-{% block content %}
-  <div class="container my-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-6">
-        <div class="card border-0 shadow-sm bg-transparent text-white">
-          <div class="card-header bg-transparent border-0">
-            <h3 class="card-title text-center my-3">Step 1 - Enter your city</h3>
+{% extends "base.html" %} {% block title %}Step 1 - Select City{% endblock %} {%
+block content %}
+<div
+  class="container-fluid container-login position-absolute top-50 start-50 translate-middle"
+>
+  <div class="">
+    <div class="card border-0 shadow-sm bg-transparent text-white">
+      <div class="card-header bg-transparent border-0">
+        <h3 class="card-title text-center my-3 fs-1">
+          Step 1 - Enter your city
+        </h3>
+      </div>
+      <div class="card-body">
+        <form onsubmit="searchByCity(event)">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control bg-dark text-white"
+              name="city"
+              id="city"
+              placeholder="City"
+              required
+            />
+            <label for="city" class="text-white">City</label>
           </div>
-          <div class="card-body">
-            <form onsubmit="searchByCity(event)">
-              <div class="form-floating mb-3">
-                <input type="text" class="form-control bg-dark text-white" name="city" id="city" placeholder="City" required>
-                <label for="city" class="text-white">City</label>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Next</button>
-              </div>
-            </form>
-            <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-bd-primary btn-lg">
+              Next
+            </button>
           </div>
-          <div class="card-footer bg-transparent border-0">
-            <div class="text-center">
-              <div class="container">
-                <p>Already have an account? <a href="/users/login" class="link-info link-opacity-75">Sign in</a></p>
-              </div>
-            </div>
-          </div>
+        </form>
+        <div class="text-center mt-3 fs-5">
+          <p>
+            Already have an account?
+            <a href="/users/login" class="my-link link-opacity-100">Sign in</a>
+          </p>
         </div>
+        <div
+          id="error-message"
+          class="alert alert-danger bg-danger text-white"
+          role="alert"
+          style="display: none"
+        ></div>
       </div>
     </div>
   </div>
-  <script src="{{ url_for('static', path='js/registration_step_1_city.js') }}"></script>
+</div>
+<script src="{{ url_for('static', path='js/registration_step_1_city.js') }}"></script>
 {% endblock %}
