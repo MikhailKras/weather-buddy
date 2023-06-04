@@ -1,40 +1,64 @@
-{% extends "base.html" %}
-
-{% block title %}Reset Password{% endblock %}
-
-{% block content %}
-  <div class="container my-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-6">
-        <div class="card border-0 shadow-sm bg-transparent text-white">
-          <div class="card-header bg-transparent border-0">
-            <h3 class="card-title text-center my-3">Reset Your Password</h3>
+{% extends "base.html" %} {% block title %}Reset Password{% endblock %} {% block
+content %}
+<div
+  class="container-fluid container-login position-absolute top-50 start-50 translate-middle"
+>
+  <div class="">
+    <div class="card border-0 shadow-sm bg-transparent text-white">
+      <div class="card-header bg-transparent border-0">
+        <h3 class="fs-1 card-title text-center my-3">Reset Your Password</h3>
+        <p class="fs-5 text-center">
+          Please enter your email address. We will send you an email with
+          instructions to reset your password.
+        </p>
+      </div>
+      <div class="card-body container-login">
+        <form id="reset-password-form" style="width: 60%">
+          <div class="form-floating mb-3">
+            <input
+              type="email"
+              class="form-control bg-dark text-white"
+              name="email"
+              id="email"
+              placeholder="Email"
+              required
+            />
+            <label for="email" class="text-white">Email</label>
           </div>
-          <div class="card-body">
-            <p class="text-center">Please enter your email address. We will send you an email with instructions to reset your password.</p>
-            <form id="reset-password-form">
-              <div class="form-floating mb-3">
-                <input type="email" class="form-control bg-dark text-white" name="email" id="email" placeholder="Email" required>
-                <label for="email" class="text-white">Email</label>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary btn-lg">Reset Password</button>
-              </div>
-            </form>
-            <div id="error-message" class="alert alert-danger bg-danger text-white" role="alert" style="display: none;"></div>
-            <div id="success-message" class="alert alert-success bg-success text-white" role="alert" style="display: none;"></div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-bd-primary btn-lg">
+              Reset Password
+            </button>
           </div>
-          <div class="card-footer bg-transparent border-0">
-            <div class="text-center">
-              <div class="container">
-                <p>Remembered your password? <a href="/users/login" class="link-info link-opacity-75">Sign in</a></p>
-              </div>
-            </div>
+        </form>
+        <div
+          id="error-message"
+          class="alert alert-danger bg-danger text-white"
+          role="alert"
+          style="display: none"
+        ></div>
+        <div
+          id="success-message"
+          class="alert alert-success bg-success text-white"
+          role="alert"
+          style="display: none"
+        ></div>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <div class="text-center">
+          <div class="container fs-5">
+            <p>
+              Remembered your password?
+              <a href="/users/login" class="my-link link-opacity-100"
+                >Sign in</a
+              >
+            </p>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <script src="{{ url_for('static', path='js/reset_password/post_email.js') }}"></script>
+<script src="{{ url_for('static', path='js/reset_password/post_email.js') }}"></script>
 {% endblock %}
