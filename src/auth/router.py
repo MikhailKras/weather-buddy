@@ -142,9 +142,10 @@ async def register_success(request: Request, message: str):
 @router.get('/verify-email-page/{token}')
 async def verify_email_page(
         request: Request,
-        token: str
+        token: str,
+        is_auth: bool = Depends(is_authenticated)
 ):
-    return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token})
+    return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token, "is_auth": is_auth})
 
 
 @router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
