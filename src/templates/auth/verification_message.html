@@ -1,66 +1,87 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Email Verification</title>
     <style>
-        body {
-            background-color: #03417a;
-            color: whitesmoke;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        background-color: #1c0459;
+        color: whitesmoke;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-            color: #333;
-        }
+      h1 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+        color: #333;
+      }
 
-        p {
-            font-size: 16px;
-            margin-bottom: 10px;
-            text-align: center;
-            color: #333;
-        }
+      p {
+        font-size: 16px;
+        margin-bottom: 10px;
+        text-align: center;
+        color: #333;
+      }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-            background-color: #5bb7fc;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-        }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        background-color: #1c0459;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+      }
 
-        a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
+      a.main {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: whitesmoke;
+        text-decoration: none;
+        text-align: center;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
 
-        a:hover {
-            background-color: #218838;
-        }
+      a.main:hover {
+        background-color: #218838;
+      }
+
+      .mail-text {
+        color: whitesmoke;
+      }
+
+      img {
+        border-radius: 50%;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>WeatherBuddy Email Verification</h1>
-        <h1 style="color: #333;">Greetings, {{ username }}!</h1>
-        <p style="color: #333;">Thank you for registering with WeatherBuddy! Please click the button below to verify your email address:</p>
-        <a href="{{ url }}">Verify Email</a>
-        <p style="color: #333;">If you did not register an account on WeatherBuddy, you can ignore this email.</p>
+      <h1 class="mail-text">WeatherBuddy Email Verification</h1>
+      <h1 class="mail-text">Greetings, {{ username }}!</h1>
+      <p class="mail-text">
+        Thank you for registering with WeatherBuddy! Please click the button
+        below to verify your email address:
+      </p>
+      <a href="{{ url }}" class="main">Verify Email</a>
+      <p class="mail-text">
+        If you did not register an account on WeatherBuddy, you can ignore this
+        email.
+      </p>
+      <img
+        src="https://i.ibb.co/GcBpSjK/logo-weather-buddy-small.png"
+        alt="logo-weather-buddy"
+        width="200"
+        height="200"
+        border="0"
+      />
     </div>
-</body>
+  </body>
 </html>
