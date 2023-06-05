@@ -1,33 +1,31 @@
 {% if is_auth %} {% extends 'auth/base.html' %} {% else %} {% extends
 'base.html' %} {% endif %} {% block title %}City Weather{% endblock %} {% block
 content %}
-<div class="container my-5">
+<div class="table-responsive custom-margin-top">
   <h1 class="d-flex justify-content-center header-margin-top">
     Choose your city
   </h1>
-  <div class="table-responsive">
-    <table class="table-custom mx-auto table-hover-cursor">
-      <thead>
-        <tr class="table-info">
-          {% for column in data.cities[0].keys() %} {% if column != 'id' %}
-          <th scope="col">{{ column.capitalize() }}</th>
-          {% endif %} {% endfor %}
-        </tr>
-      </thead>
-      <tbody class="fs-5">
-        {% for city in data.cities %}
-        <tr onclick="redirectToCity('{{ city.id }}');">
-          {% for key, value in city.items() %} {% if key != 'id' %}
-          <td>
-            {% if value is number %} {{ value|round(2) }} {% else %} {{
-            value|default('No data') }} {% endif %}
-          </td>
-          {% endif %} {% endfor %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <table class="table-custom mx-auto table-hover-cursor">
+    <thead>
+      <tr class="table-info">
+        {% for column in data.cities[0].keys() %} {% if column != 'id' %}
+        <th scope="col">{{ column.capitalize() }}</th>
+        {% endif %} {% endfor %}
+      </tr>
+    </thead>
+    <tbody class="fs-5">
+      {% for city in data.cities %}
+      <tr onclick="redirectToCity('{{ city.id }}');">
+        {% for key, value in city.items() %} {% if key != 'id' %}
+        <td>
+          {% if value is number %} {{ value|round(2) }} {% else %} {{
+          value|default('No data') }} {% endif %}
+        </td>
+        {% endif %} {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
 <script>
