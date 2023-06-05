@@ -1,36 +1,38 @@
 {% if is_auth %} {% extends 'auth/base.html' %} {% else %} {% extends
 'base.html' %} {% endif %} {% block title %}Verify Email{% endblock %} {% block
 content %}
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="card border-0 shadow-sm bg-transparent text-white">
-        <div class="card-header bg-transparent border-0">
-          <h3 class="card-title text-center my-3">Verify Email</h3>
-        </div>
-        <div class="card-body">
-          <p class="text-center mb-3">
-            Click the button below to verify your email address:
-          </p>
-          <div class="d-grid">
-            <button id="verify-email-btn" class="btn btn-primary btn-lg">
-              Verify Email
-            </button>
-          </div>
-          <div
-            id="error-message"
-            class="alert alert-danger bg-danger text-white"
-            role="alert"
-            style="display: none"
-          ></div>
-          <div
-            id="success-message"
-            class="alert alert-success bg-success text-white"
-            role="alert"
-            style="display: none"
-          ></div>
-        </div>
+<div
+  class="container-fluid container-login position-absolute top-50 start-50 translate-middle"
+>
+  <div class="card border-0 shadow-sm bg-transparent text-white">
+    <div class="card-header bg-transparent border-0">
+      <h3 class="card-title text-center">Verify Email</h3>
+    </div>
+    <div class="card-body">
+      <p class="text-center">
+        Click the button below to verify your email address:
+      </p>
+      <div class="container-login">
+        <button
+          id="verify-email-btn"
+          class="btn btn-bd-primary btn-lg"
+          style="width: 90%"
+        >
+          Verify Email
+        </button>
       </div>
+      <div
+        id="error-message"
+        class="alert alert-danger bg-danger text-white"
+        role="alert"
+        style="display: none"
+      ></div>
+      <div
+        id="success-message"
+        class="alert alert-success bg-success text-white"
+        role="alert"
+        style="display: none"
+      ></div>
     </div>
   </div>
 </div>
@@ -59,6 +61,7 @@ content %}
     } catch (error) {
       errorMessage.textContent = error.message;
       errorMessage.style.display = "block";
+      successMessage.style.display = "none";
     }
   });
 </script>
