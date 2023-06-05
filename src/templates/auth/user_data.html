@@ -1,11 +1,7 @@
 {% extends "auth/base.html" %} {% block title %}My data{% endblock %} {% block
 content %}
-<div class="container-fluid h-100">
-  <ul
-    class="fs-3 nav nav-tabs border-bottom border-3 border-white"
-    id="userDataTabs"
-    role="tablist"
-  >
+<div class="container-fluid h-100" style="padding: 0">
+  <ul class="fs-3 nav nav-tabs border-0" id="userDataTabs" role="tablist">
     <li class="nav-item" role="presentation">
       <button
         class="nav-link active"
@@ -35,6 +31,10 @@ content %}
       </button>
     </li>
   </ul>
+  <hr
+    class="border-4 opacity-100"
+    style="border-color: #d8d8f6; margin-top: 5px"
+  />
   <div class="tab-content" id="userDataTabsContent">
     <div
       class="tab-pane fade show active"
@@ -42,7 +42,7 @@ content %}
       role="tabpanel"
       aria-labelledby="dataTab"
     >
-      <div class="container my-5 table-responsive">
+      <div class="table-responsive custom-margin-top">
         <h1 class="d-flex justify-content-center header-margin-top">My Data</h1>
         <table class="table-custom mx-auto">
           <tbody>
@@ -73,7 +73,7 @@ content %}
       role="tabpanel"
       aria-labelledby="cityTab"
     >
-      <div class="container my-5 table-responsive">
+      <div class="table-responsive custom-margin-top">
         <h1 class="d-flex justify-content-center header-margin-top">
           City Information
         </h1>
