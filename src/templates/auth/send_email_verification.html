@@ -1,35 +1,32 @@
 {% extends "auth/base.html" %} {% block title %}Send Verification Email{%
 endblock %} {% block content %}
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <div class="card border-0 shadow-sm bg-transparent text-white">
-        <div class="card-header bg-transparent border-0">
-          <h3 class="card-title text-center my-3">Send Verification Email</h3>
-        </div>
-        <div class="card-body">
-          <p class="text-center mb-3">
-            Click the button below to send a verification email:
-          </p>
-          <div class="d-grid">
-            <button id="send-verification-btn" class="btn btn-primary btn-lg">
-              Send Verification Email
-            </button>
-          </div>
-          <div
-            id="error-message"
-            class="alert alert-danger bg-danger text-white"
-            role="alert"
-            style="display: none"
-          ></div>
-          <div
-            id="success-message"
-            class="alert alert-success bg-success text-white"
-            role="alert"
-            style="display: none"
-          ></div>
-        </div>
-      </div>
+<div class="container-fluid">
+  <div class="center-margin-top">
+    <h3 class="text-center header-margin-top">Send Verification Email</h3>
+    <p class="text-center">
+      Click the button below to send a verification email:
+    </p>
+    <div class="container-login">
+      <button
+        id="send-verification-btn"
+        class="btn btn-bd-primary btn-lg custom-width"
+      >
+        Send Verification Email
+      </button>
+    </div>
+    <div class="container-login text-center">
+      <div
+        id="error-message"
+        class="alert alert-danger bg-danger text-white"
+        role="alert"
+        style="display: none"
+      ></div>
+      <div
+        id="success-message"
+        class="alert alert-success bg-success text-white"
+        role="alert"
+        style="display: none"
+      ></div>
     </div>
   </div>
 </div>
