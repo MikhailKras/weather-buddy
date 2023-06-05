@@ -2,12 +2,8 @@
 'base.html' %} {% endif %} {% block title %}Weather for {{
 location_data.location }}, {{ location_data.country }}{% endblock %} {% block
 content %}
-<div class="container-fluid h-100">
-  <ul
-    class="fs-3 nav nav-tabs border-bottom border-3 border-white"
-    id="weatherTabs"
-    role="tablist"
-  >
+<div class="container-fluid h-100" style="padding: 0">
+  <ul class="fs-3 nav nav-tabs border-0" id="weatherTabs" role="tablist">
     <li class="nav-item" role="presentation">
       <button
         class="nav-link active"
@@ -37,6 +33,10 @@ content %}
       </button>
     </li>
   </ul>
+  <hr
+    class="border-4 opacity-100"
+    style="border-color: #d8d8f6; margin-top: 5px"
+  />
   <div class="tab-content" id="weatherTabsContent">
     <div
       class="tab-pane fade show active"
@@ -44,8 +44,8 @@ content %}
       role="tabpanel"
       aria-labelledby="weatherTab"
     >
-      <div class="container my-5 table-responsive">
-        <h1 class="d-flex justify-content-center">
+      <div class="table-responsive custom-margin-top">
+        <h1 class="d-flex justify-content-center text-center">
           Weather for {{ location_data.location }}, {{ location_data.country }}
         </h1>
         <div class="text-center d-flex justify-content-center">
@@ -75,8 +75,8 @@ content %}
       role="tabpanel"
       aria-labelledby="locationTab"
     >
-      <div class="container my-5 table-responsive">
-        <h1 class="d-flex justify-content-center header-margin-top">
+      <div class="table-responsive custom-margin-top">
+        <h1 class="d-flex justify-content-center header-margin-top text-center">
           Location Information for {{ location_data.location }}, {{
           location_data.country }}
         </h1>
@@ -93,5 +93,5 @@ content %}
       </div>
     </div>
   </div>
+  {% endblock %}
 </div>
-{% endblock %}
