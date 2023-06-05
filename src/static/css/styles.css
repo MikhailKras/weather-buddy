@@ -149,6 +149,18 @@ svg:hover {
   margin-top: 30vh;
 }
 
+@media (max-height: 851px) {
+  .custom-width-small {
+    margin-top: 5vh;
+  }
+}
+
+@media (max-height: 851px) and (max-width: 1024px) {
+  .custom-width-small {
+    margin-top: 2vh;
+  }
+}
+
 .custom-width {
   width: 40%;
 }
@@ -156,5 +168,15 @@ svg:hover {
 @media (max-width: 820px) {
   .custom-width {
     width: 90%;
+  }
+}
+
+.custom-width-small {
+  width: 30%;
+}
+
+@media (max-width: 820px) {
+  .custom-width-small {
+    width: 80%;
   }
 }
