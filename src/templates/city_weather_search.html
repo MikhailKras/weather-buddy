@@ -1,12 +1,8 @@
 {% if is_auth %} {% extends 'auth/base.html' %} {% else %} {% extends
 'base.html' %} {% endif %} {% block title %}Search weather city{% endblock %} {%
 block content %}
-<div class="container-fluid h-100">
-  <ul
-    class="fs-3 nav nav-tabs border-bottom border-3 border-white"
-    id="weatherTabs"
-    role="tablist"
-  >
+<div class="container-fluid h-100" style="padding: 0">
+  <ul class="fs-3 nav nav-tabs border-0" id="weatherTabs" role="tablist">
     <li class="nav-item" role="presentation">
       <button
         class="nav-link active"
@@ -36,62 +32,59 @@ block content %}
       </button>
     </li>
   </ul>
-  <div
-    class="tab-content mt-3 position-absolute top-50 start-50 translate-middle w-100"
-    id="weatherTabsContent"
-  >
+  <hr
+    class="border-4 opacity-100"
+    style="border-color: #d8d8f6; margin-top: 5px"
+  />
+  <div class="tab-content" id="weatherTabsContent">
     <div
       class="tab-pane fade show active"
       id="cityTabContent"
       role="tabpanel"
       aria-labelledby="cityTab"
     >
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-7">
-            <form onsubmit="searchByCity(event)">
-              <div class="input-group mb-3">
-                <span class="input-group-text"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-search"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
-                    /></svg
-                ></span>
-                <div class="form-floating">
-                  <input
-                    id="city"
-                    type="text"
-                    class="form-control"
-                    placeholder="Enter a city name"
-                    required
-                  />
-                  <label for="city">City name</label>
-                </div>
-              </div>
-              <div class="d-grid">
-                <button
-                  class="btn btn-lg btn-block fs-3 btn-bd-primary"
-                  type="submit"
-                >
-                  Get Weather & Location
-                </button>
-              </div>
-            </form>
-            <div
-              id="error-message"
-              class="alert alert-danger bg-danger text-white"
-              role="alert"
-              style="display: none"
-            ></div>
+      <div class="center-margin-top container-login">
+        <form class="custom-width" onsubmit="searchByCity(event)">
+          <div class="input-group mb-3">
+            <span class="input-group-text"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-search"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                /></svg
+            ></span>
+            <div class="form-floating">
+              <input
+                id="city"
+                type="text"
+                class="form-control"
+                placeholder="Enter a city name"
+                required
+              />
+              <label for="city">City name</label>
+            </div>
           </div>
-        </div>
+          <div class="d-grid">
+            <button
+              class="btn btn-lg btn-block fs-3 btn-bd-primary"
+              type="submit"
+            >
+              Get Weather & Location
+            </button>
+          </div>
+          <div
+            id="error-message"
+            class="alert alert-danger bg-danger text-white"
+            role="alert"
+            style="display: none"
+          ></div>
+        </form>
       </div>
     </div>
     <div
@@ -100,59 +93,55 @@ block content %}
       role="tabpanel"
       aria-labelledby="coordsTab"
     >
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-7">
-            <form onsubmit="searchByCoords(event)">
-              <div class="row mb-3">
-                <div class="col">
-                  <div class="form-floating">
-                    <input
-                      id="latitude"
-                      type="text"
-                      class="form-control"
-                      placeholder="Enter latitude"
-                      required
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title="Latitude: The valid latitude values range from -90 degrees (south pole) to +90 degrees (north pole). The equator is at 0 degrees latitude."
-                    />
-                    <label for="latitude">Latitude</label>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-floating">
-                    <input
-                      id="longitude"
-                      type="text"
-                      class="form-control"
-                      placeholder="Enter longitude"
-                      required
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title="Longitude: The valid longitude values range from -180 degrees to +180 degrees. The prime meridian is at 0 degrees longitude."
-                    />
-                    <label for="longitude">Longitude</label>
-                  </div>
-                </div>
+      <div class="center-margin-top container-login">
+        <form class="custom-width" onsubmit="searchByCoords(event)">
+          <div class="row mb-3">
+            <div class="col">
+              <div class="form-floating">
+                <input
+                  id="latitude"
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter latitude"
+                  required
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Latitude: The valid latitude values range from -90 degrees (south pole) to +90 degrees (north pole). The equator is at 0 degrees latitude."
+                />
+                <label for="latitude">Latitude</label>
               </div>
-              <div class="d-grid">
-                <button
-                  class="btn btn-lg btn-block fs-3 btn-bd-primary"
-                  type="submit"
-                >
-                  Get Weather & Location
-                </button>
+            </div>
+            <div class="col">
+              <div class="form-floating">
+                <input
+                  id="longitude"
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter longitude"
+                  required
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  title="Longitude: The valid longitude values range from -180 degrees to +180 degrees. The prime meridian is at 0 degrees longitude."
+                />
+                <label for="longitude">Longitude</label>
               </div>
-            </form>
-            <div
-              id="error-message-coords"
-              class="alert alert-danger bg-danger text-white"
-              role="alert"
-              style="display: none"
-            ></div>
+            </div>
           </div>
-        </div>
+          <div class="d-grid">
+            <button
+              class="btn btn-lg btn-block fs-3 btn-bd-primary"
+              type="submit"
+            >
+              Get Weather & Location
+            </button>
+          </div>
+        </form>
+        <div
+          id="error-message-coords"
+          class="alert alert-danger bg-danger text-white"
+          role="alert"
+          style="display: none"
+        ></div>
       </div>
     </div>
   </div>
