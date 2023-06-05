@@ -191,7 +191,7 @@ async def verify_email(
 
 @router.get('/email-verification')
 async def get_send_verification_email_page(request: Request):
-    return templates.TemplateResponse("auth/email_verification_form.html", {"request": request})
+    return templates.TemplateResponse("auth/send_email_verification.html", {"request": request})
 
 
 @router.post('/email-verification', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
