@@ -1,15 +1,11 @@
 {% extends "base.html" %} {% block title %}Step 2 - User Information{% endblock
 %} {% block content %}
-<div
-  class="container-fluid container-login position-absolute top-50 start-50 translate-middle"
->
-  <div class="">
+<div class="container-fluid container-login">
+  <div class="center-margin-top custom-width-small">
     <div class="card border-0 shadow-sm bg-transparent text-white">
-      <div class="card-header bg-transparent border-0">
-        <h3 class="card-title text-center my-3 fs-1">
-          Step 2 - User Information
-        </h3>
-      </div>
+      <h3 class="card-title text-center my-3 fs-1">
+        Step 2 - User Information
+      </h3>
       <div class="card-body">
         <form id="user-info-form">
           <input type="hidden" name="city" id="city" value="{{ city }}" />

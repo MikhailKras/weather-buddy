@@ -1,76 +1,68 @@
 {% extends "base.html" %} {% block title %}Sign in{% endblock %} {% block
 content %}
-<div
-  class="container-fluid container-login position-absolute top-50 start-50 translate-middle"
->
-  <div class="">
-    <div class="card border-0 shadow-sm bg-transparent text-white">
-      <div class="card-header bg-transparent border-0">
-        <h3 class="card-title text-center my-3 fs-1">
-          Sign in to WeatherBuddy
-        </h3>
+<div class="container-fluid container-login">
+  <div class="center-margin-top custom-width-small">
+    <h3 class="fs-1 text-center header-margin-top">Sign in to WeatherBuddy</h3>
+    <form id="login-form" style="margin: auto">
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control bg-dark text-white"
+          name="username"
+          id="username"
+          placeholder="Username"
+          required
+        />
+        <label for="username" class="text-white">Username</label>
       </div>
-      <div class="card-body">
-        <form id="login-form">
-          <div class="form-floating mb-3">
-            <input
-              type="text"
-              class="form-control bg-dark text-white"
-              name="username"
-              id="username"
-              placeholder="Username"
-              required
-            />
-            <label for="username" class="text-white">Username</label>
-          </div>
-          <div class="input-group mb-3">
-            <div class="form-floating">
-              <input
-                type="password"
-                class="form-control bg-dark text-white"
-                name="password"
-                id="password"
-                placeholder="Password"
-                required
-              />
-              <label for="password" class="text-white">Password</label>
-            </div>
-            <span class="input-group-text"
-              ><i class="bi bi-eye-slash" id="togglePassword"></i
-            ></span>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-bd-primary btn-lg">
-              Sign in!
-            </button>
-          </div>
-        </form>
-        <div class="text-center mt-3">
-          <a href="/users/password-reset" class="my-link fs-5 link-opacity-100"
-            >Forgot password?</a
-          >
+      <div class="input-group mb-3">
+        <div class="form-floating">
+          <input
+            type="password"
+            class="form-control bg-dark text-white"
+            name="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+          <label for="password" class="text-white">Password</label>
         </div>
-        <div class="text-center mt-3 fs-5">
-          <p>
-            New to WeatherBuddy?
-            <a href="/users/register/city" class="my-link link-opacity-100"
-              >Create an account</a
-            >
-          </p>
-        </div>
-        <div
-          id="error-message"
-          class="alert alert-danger bg-danger text-white"
-          role="alert"
-          style="display: none"
-        ></div>
-        <div
-          id="success-message"
-          class="alert alert-success bg-success text-white"
-          role="alert"
-          style="display: none"
-        ></div>
+        <span class="input-group-text"
+          ><i class="bi bi-eye-slash" id="togglePassword"></i
+        ></span>
       </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-bd-primary btn-lg">
+          Sign in!
+        </button>
+      </div>
+    </form>
+    <div class="text-center mt-3">
+      <a href="/users/password-reset" class="my-link fs-5 link-opacity-100"
+        >Forgot password?</a
+      >
+    </div>
+    <div class="text-center mt-3 fs-5">
+      <p>
+        New to WeatherBuddy?
+        <a href="/users/register/city" class="my-link link-opacity-100"
+          >Create an account</a
+        >
+      </p>
+    </div>
+    <div class="container-login text-center">
+      <div
+        id="error-message"
+        class="alert alert-danger bg-danger text-white"
+        role="alert"
+        style="display: none"
+      ></div>
+      <div
+        id="success-message"
+        class="alert alert-success bg-success text-white"
+        role="alert"
+        style="display: none"
+      ></div>
     </div>
   </div>
 </div>
