@@ -77,7 +77,7 @@ async def register_step_1_submit(
     registration_token = create_registration_token(city_data.city_id)
     redirect_url = '/users/register/details'
     response = RedirectResponse(redirect_url, status_code=status.HTTP_302_FOUND)
-    response.set_cookie(key="registration_token", value=registration_token, httponly=True)
+    response.set_cookie(key="registration_token", value=registration_token, httponly=True, max_age=600)
     return response
 
 
@@ -250,7 +250,8 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={'sub': user_data.username}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
+    cookie_max_age = int(ACCESS_TOKEN_EXPIRE_MINUTES) * 60
+    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True, max_age=cookie_max_age)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -331,7 +332,8 @@ async def update_user_data(
                                         detail='This username is already registered!')
                 new_access_token_expires = timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))
                 new_access_token = create_access_token(data={"sub": new_data.username}, expires_delta=new_access_token_expires)
-                response.set_cookie(key='access_token', value=f"Bearer {new_access_token}", httponly=True)
+                cookie_max_age = int(ACCESS_TOKEN_EXPIRE_MINUTES) * 60
+                response.set_cookie(key='access_token', value=f"Bearer {new_access_token}", httponly=True, max_age=cookie_max_age)
             elif field_name == 'email':
                 if await get_user_by_email(new_value, session=session):
                     raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
