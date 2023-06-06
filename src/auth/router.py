@@ -148,7 +148,7 @@ async def verify_email_page(
     return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token, "is_auth": is_auth})
 
 
-@router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
+@router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=5, seconds=60, callback=custom_callback))])
 async def verify_email(
         token: str,
         session: AsyncSession = Depends(get_async_session)
@@ -194,7 +194,7 @@ async def get_send_verification_email_page(request: Request):
     return templates.TemplateResponse("auth/send_email_verification.html", {"request": request})
 
 
-@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
+@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=5, seconds=60, callback=custom_callback))])
 async def send_verification_email(
         user_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
@@ -429,7 +429,7 @@ async def get_password_reset_page_with_email(request: Request, is_auth: bool = D
     return templates.TemplateResponse('auth/reset_password/get_email.html', context={"request": request})
 
 
-@router.post("/password-reset", dependencies=[Depends(RateLimiter(times=1, seconds=30, callback=custom_callback))])
+@router.post("/password-reset", dependencies=[Depends(RateLimiter(times=5, seconds=30, callback=custom_callback))])
 async def post_email_for_password_reset(
         response: Response,
         email_data: EmailPasswordReset,
