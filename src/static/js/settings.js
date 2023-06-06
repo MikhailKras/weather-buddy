@@ -137,7 +137,22 @@ changePasswordForm.addEventListener("submit", (event) => {
 });
 
 const deleteBtn = document.getElementById("delete-btn");
-deleteBtn.addEventListener("click", async () => {
+const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
+const confirmationInput = document.getElementById("confirmation-input");
+
+deleteBtn.addEventListener("click", () => {
+  // Clear the confirmation input field when the modal is opened
+  confirmationInput.value = "";
+});
+
+confirmDeleteBtn.addEventListener("click", async () => {
+  const confirmation = confirmationInput.value.trim();
+
+  if (confirmation !== "DELETE") {
+    alert('Please enter the word "DELETE" to confirm the account deletion.');
+    return;
+  }
+
   const response = await fetch("/users/settings/delete_user", {
     method: "DELETE",
     headers: {
@@ -155,5 +170,13 @@ deleteBtn.addEventListener("click", async () => {
   } else {
     // Handle error response
     console.error(`Error deleting account: ${response.statusText}`);
+  }
+});
+
+// Prevent form submission on Enter key press
+confirmationInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    confirmDeleteBtn.click();
   }
 });

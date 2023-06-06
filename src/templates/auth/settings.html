@@ -258,9 +258,68 @@
             irreversible.
           </p>
           <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button id="delete-btn" class="btn btn btn-warning me-md-2">
+            <button
+              id="delete-btn"
+              class="btn btn btn-warning me-md-2"
+              data-bs-toggle="modal"
+              data-bs-target="#deleteModal"
+            >
               Delete account
             </button>
+          </div>
+
+          <!-- Delete Confirmation Modal -->
+          <div
+            class="modal fade"
+            id="deleteModal"
+            tabindex="-1"
+            aria-labelledby="deleteModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">
+                    Confirm Deletion
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <p>
+                    To confirm the account deletion, please enter the word
+                    <strong>"DELETE"</strong>:
+                  </p>
+                  <input
+                    type="text"
+                    id="confirmation-input"
+                    class="form-control mb-2"
+                    placeholder="Confirmation"
+                    required
+                  />
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    id="confirm-delete-btn"
+                    class="btn btn-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
