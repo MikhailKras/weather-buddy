@@ -1,25 +1,27 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const errorMessage = document.getElementById('error-message');
-  const errorMessageCity = document.getElementById('error-message-city');
-  const errorMessagePassword = document.getElementById('error-message-password');
+document.addEventListener("DOMContentLoaded", () => {
+  const errorMessage = document.getElementById("error-message");
+  const errorMessageCity = document.getElementById("error-message-city");
+  const errorMessagePassword = document.getElementById(
+    "error-message-password"
+  );
 
-  const tabLinks = document.querySelectorAll('.nav-link');
+  const tabLinks = document.querySelectorAll(".nav-link");
 
   const hideErrorMessages = () => {
-    errorMessage.style.display = 'none';
-    errorMessageCity.style.display = 'none';
-    errorMessagePassword.style.display = 'none';
+    errorMessage.style.display = "none";
+    errorMessageCity.style.display = "none";
+    errorMessagePassword.style.display = "none";
   };
-  tabLinks.forEach(tab => {
-    tab.addEventListener('click', hideErrorMessages);
+  tabLinks.forEach((tab) => {
+    tab.addEventListener("click", hideErrorMessages);
   });
 });
 
-const changeDataForm = document.getElementById('change-data-form');
-const errorMessage = document.getElementById('error-message');
-const successMessage = document.getElementById('success-message');
+const changeDataForm = document.getElementById("change-data-form");
+const errorMessage = document.getElementById("error-message");
+const successMessage = document.getElementById("success-message");
 
-changeDataForm.addEventListener('submit', (event) => {
+changeDataForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
   const userData = {
@@ -29,12 +31,12 @@ changeDataForm.addEventListener('submit', (event) => {
 
   errorMessage.style.display = "none";
 
-  fetch('/users/settings/update_data', {
-    method: 'PATCH',
+  fetch("/users/settings/update_data", {
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData)
+    body: JSON.stringify(userData),
   })
     .then((response) => {
       if (!response.ok) {
@@ -45,67 +47,72 @@ changeDataForm.addEventListener('submit', (event) => {
       return response.json();
     })
     .then((data) => {
-      successMessage.style.display = 'block';
+      successMessage.style.display = "block";
       successMessage.textContent = data.message;
-      errorMessage.style.display = 'none';
+      errorMessage.style.display = "none";
       setTimeout(() => {
-        window.location.href = '/users/me';
+        window.location.href = "/users/me";
       }, 2000);
     })
     .catch((error) => {
       errorMessage.textContent = error.message;
-      errorMessage.style.display = 'block';
+      errorMessage.style.display = "block";
     });
 });
 
+const changeCityForm = document.getElementById("change-city-data-form");
+const errorMessageCity = document.getElementById("error-message-city");
+const successMessageCity = document.getElementById("success-message-city");
 
-const changeCityForm = document.getElementById('change-city-data-form');
-const errorMessageCity = document.getElementById('error-message-city');
-const successMessageCity = document.getElementById('success-message-city');
-
-changeCityForm.addEventListener('submit', (event) => {
+changeCityForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
   const cityInput = changeCityForm.elements.city.value;
 
-  fetch(`/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`)
+  fetch(
+    `/users/settings/city/choose_city_name?city_input=${encodeURIComponent(
+      cityInput
+    )}`
+  )
     .then((response) => {
       if (!response.ok) {
         return response.json().then((data) => {
           throw new Error(data.detail);
         });
       }
-      window.location.href = `/users/settings/city/choose_city_name?city_input=${encodeURIComponent(cityInput)}`;
+      window.location.href = `/users/settings/city/choose_city_name?city_input=${encodeURIComponent(
+        cityInput
+      )}`;
     })
     .catch((error) => {
       errorMessageCity.textContent = error.message;
       errorMessageCity.style.display = "block";
     });
+});
 
-})
+const changePasswordForm = document.getElementById("change-password-form");
+const errorMessagePassword = document.getElementById("error-message-password");
+const successMessagePassword = document.getElementById(
+  "success-message-password"
+);
 
-
-const changePasswordForm = document.getElementById('change-password-form');
-const errorMessagePassword = document.getElementById('error-message-password');
-const successMessagePassword = document.getElementById('success-message-password');
-
-changePasswordForm.addEventListener('submit', (event) => {
+changePasswordForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
   const passwords = {
-    current_password: changePasswordForm.elements['current-password'].value,
-    repeat_password: changePasswordForm.elements['repeat-password'].value,
-    new_password: changePasswordForm.elements['new-password'].value
+    current_password: changePasswordForm.elements["current-password"].value,
+    repeat_password: changePasswordForm.elements["repeat-password"].value,
+    new_password: changePasswordForm.elements["new-password"].value,
   };
 
   errorMessagePassword.style.display = "none";
 
-  fetch('/users/settings/change_password', {
-    method: 'PATCH',
+  fetch("/users/settings/change_password", {
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(passwords)
+    body: JSON.stringify(passwords),
   })
     .then((response) => {
       if (!response.ok) {
@@ -116,34 +123,34 @@ changePasswordForm.addEventListener('submit', (event) => {
       return response.json();
     })
     .then((data) => {
-      successMessagePassword.style.display = 'block';
+      successMessagePassword.style.display = "block";
       successMessagePassword.textContent = data.message;
-      errorMessagePassword.style.display = 'none';
+      errorMessagePassword.style.display = "none";
       setTimeout(() => {
-        window.location.href = '/users/me';
+        window.location.href = "/users/me";
       }, 2000);
     })
     .catch((error) => {
       errorMessagePassword.textContent = error.message;
-      errorMessagePassword.style.display = 'block';
+      errorMessagePassword.style.display = "block";
     });
 });
 
-const deleteBtn = document.getElementById('delete-btn');
-deleteBtn.addEventListener('click', async () => {
-  const response = await fetch('/users/settings/delete_user', {
-    method: 'DELETE',
+const deleteBtn = document.getElementById("delete-btn");
+deleteBtn.addEventListener("click", async () => {
+  const response = await fetch("/users/settings/delete_user", {
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       // Optional body payload
-    })
+    }),
   });
 
   if (response.ok) {
     setTimeout(() => {
-      window.location.href = '/users/login';
+      window.location.href = "/users/login";
     }, 2000);
   } else {
     // Handle error response

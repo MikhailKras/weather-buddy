@@ -12,7 +12,9 @@ function searchByCity(event) {
           throw new Error(data.detail);
         });
       }
-      window.location.href = `/weather/city_names?city_input=${encodeURIComponent(cityInput)}`;
+      window.location.href = `/weather/city_names?city_input=${encodeURIComponent(
+        cityInput
+      )}`;
     })
     .catch((error) => {
       errorMessage.textContent = error.message;
@@ -28,7 +30,11 @@ function searchByCoords(event) {
 
   errorMessage.style.display = "none";
 
-  redirect_url = "/weather/info/by_coordinates?latitude=" + encodeURIComponent(latitudeInput) + "&longitude=" + encodeURIComponent(longitudeInput);
+  redirect_url =
+    "/weather/info/by_coordinates?latitude=" +
+    encodeURIComponent(latitudeInput) +
+    "&longitude=" +
+    encodeURIComponent(longitudeInput);
   fetch(redirect_url)
     .then((response) => {
       if (!response.ok) {

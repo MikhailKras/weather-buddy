@@ -1,8 +1,8 @@
-const loginForm = document.getElementById('login-form');
-const errorMessage = document.getElementById('error-message');
-const successMessage = document.getElementById('success-message');
+const loginForm = document.getElementById("login-form");
+const errorMessage = document.getElementById("error-message");
+const successMessage = document.getElementById("success-message");
 
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
   const username = loginForm.elements.username.value;
@@ -10,15 +10,15 @@ loginForm.addEventListener('submit', (event) => {
 
   errorMessage.style.display = "none";
 
-  fetch('/users/token', {
-    method: 'POST',
+  fetch("/users/token", {
+    method: "POST",
     body: new URLSearchParams({
-      grant_type: 'password',
+      grant_type: "password",
       username: username,
       password: password,
     }),
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
     },
   })
     .then((response) => {
@@ -30,15 +30,15 @@ loginForm.addEventListener('submit', (event) => {
       return response.json();
     })
     .then((data) => {
-      successMessage.style.display = 'block';
-      successMessage.textContent = 'Successfully logged in!';
-      errorMessage.style.display = 'none';
+      successMessage.style.display = "block";
+      successMessage.textContent = "Successfully logged in!";
+      errorMessage.style.display = "none";
       setTimeout(() => {
-        window.location.href = '/users/me';
+        window.location.href = "/users/me";
       }, 2000);
     })
     .catch((error) => {
       errorMessage.textContent = error.message;
-      errorMessage.style.display = 'block';
+      errorMessage.style.display = "block";
     });
 });
