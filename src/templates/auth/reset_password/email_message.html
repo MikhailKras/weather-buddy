@@ -5,7 +5,7 @@
     <title>Password Reset</title>
     <style>
       body {
-        background-color: #03417a;
+        background-color: #1c0459;
         color: whitesmoke;
         font-family: Arial, sans-serif;
         margin: 0;
@@ -32,7 +32,7 @@
         margin: 0 auto;
         padding: 20px;
         text-align: center;
-        background-color: #5bb7fc;
+        background-color: #1c0459;
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         margin-top: 50px;
@@ -42,7 +42,7 @@
         display: inline-block;
         padding: 10px 20px;
         background-color: #28a745;
-        color: #fff;
+        color: whitesmoke;
         text-decoration: none;
         text-align: center;
         border-radius: 5px;
@@ -52,20 +52,35 @@
       a:hover {
         background-color: #218838;
       }
+
+      .mail-text {
+        color: whitesmoke;
+      }
+
+      img {
+        border-radius: 50%;
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>WeatherBuddy Password Reset</h1>
-      <h1 style="color: #333">Greetings, {{ username }}!</h1>
-      <p style="color: #333">
+      <h1 class="mail-text">WeatherBuddy Password Reset</h1>
+      <h1 class="mail-text">Greetings, {{ username }}!</h1>
+      <p class="mail-text">
         We received a request to reset your password for your WeatherBuddy
         account. Please click the button below to reset your password:
       </p>
-      <a href="{{ url }}">Reset Password</a>
-      <p style="color: #333">
+      <a class="main" href="{{ url }}">Reset Password</a>
+      <p class="mail-text">
         If you did not request a password reset, you can ignore this email.
       </p>
+      <img
+        src="https://i.ibb.co/GcBpSjK/logo-weather-buddy-small.png"
+        alt="logo-weather-buddy"
+        width="200"
+        height="200"
+        border="0"
+      />
     </div>
   </body>
 </html>
