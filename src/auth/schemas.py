@@ -82,15 +82,15 @@ class TokenData(BaseModel):
 
 class PasswordChange(BaseModel):
     current_password: str
-    repeat_password: str
     new_password: str
+    repeat_password: str
 
     @root_validator
     def check_passwords_match(cls, values):
         current_password = values.get('current_password')
-        repeat_password = values.get('repeat_password')
         new_password = values.get('new_password')
-        if current_password != repeat_password:
+        repeat_password = values.get('repeat_password')
+        if new_password != repeat_password:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail='The provided passwords do not match'

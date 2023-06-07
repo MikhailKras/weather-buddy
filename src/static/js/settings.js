@@ -101,8 +101,8 @@ changePasswordForm.addEventListener("submit", (event) => {
 
   const passwords = {
     current_password: changePasswordForm.elements["current-password"].value,
-    repeat_password: changePasswordForm.elements["repeat-password"].value,
     new_password: changePasswordForm.elements["new-password"].value,
+    repeat_password: changePasswordForm.elements["repeat-password"].value,
   };
 
   errorMessagePassword.style.display = "none";

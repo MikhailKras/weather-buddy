@@ -525,33 +525,35 @@ async def test_change_city_data(
     [
         ({
              "current_password": "correct_password1",
-             "repeat_password": "correct_password1",
-             "new_password": "new_password1"
+             "new_password": "new_password1",
+             "repeat_password": "new_password1",
          }, "correct_password1", 200, "Password changed successfully!", None),
         ({
             "current_password": "correct_password1",
+            "new_password": "new_password1",
             "repeat_password": "another_password1",
-            "new_password": "new_password1"
+
         }, "correct_password1", 400, None, "The provided passwords do not match"),
         ({
             "current_password": "correct_password1",
+            "new_password": "correct_password1",
             "repeat_password": "correct_password1",
-            "new_password": "correct_password1"
+
         }, "correct_password1", 400, None, "New password must be different from current password"),
         ({
             "current_password": "correct_password1",
-            "repeat_password": "correct_password1",
-            "new_password": "bad_pattern"
+            "new_password": "bad_pattern",
+            "repeat_password": "bad_pattern",
         }, "correct_password1", 400, None, "New password must contain at least one digit, at least one letter"),
         ({
             "current_password": "correct_password1",
-            "repeat_password": "correct_password1",
-            "new_password": "short1"
+            "new_password": "short1",
+            "repeat_password": "short1",
         }, "correct_password1", 400, None, "Password must contain at least 7 characters"),
         ({
             "current_password": "incorrect_password1",
-            "repeat_password": "incorrect_password1",
-            "new_password": "new_password1"
+            "new_password": "new_password1",
+            "repeat_password": "new_password1",
         }, "correct_password1", 401, None, "Current password is incorrect")
     ]
 )
