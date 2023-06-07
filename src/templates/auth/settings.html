@@ -196,32 +196,47 @@
             style="border-color: #d8d8f6; margin-top: 5px"
           />
           <form id="change-password-form">
-            <div class="form-floating mb-3">
-              <input
-                type="password"
-                class="form-control bg-dark text-white"
-                id="current-password"
-                placeholder="Current password"
-              />
-              <label for="current-password">Current password</label>
+            <div class="input-group mb-3">
+              <div class="form-floating">
+                <input
+                  type="password"
+                  class="form-control bg-dark text-white"
+                  id="current-password"
+                  placeholder="Current password"
+                />
+                <label for="current-password">Current password</label>
+              </div>
+              <span class="input-group-text"
+                ><i class="bi bi-eye-slash" id="toggleCurrentPassword"></i
+              ></span>
             </div>
-            <div class="form-floating mb-3">
-              <input
-                type="password"
-                class="form-control bg-dark text-white"
-                id="repeat-password"
-                placeholder="Repeat password"
-              />
-              <label for="repeat-password">Repeat password</label>
+            <div class="input-group mb-3">
+              <div class="form-floating">
+                <input
+                  type="password"
+                  class="form-control bg-dark text-white"
+                  id="repeat-password"
+                  placeholder="Repeat password"
+                />
+                <label for="repeat-password">Repeat password</label>
+              </div>
+              <span class="input-group-text"
+                ><i class="bi bi-eye-slash" id="toggleRepeatPassword"></i
+              ></span>
             </div>
-            <div class="form-floating mb-3">
-              <input
-                type="password"
-                class="form-control bg-dark text-white"
-                id="new-password"
-                placeholder="New password"
-              />
-              <label for="new-password">New password</label>
+            <div class="input-group mb-3">
+              <div class="form-floating">
+                <input
+                  type="password"
+                  class="form-control bg-dark text-white"
+                  id="new-password"
+                  placeholder="New password"
+                />
+                <label for="new-password">New password</label>
+              </div>
+              <span class="input-group-text"
+                ><i class="bi bi-eye-slash" id="toggleNewPassword"></i
+              ></span>
             </div>
             <div class="d-grid">
               <button type="submit" class="btn btn-bd-primary btn-lg">
@@ -326,6 +341,46 @@
     </div>
   </div>
 </div>
+
+<script>
+  const toggleCurrentPassword = document.querySelector(
+    "#toggleCurrentPassword"
+  );
+  const currentPassword = document.querySelector("#current-password");
+  toggleCurrentPassword.addEventListener("click", () => {
+    // Toggle the type attribute using
+    // getAttribure() method
+    const type =
+      currentPassword.getAttribute("type") === "password" ? "text" : "password";
+    currentPassword.setAttribute("type", type);
+    // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye");
+  });
+
+  const toggleNewPassword = document.querySelector("#toggleNewPassword");
+  const newPassword = document.querySelector("#new-password");
+  toggleNewPassword.addEventListener("click", () => {
+    // Toggle the type attribute using
+    // getAttribure() method
+    const type =
+      newPassword.getAttribute("type") === "password" ? "text" : "password";
+    newPassword.setAttribute("type", type);
+    // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye");
+  });
+
+  const toggleRepeatPassword = document.querySelector("#toggleRepeatPassword");
+  const repeatPassword = document.querySelector("#repeat-password");
+  toggleRepeatPassword.addEventListener("click", () => {
+    // Toggle the type attribute using
+    // getAttribure() method
+    const type =
+      repeatPassword.getAttribute("type") === "password" ? "text" : "password";
+    repeatPassword.setAttribute("type", type);
+    // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye");
+  });
+</script>
 
 <script src="{{ url_for('static', path='js/settings.js') }}"></script>
 {% endblock %}
