@@ -1,10 +1,11 @@
 from typing import AsyncGenerator
 
+import motor.motor_asyncio
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, MONGODB_HOST, MONGODB_PORT, MONGODB_NAME
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 Base = declarative_base()
@@ -18,3 +19,23 @@ async_session_maker = sessionmaker(engine, class_=AsyncSession)
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
+
+
+class MongoDB:
+    def __init__(self, host, port, db_name):
+        self.host = host
+        self.port = port
+        self.db_name = db_name
+        self.db = None
+        self.client = None
+
+    async def connect(self):
+        self.client = motor.motor_asyncio.AsyncIOMotorClient(f"mongodb://{self.host}:{self.port}")
+        self.db = self.client[self.db_name]
+
+    async def disconnect(self):
+        if self.client:
+            self.client.close()
+
+
+mongo_db = MongoDB(host=MONGODB_HOST, port=MONGODB_PORT, db_name=MONGODB_NAME)

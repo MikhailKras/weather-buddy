@@ -9,6 +9,7 @@ from fastapi_limiter import FastAPILimiter
 
 from src.auth.jwt import is_authenticated
 from src.config import REDIS_HOST, REDIS_PORT
+from src.database import mongo_db
 from src.weather_service.router import router as router_weather
 from src.auth.router import router as router_auth
 
@@ -19,6 +20,13 @@ app = FastAPI(title='Weather Buddy')
 async def startup():
     redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}", encoding="utf8", decode_responses=True)
     await FastAPILimiter.init(redis)
+
+    await mongo_db.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await mongo_db.disconnect()
 
 
 app.include_router(router_weather)
