@@ -32,6 +32,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 Mako==1.2.4
 MarkupSafe==2.1.2
+motor==3.1.2
 multidict==6.0.4
 orjson==3.8.7
 packaging==23.1
@@ -40,6 +41,7 @@ pluggy==1.0.0
 pyasn1==0.4.8
 pycparser==2.21
 pydantic==1.10.6
+pymongo==4.3.3
 pytest==7.3.1
 pytest-asyncio==0.21.0
 python-dotenv==1.0.0
