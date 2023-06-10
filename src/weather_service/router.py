@@ -12,8 +12,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.jwt import is_authenticated
 from src.config import WEATHER_API_KEY
 from src.database import get_async_session
-from src.weather_service.schemas import CityInDB
-from src.weather_service.utils import search_cities_db, get_city_data_by_id, process_weather_data
+from src.weather_service.schemas import CityInDB, PrecipitationType, PrecipitationClothing
+from src.weather_service.utils import search_cities_db, get_city_data_by_id, process_data, \
+    get_data_from_clothing_document_by_precipitation, get_clothing_document, get_temperature_range, get_precipitation_type
 
 
 class ValidationErrorLoggingRoute(APIRoute):
@@ -103,7 +104,7 @@ async def get_city_id_by_coordinates(
             ):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='No information found for given coordinates')
 
-    location_data, weather_data = await process_weather_data(data)
+    location_data, weather_data = await process_data(data)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
@@ -141,14 +142,25 @@ async def get_city_weather(
                 if 'error' in data:
                     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
 
-    location_data, weather_data = await process_weather_data(data, city_data)
+    temperature_range = get_temperature_range(int(data['current']['feelslike_c']))
+    precipitation = await get_precipitation_type(data['current']['condition']['code'])
+    document = await get_clothing_document(temperature_range)
+    db_clothing_data = get_data_from_clothing_document_by_precipitation(document, precipitation)
+    location_data, weather_data, clothing_data = await process_data(data, city_data, db_clothing_data)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
             "request": request,
             "weather_data": weather_data,
             "location_data": location_data,
+            "clothing_data": clothing_data,
             "is_auth": is_auth,
         }
     )
 
+
+@router.get('/clothes_data', response_model=PrecipitationClothing)
+async def get_clothes_data(temperature: int, precipitation: PrecipitationType):
+    temperature_range = get_temperature_range(temperature)
+    document = await get_clothing_document(temperature_range)
+    return get_data_from_clothing_document_by_precipitation(document, precipitation)
