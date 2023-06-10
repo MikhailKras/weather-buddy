@@ -1,4 +1,5 @@
-from typing import List
+from enum import Enum
+from typing import List, Optional
 
 from bson import ObjectId
 from pydantic import BaseModel, Field
@@ -51,8 +52,8 @@ class PrecipitationClothing(BaseModel):
 
 class Precipitation(BaseModel):
     none: PrecipitationClothing = Field(..., alias='None')
-    Rain: PrecipitationClothing
-    Snow: PrecipitationClothing
+    Rain: Optional[PrecipitationClothing]
+    Snow: Optional[PrecipitationClothing]
 
 
 class TemperatureRange(BaseModel):
@@ -108,3 +109,9 @@ class ClothesDataDocument(BaseModel):
             },
         }
     }
+
+
+class PrecipitationType(Enum):
+    none = "None"
+    rain = "Rain"
+    snow = "Snow"
