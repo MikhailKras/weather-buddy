@@ -104,13 +104,18 @@ async def get_city_id_by_coordinates(
             ):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='No information found for given coordinates')
 
-    location_data, weather_data = await process_data(data)
+    temperature_range = get_temperature_range(int(data['current']['feelslike_c']))
+    precipitation = await get_precipitation_type(data['current']['condition']['code'])
+    document = await get_clothing_document(temperature_range)
+    db_clothing_data = get_data_from_clothing_document_by_precipitation(document, precipitation)
+    location_data, weather_data, clothing_data = await process_data(weatherapi_data=data, db_clothing_data=db_clothing_data)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
             "request": request,
             "weather_data": weather_data,
             "location_data": location_data,
+            "clothing_data": clothing_data,
             "is_auth": is_auth,
         }
     )
