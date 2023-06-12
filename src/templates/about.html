@@ -1,21 +1,49 @@
-{% if is_auth %}
-  {% extends 'auth/base.html' %}
-{% else %}
-  {% extends 'base.html' %}
-{% endif %}
-
-{% block title %}About Us{% endblock %}
-
-{% block content %}
+{% extends 'auth/base.html' if is_auth else 'base.html' %} {% block title
+%}About Us{% endblock %} {% block content %}
+<div class="container-fluid container-login">
   <div class="container my-5">
     <h1 class="display-4 mb-4 text-white">About WeatherBuddy</h1>
-    <p class="lead">WeatherBuddy is a web application that provides up-to-date weather information for any city in the world.</p>
-    <p class="lead">Our goal is to help people plan their day by providing accurate and reliable weather forecasts.</p>
-    <hr class="my-5">
+    <p class="lead fs-3">
+      WeatherBuddy is a web application that provides up-to-date weather
+      information for any city in the world.
+    </p>
+    <p class="lead fs-3">
+      Our goal is to help people plan their day by providing accurate and
+      reliable weather forecasts, along with useful information on clothing
+      recommendations for the current weather conditions.
+    </p>
+    <p class="lead fs-3">
+      WeatherBuddy also provides additional location data, including latitude,
+      longitude, population, and timezone, to give users a comprehensive
+      overview of their selected city.
+    </p>
+    <hr
+      class="border-4 opacity-100"
+      style="border-color: #d8d8f6; margin-top: 5px"
+    />
     <h2 class="mb-3">Contact Us</h2>
     <ul class="list-unstyled">
-      <li><i class="bi bi-github"></i><a href="https://github.com/MikhailKras" target="_blank" class="ms-2">https://github.com/MikhailKras</a></li>
-      <li><i class="bi bi-envelope"></i><a href="mailto:kras2011@yahoo.com" class="ms-2">kras2011@yahoo.com</a></li>
+      <li>
+        <i class="fs-3 bi bi-github"></i
+        ><a
+          href="https://github.com/MikhailKras"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="fs-3 my-link ms-2"
+          >GitHub</a
+        >
+      </li>
+      <li>
+        <i class="fs-3 bi bi-telegram"></i
+        ><a
+          href="https://t.me/Terabium"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="fs-3 my-link ms-2"
+          >Telegram</a
+        >
+      </li>
     </ul>
   </div>
+</div>
 {% endblock %}
