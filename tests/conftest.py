@@ -3,14 +3,14 @@ from typing import AsyncGenerator
 
 import pytest
 from httpx import AsyncClient
-from sqlalchemy import insert
+from sqlalchemy import insert, select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from src.auth.jwt import create_registration_token, create_reset_password_token
 from src.auth.models import user, email_verification
 from src.config import DB_USER_TEST, DB_PASS_TEST, DB_HOST_TEST, DB_PORT_TEST, DB_NAME_TEST
-from src.database import metadata, get_async_session
+from src.database import metadata, get_async_session, DATABASE_URL
 from src.main import app, startup
 from src.models import city
 
@@ -68,13 +68,47 @@ def city_data():
 
 
 @pytest.fixture(scope="session")
-async def fill_city_table(city_data):
+async def fill_city_table_with_custom_data(city_data):
     async with async_session_maker() as session:
         insert_query = insert(city).values(
             **city_data
         )
         await session.execute(insert_query)
         await session.commit()
+
+
+@pytest.fixture(scope="session")
+async def fill_city_table_with_real_data(city_data):
+    engine = create_async_engine(DATABASE_URL)
+    async_real_session_maker = sessionmaker(engine, class_=AsyncSession)
+    async with async_real_session_maker() as real_session:
+        city_data = select(city)
+        result = await real_session.execute(city_data)
+        city_rows = result.fetchall()
+
+    async with async_session_maker() as session:
+        for row in city_rows:
+            insert_query = insert(city).values(
+                id=row.id,
+                name=row.name,
+                region=row.region,
+                country=row.country,
+                latitude=row.latitude,
+                longitude=row.longitude,
+                population=row.population,
+                timezone=row.timezone,
+                alternatenames=row.alternatenames
+            )
+            await session.execute(insert_query)
+        await session.commit()
+
+    yield city_rows
+
+
+async def city_ids_to_test(num_ids: int):
+    city_rows = await fill_city_table_with_real_data
+    city_ids = [row.id for row in city_rows[:num_ids]]
+    return city_ids
 
 
 @pytest.fixture(scope="session")
