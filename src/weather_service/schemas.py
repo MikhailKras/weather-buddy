@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 class CityInDB(BaseModel):
     id: int
     name: str
-    region: str
+    region: Optional[str]
     country: str
     latitude: float
     longitude: float
