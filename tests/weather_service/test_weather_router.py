@@ -23,7 +23,7 @@ async def test_find_city_name_matches(
         expected_status,
         detail,
         content_type,
-        fill_city_table
+        fill_city_table_with_custom_data
 ):
     response = await ac.get(f"/weather/city_names", params={"city_input": city_input})
 
@@ -63,7 +63,7 @@ async def test_get_id_by_coordinates(
 
 async def test_get_city_weather(
         ac: AsyncClient,
-        fill_city_table
+        fill_city_table_with_custom_data
 ):
     response = await ac.get(f"/weather/info", params={"city_id": 1})
 

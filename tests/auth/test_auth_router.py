@@ -47,7 +47,7 @@ async def test_find_city_name_matches(
         expected_status,
         expected_detail,
         expected_content_type,
-        fill_city_table
+        fill_city_table_with_custom_data
 ):
     response = await ac.get(f"/users/{purpose}/city/choose_city_name", params={"city_input": city_input})
 
@@ -101,7 +101,7 @@ async def test_register_step_2(
 
 async def test_register_step_2_submit(
         ac: AsyncClient,
-        fill_city_table,
+        fill_city_table_with_custom_data,
         monkeypatch: pytest.MonkeyPatch):
     async def send_verification_code_mock(*args, **kwargs):
         pass
@@ -118,7 +118,7 @@ async def test_register_step_2_submit(
     assert response.json()["message"] == "Registration successful. Please verify your email to gain full access."
 
 
-async def test_register_step_2_submit_existing_username(ac: AsyncClient, existing_user, fill_city_table):
+async def test_register_step_2_submit_existing_username(ac: AsyncClient, existing_user, fill_city_table_with_custom_data):
     response = await ac.post("/users/register/details", json={
         "username": existing_user["username"],
         "password": "string1",
@@ -171,7 +171,7 @@ async def test_verify_email(ac: AsyncClient,
                             expected_detail,
                             expected_message,
                             user_data,
-                            fill_city_table,
+                            fill_city_table_with_custom_data,
                             monkeypatch: pytest.MonkeyPatch
                             ):
     def get_email_from_token_mock(*args, **kwargs):
@@ -244,7 +244,7 @@ async def test_post_email_for_password_reset(
         expected_status,
         message,
         detail,
-        fill_city_table,
+        fill_city_table_with_custom_data,
         monkeypatch: pytest.MonkeyPatch,
 ):
 
@@ -296,7 +296,7 @@ async def test_reset_password(
         expected_status,
         detail,
         message,
-        fill_city_table
+        fill_city_table_with_custom_data
 ):
     reset_password_token_value = create_reset_password_token(
         user_id=user_id
@@ -332,7 +332,7 @@ async def test_send_verification_email(ac: AsyncClient,
                                        expected_status,
                                        detail,
                                        message,
-                                       fill_city_table,
+                                       fill_city_table_with_custom_data,
                                        monkeypatch: pytest.MonkeyPatch,
                                        ):
     async def get_user_email_verification_info_mock(*args, **kwargs):
@@ -430,7 +430,7 @@ async def test_login_for_access_token(
         assert response.json()["token_type"] == "bearer"
 
 
-async def test_read_users_me(ac: AsyncClient, fill_city_table, monkeypatch: pytest.MonkeyPatch):
+async def test_read_users_me(ac: AsyncClient, fill_city_table_with_custom_data, monkeypatch: pytest.MonkeyPatch):
     async def get_user_email_verification_info_mock(*args, **kwargs):
         return UserEmailVerificationInfo(id=1, user_id=1, token="test_token", verified=False)
     monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)

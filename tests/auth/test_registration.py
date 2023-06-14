@@ -6,7 +6,7 @@ from src.auth.email import Email
 from src.auth.jwt import create_registration_token
 
 
-async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyPatch, city_data, fill_city_table):
+async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyPatch, city_data, fill_city_table_with_custom_data):
     response = await ac.get("/users/register/city")
 
     assert response.status_code == status.HTTP_200_OK
