@@ -1,10 +1,19 @@
 # WeatherBuddy
 
+### Backend Technologies
+
 [![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.96-green.svg)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.8-blue.svg)](https://www.postgresql.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-6.0.6-green.svg)](https://www.mongodb.com/)
 [![Redis](https://img.shields.io/badge/Redis-7.0.11-red.svg)](https://redis.io/)
+
+### Frontend Technologies
+
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-purple.svg)](https://getbootstrap.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![CSS](https://img.shields.io/badge/CSS-3-blueviolet.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+
 
 This is a Python web application built with FastAPI that provides current weather information. The application utilizes a PostgreSQL database that contains a table with 25,000+ cities. Users can retrieve the following information for each city:
 
