@@ -88,7 +88,7 @@ async def get_city_id_by_coordinates(
 ):
     if not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid coordinates!')
-    url = 'http://api.weatherapi.com/v1/current.json'
+    url = 'http://api.weatherapi.com/v1/forecast.json'
     params = {
         'key': WEATHER_API_KEY,
         'q': f"{latitude},{longitude}",
@@ -108,12 +108,13 @@ async def get_city_id_by_coordinates(
     precipitation = await get_precipitation_type(data['current']['condition']['code'])
     document = await get_clothing_document(temperature_range)
     db_clothing_data = get_data_from_clothing_document_by_precipitation(document, precipitation)
-    location_data, weather_data, clothing_data = await process_data(weatherapi_data=data, db_clothing_data=db_clothing_data)
+    location_data, weather_data, clothing_data, forecast_data = await process_data(weatherapi_data=data, db_clothing_data=db_clothing_data)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
             "request": request,
             "weather_data": weather_data,
+            "forecast_data": forecast_data,
             "location_data": location_data,
             "clothing_data": clothing_data,
             "is_auth": is_auth,
@@ -130,7 +131,7 @@ async def get_city_weather(
 ):
     city_data = await get_city_data_by_id(city_id, session=session)
 
-    url = 'http://api.weatherapi.com/v1/current.json'
+    url = 'http://api.weatherapi.com/v1/forecast.json'
     params = {
         'key': WEATHER_API_KEY,
         'q': f"{city_data.latitude},{city_data.longitude}",
@@ -151,12 +152,13 @@ async def get_city_weather(
     precipitation = await get_precipitation_type(data['current']['condition']['code'])
     document = await get_clothing_document(temperature_range)
     db_clothing_data = get_data_from_clothing_document_by_precipitation(document, precipitation)
-    location_data, weather_data, clothing_data = await process_data(data, city_data, db_clothing_data)
+    location_data, weather_data, clothing_data, forecast_data = await process_data(data, city_data, db_clothing_data)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
             "request": request,
             "weather_data": weather_data,
+            "forecast_data": forecast_data,
             "location_data": location_data,
             "clothing_data": clothing_data,
             "is_auth": is_auth,

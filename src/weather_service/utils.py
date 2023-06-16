@@ -82,9 +82,41 @@ async def process_data(
         'cloudiness, %': weatherapi_data['current']['cloud'],
         'img url': weatherapi_data['current']['condition']['icon']
     }
+
+    forecast_info = weatherapi_data['forecast']['forecastday']
+    formatted_forecast = []
+
+    for day in forecast_info:
+        date = day['date']
+        max_temp = day['day']['maxtemp_c']
+        min_temp = day['day']['mintemp_c']
+        condition = day['day']['condition']['text']
+
+        hourly_forecast = day['hour']
+        formatted_hourly_forecast = []
+
+        for hour in hourly_forecast:
+            time = hour['time']
+            temp = hour['temp_c']
+            condition = hour['condition']['text']
+
+            formatted_hourly_forecast.append({
+                'time': time,
+                'temp': temp,
+                'condition': condition
+            })
+
+        formatted_forecast.append({
+            'date': date,
+            'max_temp': max_temp,
+            'min_temp': min_temp,
+            'condition': condition,
+            'hourly_forecast': formatted_hourly_forecast
+        })
+
     if db_city_data:
         location_data.update(population=db_city_data.population)
-    return location_data, weather_data, clothing_data
+    return location_data, weather_data, clothing_data, formatted_forecast
 
 
 def get_temperature_range(temperature: int) -> TemperatureRange:
