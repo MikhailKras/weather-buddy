@@ -99,11 +99,13 @@ async def process_data(
             time = hour['time']
             temp = hour['temp_c']
             condition = hour['condition']['text']
+            img_url = hour['condition']['icon']
 
             formatted_hourly_forecast.append({
                 'time': time,
                 'temp': temp,
-                'condition': condition
+                'condition': condition,
+                'img_url': img_url
             })
 
         formatted_forecast.append({

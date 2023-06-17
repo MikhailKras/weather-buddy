@@ -135,6 +135,7 @@ async def get_city_weather(
     params = {
         'key': WEATHER_API_KEY,
         'q': f"{city_data.latitude},{city_data.longitude}",
+        'days': 3,
     }
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, params=params) as response:

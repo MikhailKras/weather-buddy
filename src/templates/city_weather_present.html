@@ -35,6 +35,20 @@ content %}
     <li class="nav-item" role="presentation">
       <button
         class="nav-link"
+        id="forecastTab"
+        data-bs-toggle="tab"
+        data-bs-target="#forecastTabContent"
+        type="button"
+        role="tab"
+        aria-controls="forecastTabContent"
+        aria-selected="true"
+      >
+        Forecast
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
         id="locationTab"
         data-bs-toggle="tab"
         data-bs-target="#locationTabContent"
@@ -138,6 +152,84 @@ content %}
         </table>
       </div>
     </div>
+    <!-- ... existing code ... -->
+    <div
+      class="tab-pane fade"
+      id="forecastTabContent"
+      role="tabpanel"
+      aria-labelledby="forecastTab"
+    >
+      <div class="table-responsive">
+        <ul class="fs-4 nav nav-tabs" id="forecastTabs" role="tablist">
+          {% for day in forecast_data %}
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link {% if loop.first %}active{% endif %}"
+              id="{{ day.date|replace('-', '') }}-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#{{ day.date|replace('-', '') }}-tabContent"
+              type="button"
+              role="tab"
+              aria-controls="{{ day.date|replace('-', '') }}-tabContent"
+              aria-selected="{% if loop.first %}true{% else %}false{% endif %}"
+            >
+              {{ day.date }}
+            </button>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="tab-content" id="forecastTabsContent">
+          {% for day in forecast_data %}
+          <div
+            class="tab-pane fade {% if loop.first %}show active{% endif %}"
+            id="{{ day.date|replace('-', '') }}-tabContent"
+            role="tabpanel"
+            aria-labelledby="{{ day.date|replace('-', '') }}-tab"
+          >
+            <h1 class="d-flex justify-content-center text-center">
+              Forecast for {{ location_data.location }}, {{ day.date[-5:] }}
+            </h1>
+            <table class="table-custom mx-auto">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Temperature (°C)</th>
+                  <th>Condition</th>
+                </tr>
+              </thead>
+              <!-- ... existing code ... -->
+              <!-- ... existing code ... -->
+              <tbody>
+                {% for hour in day.hourly_forecast %}
+                <tr>
+                  <td>{{ hour.time[-5:] }}</td>
+                  <td>{{ hour.temp }}</td>
+                  <td>
+                    <div
+                      class="d-flex align-items-center justify-content-center"
+                    >
+                      <span>{{ hour.condition }}</span>
+                      <img
+                        src="{{ hour.img_url }}"
+                        alt="Weather Icon"
+                        class="weather-icon ml-2"
+                      />
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <!-- ... existing code ... -->
+
+              <!-- ... existing code ... -->
+            </table>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <!-- ... existing code ... -->
+
     <div
       class="tab-pane fade"
       id="locationTabContent"
