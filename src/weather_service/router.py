@@ -165,10 +165,3 @@ async def get_city_weather(
             "is_auth": is_auth,
         }
     )
-
-
-@router.get('/clothes_data', response_model=PrecipitationClothing)
-async def get_clothes_data(temperature: int, precipitation: PrecipitationType):
-    temperature_range = get_temperature_range(temperature)
-    document = await get_clothing_document(temperature_range)
-    return get_data_from_clothing_document_by_precipitation(document, precipitation)
