@@ -143,7 +143,7 @@ async def get_city_weather(
             if 'error' in data:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
         if data['location']['name'].title() not in (city_data.name, *map(lambda name: name.title(), city_data.alternatenames)):
-            params.update(q=f"{city_data.name}, {city_data.region}")
+            params.update(q=f"{city_data.name}, {city_data.region}, {city_data.country}")
             async with session.get(url=url, params=params) as response:
                 data = await response.json()
                 if 'error' in data:
