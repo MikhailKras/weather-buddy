@@ -76,15 +76,16 @@ content %}
         <h1 class="d-flex justify-content-center text-center">
           Clothing for {{ location_data.location }}, {{ location_data.country }}
         </h1>
-        <div class="text-center d-flex justify-content-center">
-          <img src={{ weather_data["img url"] }} style="max-height: 70px;
-          max-width: 70px" />
-          <span class="fs-1" style="display: inline-block; line-height: 70px"
-            >{{ weather_data["temperature, °C"] }} °C</span
-          >
-        </div>
+        <div class="text-center d-flex justify-content-center"></div>
         {% if clothing_data %}
         <table class="table-custom mx-auto header-margin-top">
+          <tr>
+            <td>Feels like, °C</td>
+            <td>
+              <img src={{ weather_data["img url"] }} style="max-height: 70px;
+              max-width: 70px" /> {{ weather_data["feels like, °C"] }}
+            </td>
+          </tr>
           {% for clothing_type, clothing_items in clothing_data.items() %} {% if
           not loop.last %}
           <tbody>
@@ -152,7 +153,6 @@ content %}
         </table>
       </div>
     </div>
-    <!-- ... existing code ... -->
     <div
       class="tab-pane fade"
       id="forecastTabContent"
@@ -197,8 +197,6 @@ content %}
                   <th>Condition</th>
                 </tr>
               </thead>
-              <!-- ... existing code ... -->
-              <!-- ... existing code ... -->
               <tbody>
                 {% for hour in day.hourly_forecast %}
                 <tr>
@@ -219,17 +217,12 @@ content %}
                 </tr>
                 {% endfor %}
               </tbody>
-              <!-- ... existing code ... -->
-
-              <!-- ... existing code ... -->
             </table>
           </div>
           {% endfor %}
         </div>
       </div>
     </div>
-    <!-- ... existing code ... -->
-
     <div
       class="tab-pane fade"
       id="locationTabContent"
