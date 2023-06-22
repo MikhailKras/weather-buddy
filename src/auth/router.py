@@ -1,3 +1,4 @@
+import time
 from datetime import timedelta
 from typing import List
 
@@ -8,14 +9,15 @@ from fastapi.templating import Jinja2Templates
 from fastapi_limiter.depends import RateLimiter
 from sqlalchemy import insert, update, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.background import BackgroundTasks
 
-from src.auth.email import Email
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data, \
     create_email_verification_token, get_email_from_token, create_reset_password_token, get_user_id_from_token
 from src.auth.models import user, email_verification
 from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity, \
     UserEmailVerificationInfo, EmailPasswordReset, PasswordReset
 from src.auth.security import get_password_hash, verify_password
+from src.auth.tasks import task_send_reset_password_mail, task_send_verification_code
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data, \
     get_user_by_user_id
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
@@ -127,7 +129,7 @@ async def register_step_2_submit(
     await session.commit()
 
     url = f"{CLIENT_ORIGIN}/users/verify-email-page/{verification_token}"
-    await Email(user_data.username, url, [user_data.email]).send_verification_code()
+    task_send_verification_code.delay(user_data.username, url, [user_data.email])
 
     return {'message': 'Registration successful. Please verify your email to gain full access.'}
 
@@ -217,7 +219,7 @@ async def send_verification_email(
     url = f"{CLIENT_ORIGIN}/users/verify-email-page/{verification_token}"
 
     try:
-        await Email(user_data.username, url, [user_data.email]).send_verification_code()
+        task_send_verification_code.delay(user_data.username, url, [user_data.email])
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Failed to send verification email. Please try again later.")
@@ -431,7 +433,6 @@ async def get_password_reset_page_with_email(request: Request, is_auth: bool = D
 
 @router.post("/password-reset", dependencies=[Depends(RateLimiter(times=5, seconds=30, callback=custom_callback))])
 async def post_email_for_password_reset(
-        response: Response,
         email_data: EmailPasswordReset,
         session: AsyncSession = Depends(get_async_session),
 ):
@@ -453,7 +454,7 @@ async def post_email_for_password_reset(
     url = f"{CLIENT_ORIGIN}/users/password-reset/form/{reset_password_token}"
 
     try:
-        await Email(user_data.username, url, [user_data.email]).send_reset_password_mail()
+        task_send_reset_password_mail.delay(user_data.username, url, [user_data.email])
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail="Failed to send reset password email. Please try again later.")

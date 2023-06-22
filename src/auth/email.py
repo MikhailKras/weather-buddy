@@ -1,6 +1,6 @@
+import smtplib
+from email.message import EmailMessage
 from typing import List
-
-from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from pydantic import EmailStr
 from jinja2 import Environment, select_autoescape, PackageLoader
 
@@ -18,22 +18,8 @@ class Email:
         self.sender = '<weather_buddy@example.com>'
         self.email = email
         self.url = url
-        pass
 
-    async def send_mail(self, subject, template):
-
-        conf = ConnectionConfig(
-            MAIL_USERNAME=EMAIL_USERNAME,
-            MAIL_PASSWORD=EMAIL_PASSWORD,
-            MAIL_FROM=EMAIL_FROM,
-            MAIL_PORT=EMAIL_PORT,
-            MAIL_SERVER=EMAIL_HOST,
-            MAIL_STARTTLS=False,
-            MAIL_SSL_TLS=True,
-            USE_CREDENTIALS=True,
-            VALIDATE_CERTS=True
-        )
-
+    def send_mail(self, subject, template):
         template = env.get_template(template)
 
         html = template.render(
@@ -42,18 +28,18 @@ class Email:
             subject=subject
         )
 
-        message = MessageSchema(
-            subject=subject,
-            recipients=self.email,
-            body=html,
-            subtype="html"
-        )
+        msg = EmailMessage()
+        msg['Subject'] = subject
+        msg['From'] = EMAIL_FROM
+        msg['To'] = ', '.join(self.email)
+        msg.set_content(html, subtype='html')
 
-        fm = FastMail(conf)
-        await fm.send_message(message)
+        with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT) as server:
+            server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+            server.send_message(msg)
 
-    async def send_verification_code(self):
-        await self.send_mail('Email Verification for WeatherBuddy (valid for 10 minutes)', 'auth/verification_message.html')
+    def send_verification_code(self):
+        self.send_mail('Email Verification for WeatherBuddy (valid for 10 minutes)', 'auth/verification_message.html')
 
-    async def send_reset_password_mail(self):
-        await self.send_mail('Reset Password email for WeatherBuddy (valid for 10 minutes)', 'auth/reset_password/email_message.html')
+    def send_reset_password_mail(self):
+        self.send_mail('Reset Password email for WeatherBuddy (valid for 10 minutes)', 'auth/reset_password/email_message.html')
