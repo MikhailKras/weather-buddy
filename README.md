@@ -2,17 +2,18 @@
 
 ### Backend Technologies
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.96-green.svg)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.8-blue.svg)](https://www.postgresql.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.0.6-green.svg)](https://www.mongodb.com/)
-[![Redis](https://img.shields.io/badge/Redis-7.0.11-red.svg)](https://redis.io/)
+[![Python](https://img.shields.io/badge/Python-3.11-416b9a.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.96-409484.svg)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14.8-336791.svg)](https://www.postgresql.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0.6-419053.svg)](https://www.mongodb.com/)
+[![Redis](https://img.shields.io/badge/Redis-7.0.11-c84126.svg)](https://redis.io/)
+[![Celery](https://img.shields.io/badge/Celery-5.3.1-b0ca60.svg)](https://docs.celeryproject.org/)
 
 ### Frontend Technologies
 
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-purple.svg)](https://getbootstrap.com/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![CSS](https://img.shields.io/badge/CSS-3-blueviolet.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-7811f7.svg)](https://getbootstrap.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-eee06a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![CSS](https://img.shields.io/badge/CSS-3-523f79.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 
 This is a Python web application built with FastAPI that provides current weather information. The application utilizes a PostgreSQL database that contains a table with 25,000+ cities. Users can retrieve the following information for each city:
@@ -26,7 +27,7 @@ This is a Python web application built with FastAPI that provides current weathe
 - Two-step registration process:
   - Step 1: Choose city name
   - Step 2: Input additional information (username, email, password)
-- Email verification with FastAPI-Email and sending emails using Google SMTP
+- Email verification with synchronous SMTP using `smtplib` and Celery for asynchronous email tasks
 - Rate limiter for several endpoints with FastAPI-Limiter (using Redis)
 - CSS styles and Bootstrap 5 framework for frontend
 - JavaScript scripts for sending requests to the API
