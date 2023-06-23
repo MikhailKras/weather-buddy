@@ -105,7 +105,7 @@ async def authenticate_user(
 async def get_user_email_verification_info(
         user_id: int,
         session: AsyncSession = Depends(get_async_session)
-):
+) -> Optional[UserEmailVerificationInfo]:
     column_names = [column.name for column in email_verification.columns]
     select_query = select(email_verification).where(email_verification.c.user_id == user_id)
     result = await session.execute(select_query)
@@ -119,7 +119,7 @@ async def get_user_email_verification_info(
 async def get_user_city_data(
         city_id: int,
         session: AsyncSession = Depends(get_async_session)
-):
+) -> Optional[CityInDB]:
     column_names = [column.name for column in city.columns]
     select_query = select(city).where(city.c.id == city_id)
     result = await session.execute(select_query)
