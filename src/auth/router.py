@@ -1,6 +1,6 @@
 import time
 from datetime import timedelta
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -9,7 +9,6 @@ from fastapi.templating import Jinja2Templates
 from fastapi_limiter.depends import RateLimiter
 from sqlalchemy import insert, update, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.background import BackgroundTasks
 
 from src.auth.jwt import create_access_token, get_current_user, is_authenticated, create_registration_token, get_current_city_data, \
     create_email_verification_token, get_email_from_token, create_reset_password_token, get_user_id_from_token
@@ -35,8 +34,8 @@ templates = Jinja2Templates(directory='src/templates')
 
 
 @router.get('/register/city', response_class=HTMLResponse)
-async def register_step_1(request: Request, is_auth: bool = Depends(is_authenticated)):
-    if is_auth:
+async def register_step_1(request: Request, user_data: Optional[UserInDB] = Depends(is_authenticated)):
+    if user_data:
         return RedirectResponse('/users/me')
     return templates.TemplateResponse('auth/register_step_1_city.html', context={"request": request})
 
@@ -47,7 +46,7 @@ async def find_city_name_matches(
         purpose: str,
         city_input: str,
         session: AsyncSession = Depends(get_async_session),
-        is_auth: bool = Depends(is_authenticated)
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
     if purpose not in ('register', 'settings'):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid purpose!')
@@ -68,7 +67,7 @@ async def find_city_name_matches(
         ]
     }
     return templates.TemplateResponse(
-        'auth/choose_city_name.html', context={"request": request, "data": data, "is_auth": is_auth, "purpose": purpose}
+        'auth/choose_city_name.html', context={"request": request, "data": data, "is_auth": user_data, "purpose": purpose}
     )
 
 
@@ -145,9 +144,9 @@ async def register_success(request: Request, message: str):
 async def verify_email_page(
         request: Request,
         token: str,
-        is_auth: bool = Depends(is_authenticated)
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
-    return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token, "is_auth": is_auth})
+    return templates.TemplateResponse("auth/email_verification.html", {"request": request, "token": token, "is_auth": user_data})
 
 
 @router.get('/verify-email/{token}', dependencies=[Depends(RateLimiter(times=5, seconds=60, callback=custom_callback))])
@@ -228,8 +227,8 @@ async def send_verification_email(
 
 
 @router.get('/login', response_class=HTMLResponse)
-async def login_user_get_form(request: Request, is_auth: bool = Depends(is_authenticated)):
-    if is_auth:
+async def login_user_get_form(request: Request, user_data: Optional[UserInDB] = Depends(is_authenticated)):
+    if user_data:
         return RedirectResponse('/users/me')
     response = templates.TemplateResponse('auth/login.html', context={"request": request})
     return response
@@ -287,9 +286,9 @@ async def read_users_me(
 
 
 @router.get("/logout", response_class=RedirectResponse)
-async def logout(is_auth: bool = Depends(is_authenticated)):
+async def logout(user_data: Optional[UserInDB] = Depends(is_authenticated)):
     response = RedirectResponse("/users/login")
-    if is_auth:
+    if user_data:
         response.delete_cookie(key="access_token")
     return response
 
@@ -425,8 +424,8 @@ async def get_my_city_info(
 
 
 @router.get("/password-reset", response_class=HTMLResponse)
-async def get_password_reset_page_with_email(request: Request, is_auth: bool = Depends(is_authenticated)):
-    if is_auth:
+async def get_password_reset_page_with_email(request: Request, user_data: Optional[UserInDB] = Depends(is_authenticated)):
+    if user_data:
         return RedirectResponse('/users/me')
     return templates.TemplateResponse('auth/reset_password/get_email.html', context={"request": request})
 

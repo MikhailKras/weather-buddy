@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 import aiohttp
 
@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import is_authenticated
+from src.auth.schemas import UserInDB
 from src.config import WEATHER_API_KEY
 from src.database import get_async_session
 from src.weather_service.schemas import CityInDB, PrecipitationType, PrecipitationClothing
@@ -45,8 +46,8 @@ templates = Jinja2Templates(directory='src/templates')
 
 
 @router.get('/search', response_class=HTMLResponse)
-async def get_page_weather_search(request: Request, is_auth: bool = Depends(is_authenticated)):
-    return templates.TemplateResponse('city_weather_search.html', context={"request": request, "is_auth": is_auth})
+async def get_page_weather_search(request: Request, user_data: Optional[UserInDB] = Depends(is_authenticated)):
+    return templates.TemplateResponse('city_weather_search.html', context={"request": request, "is_auth": user_data})
 
 
 @router.get('/city_names', response_class=HTMLResponse)
@@ -54,7 +55,7 @@ async def find_city_name_matches(
         request: Request,
         city_input: str,
         session: AsyncSession = Depends(get_async_session),
-        is_auth: bool = Depends(is_authenticated)
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
     city_info: List[CityInDB] = await search_cities_db(city_input.title(), session=session)
     if not city_info:
@@ -75,7 +76,7 @@ async def find_city_name_matches(
     }
 
     return templates.TemplateResponse(
-        'city_names.html', context={"request": request, "data": data, "is_auth": is_auth}
+        'city_names.html', context={"request": request, "data": data, "is_auth": user_data}
     )
 
 
@@ -84,7 +85,7 @@ async def get_city_id_by_coordinates(
         request: Request,
         latitude: float,
         longitude: float,
-        is_auth: bool = Depends(is_authenticated)
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
     if not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid coordinates!')
@@ -117,7 +118,7 @@ async def get_city_id_by_coordinates(
             "forecast_data": forecast_data,
             "location_data": location_data,
             "clothing_data": clothing_data,
-            "is_auth": is_auth,
+            "is_auth": user_data,
         }
     )
 
@@ -127,7 +128,7 @@ async def get_city_weather(
         request: Request,
         city_id: int,
         session: AsyncSession = Depends(get_async_session),
-        is_auth: bool = Depends(is_authenticated)
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
     city_data = await get_city_data_by_id(city_id, session=session)
 
@@ -137,14 +138,14 @@ async def get_city_weather(
         'q': f"{city_data.latitude},{city_data.longitude}",
         'days': 3,
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, params=params) as response:
+    async with aiohttp.ClientSession() as weatherapi_session:
+        async with weatherapi_session.get(url=url, params=params) as response:
             data = await response.json()
             if 'error' in data:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
         if data['location']['name'].title() not in (city_data.name, *map(lambda name: name.title(), city_data.alternatenames)):
             params.update(q=f"{city_data.name}, {city_data.region}, {city_data.country}")
-            async with session.get(url=url, params=params) as response:
+            async with weatherapi_session.get(url=url, params=params) as response:
                 data = await response.json()
                 if 'error' in data:
                     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
@@ -162,6 +163,6 @@ async def get_city_weather(
             "forecast_data": forecast_data,
             "location_data": location_data,
             "clothing_data": clothing_data,
-            "is_auth": is_auth,
+            "is_auth": user_data,
         }
     )

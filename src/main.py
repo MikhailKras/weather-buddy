@@ -1,3 +1,5 @@
+from typing import Optional
+
 from redis import asyncio as aioredis
 import uvicorn
 
@@ -8,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi_limiter import FastAPILimiter
 
 from src.auth.jwt import is_authenticated
+from src.auth.schemas import UserInDB
 from src.config import REDIS_HOST, REDIS_PORT
 from src.database import mongo_db
 from src.weather_service.router import router as router_weather
@@ -38,13 +41,13 @@ templates = Jinja2Templates(directory='src/templates')
 
 
 @app.get('/', response_class=HTMLResponse)
-async def get_home_page(request: Request, is_auth: bool = Depends(is_authenticated)):
-    return templates.TemplateResponse('home.html', context={"request": request, "is_auth": is_auth})
+async def get_home_page(request: Request, user_data: Optional[UserInDB] = Depends(is_authenticated)):
+    return templates.TemplateResponse('home.html', context={"request": request, "is_auth": user_data})
 
 
 @app.get('/about', response_class=HTMLResponse)
-async def get_home_page(request: Request, is_auth: bool = Depends(is_authenticated)):
-    return templates.TemplateResponse('about.html', context={"request": request, "is_auth": is_auth})
+async def get_home_page(request: Request, user_data: Optional[UserInDB] = Depends(is_authenticated)):
+    return templates.TemplateResponse('about.html', context={"request": request, "is_auth": user_data})
 
 
 if __name__ == "__main__":

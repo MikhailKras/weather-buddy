@@ -5,7 +5,7 @@ from fastapi import status, HTTPException, Depends, Cookie
 from jose import jwt, JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.schemas import TokenData, UserCreateStep1
+from src.auth.schemas import TokenData, UserCreateStep1, UserInDB
 from src.auth.utils import get_user_by_username, OAuth2PasswordBearerWithCookie
 from src.config import SECRET_KEY, ALGORITHM, SECRET_KEY_REG, SECRET_KEY_EMAIL_VERIFICATION, SECRET_KEY_RESET_PASSWORD
 from src.database import get_async_session
@@ -27,7 +27,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
 async def get_current_user(
         token: str = Depends(oauth2_scheme),
         session: AsyncSession = Depends(get_async_session)
-):
+) -> UserInDB:
     not_auth_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Not authenticated",
@@ -57,19 +57,19 @@ async def get_current_user(
 async def is_authenticated(
         token: str = Depends(oauth2_scheme),
         session: AsyncSession = Depends(get_async_session)
-) -> bool:
+) -> Optional[UserInDB]:
     try:
         if token is None:
-            return False
+            return None
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            return False
+            return None
         token_data = TokenData(username=username)
     except JWTError:
-        return False
+        return None
     user = await get_user_by_username(token_data.username, session=session)
-    return bool(user)
+    return user
 
 
 def create_registration_token(
