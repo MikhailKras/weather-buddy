@@ -5,6 +5,7 @@ import src
 from src.auth.email import Email
 from src.auth.jwt import is_authenticated, create_reset_password_token
 from src.auth.schemas import UserEmailVerificationInfo
+from src.auth.tasks import task_send_verification_code, task_send_reset_password_mail
 from src.config import RATE_LIMITER_FLAG
 from src.main import app
 
@@ -103,10 +104,10 @@ async def test_register_step_2_submit(
         ac: AsyncClient,
         fill_city_table_with_custom_data,
         monkeypatch: pytest.MonkeyPatch):
-    async def send_verification_code_mock(*args, **kwargs):
+    def send_verification_code_mock(*args, **kwargs):
         pass
 
-    monkeypatch.setattr(Email, "send_verification_code", send_verification_code_mock)
+    monkeypatch.setattr(task_send_verification_code, "delay", send_verification_code_mock)
 
     response = await ac.post("/users/register/details", json={
         "username": "test_user1",
@@ -248,13 +249,13 @@ async def test_post_email_for_password_reset(
         monkeypatch: pytest.MonkeyPatch,
 ):
 
-    async def send_reset_password_mail_mock(*args, **kwargs):
+    def send_reset_password_mail_mock(*args, **kwargs):
         pass
 
     async def get_user_email_verification_info_mock(*args, **kwargs):
         return UserEmailVerificationInfo(id=user_id, user_id=user_id, token="test_token", verified=verified)
 
-    monkeypatch.setattr(Email, "send_reset_password_mail", send_reset_password_mail_mock)
+    monkeypatch.setattr(task_send_reset_password_mail, "delay", send_reset_password_mail_mock)
     monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
 
     response = await ac.post("/users/password-reset", headers={"Rate-Limiter-Flag": RATE_LIMITER_FLAG}, json=email_data)
@@ -338,13 +339,13 @@ async def test_send_verification_email(ac: AsyncClient,
     async def get_user_email_verification_info_mock(*args, **kwargs):
         return UserEmailVerificationInfo(id=user_id, user_id=user_id, token="test_token", verified=verified)
 
-    async def send_verification_code_mock(*args, **kwargs):
+    def send_verification_code_mock(*args, **kwargs):
         if user_id == 3:
             raise Exception
         pass
 
     monkeypatch.setattr(src.auth.router, "get_user_email_verification_info", get_user_email_verification_info_mock)
-    monkeypatch.setattr(Email, "send_verification_code", send_verification_code_mock)
+    monkeypatch.setattr(task_send_verification_code, "delay", send_verification_code_mock)
     response = await ac.post("/users/email-verification", headers={"Rate-Limiter-Flag": RATE_LIMITER_FLAG})
 
     assert response.status_code == expected_status

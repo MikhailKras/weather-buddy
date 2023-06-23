@@ -2,8 +2,8 @@ import pytest
 from httpx import AsyncClient
 from fastapi import status
 
-from src.auth.email import Email
 from src.auth.jwt import create_registration_token
+from src.auth.tasks import task_send_verification_code
 
 
 async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyPatch, city_data, fill_city_table_with_custom_data):
@@ -35,10 +35,10 @@ async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyP
         "password": "password123"
     }
 
-    async def send_verification_code_mock(*args, **kwargs):
+    def send_verification_code_mock(*args, **kwargs):
         pass
 
-    monkeypatch.setattr(Email, "send_verification_code", send_verification_code_mock)
+    monkeypatch.setattr(task_send_verification_code, "delay", send_verification_code_mock)
 
     response = await ac.post("/users/register/details", json=user_data)
 
