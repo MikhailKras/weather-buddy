@@ -1,13 +1,15 @@
+import datetime
 from typing import List, Optional
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import select, insert, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import MONGODB_COLLECTION_NAME
-from src.models import city
+from src.models import city, city_search_history
 from src.database import get_async_session, mongo_db
-from src.weather_service.schemas import CityInDB, TemperatureRange, ClothesDataDocument, PrecipitationClothing, PrecipitationType
+from src.weather_service.schemas import CityInDB, TemperatureRange, ClothesDataDocument, PrecipitationClothing, PrecipitationType, \
+    CitySearchHistory
 
 
 async def search_cities_db(
@@ -188,3 +190,37 @@ def get_data_from_clothing_document_by_precipitation(
         )
 
     return data_for_current_precipitation
+
+
+async def insert_search_history(
+        search_history: CitySearchHistory,
+        session: AsyncSession = Depends(get_async_session),
+) -> None:
+    existing_query = select(city_search_history).where(
+        and_(
+            city_search_history.c.user_id == search_history.user_id,
+            city_search_history.c.city_id == search_history.city_id,
+            city_search_history.c.latitude == search_history.latitude,
+            city_search_history.c.longitude == search_history.longitude,
+        )
+    ).order_by(city_search_history.c.request_at.desc()).limit(1)
+
+    existing_result = await session.execute(existing_query)
+    existing_row = existing_result.fetchone()
+
+    diff_time = None
+
+    if existing_row:
+        column_names = [column.name for column in city_search_history.columns]
+        existing_data = CitySearchHistory(**{column_name: value for column_name, value in zip(column_names, existing_row.tuple())})
+        diff_time = datetime.datetime.utcnow() - existing_data.request_at
+
+    if existing_row is None or diff_time.seconds > 300:
+        insert_query = insert(city_search_history).values(
+            user_id=search_history.user_id,
+            city_id=search_history.city_id,
+            latitude=search_history.latitude,
+            longitude=search_history.longitude,
+        )
+        await session.execute(insert_query)
+        await session.commit()

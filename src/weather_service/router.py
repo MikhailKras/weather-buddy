@@ -11,9 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserInDB
+from src.weather_service.utils import insert_search_history
 from src.config import WEATHER_API_KEY
 from src.database import get_async_session
-from src.weather_service.schemas import CityInDB, PrecipitationType, PrecipitationClothing
+from src.weather_service.schemas import CityInDB, CitySearchHistory
 from src.weather_service.utils import search_cities_db, get_city_data_by_id, process_data, \
     get_data_from_clothing_document_by_precipitation, get_clothing_document, get_temperature_range, get_precipitation_type
 
@@ -85,6 +86,7 @@ async def get_city_id_by_coordinates(
         request: Request,
         latitude: float,
         longitude: float,
+        session: AsyncSession = Depends(get_async_session),
         user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
     if not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
@@ -94,8 +96,8 @@ async def get_city_id_by_coordinates(
         'key': WEATHER_API_KEY,
         'q': f"{latitude},{longitude}",
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, params=params) as response:
+    async with aiohttp.ClientSession() as weatherapi_session:
+        async with weatherapi_session.get(url=url, params=params) as response:
             data = await response.json()
             if 'error' in data:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=data['error']['message'])
@@ -110,6 +112,10 @@ async def get_city_id_by_coordinates(
     document = await get_clothing_document(temperature_range)
     db_clothing_data = get_data_from_clothing_document_by_precipitation(document, precipitation)
     location_data, weather_data, clothing_data, forecast_data = await process_data(weatherapi_data=data, db_clothing_data=db_clothing_data)
+
+    if user_data is not None:
+        search_history = CitySearchHistory(user_id=user_data.id, latitude=latitude, longitude=longitude)
+        await insert_search_history(search_history=search_history, session=session)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
@@ -155,6 +161,10 @@ async def get_city_weather(
     document = await get_clothing_document(temperature_range)
     db_clothing_data = get_data_from_clothing_document_by_precipitation(document, precipitation)
     location_data, weather_data, clothing_data, forecast_data = await process_data(data, city_data, db_clothing_data)
+
+    if user_data is not None:
+        search_history = CitySearchHistory(user_id=user_data.id, city_id=city_id)
+        await insert_search_history(search_history=search_history, session=session)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
