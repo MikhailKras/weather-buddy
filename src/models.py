@@ -1,5 +1,6 @@
-from sqlalchemy import Table, Column, Integer, String, Float, CheckConstraint, ARRAY
+from datetime import datetime
 
+from sqlalchemy import Table, Column, Integer, String, Float, CheckConstraint, ARRAY, ForeignKey, TIMESTAMP
 from src.database import metadata
 
 city = Table(
@@ -14,4 +15,14 @@ city = Table(
     Column('population', Integer),
     Column('timezone', String),
     Column('alternatenames', ARRAY(String))
+)
+city_search_history = Table(
+    'city_search_history',
+    metadata,
+    Column('id', Integer, primary_key=True),
+    Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
+    Column('city_id', Integer, ForeignKey('city.id'), default=None),
+    Column('latitude', Float),
+    Column('longitude', Float),
+    Column('request_at', TIMESTAMP, default=datetime.utcnow),
 )
