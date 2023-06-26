@@ -16,13 +16,25 @@ city = Table(
     Column('timezone', String),
     Column('alternatenames', ARRAY(String))
 )
-city_search_history = Table(
-    'city_search_history',
+search_history_city_name = Table(
+    'search_history_city_name',
     metadata,
     Column('id', Integer, primary_key=True),
     Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
-    Column('city_id', Integer, ForeignKey('city.id'), default=None),
+    Column('city_id', Integer, ForeignKey('city.id'), nullable=False),
+    Column('request_at', TIMESTAMP, default=datetime.utcnow),
+)
+
+
+search_history_coordinates = Table(
+    'search_history_coordinates',
+    metadata,
+    Column('id', Integer, primary_key=True),
+    Column('user_id', Integer, ForeignKey('user.id'), nullable=False),
     Column('latitude', Float),
     Column('longitude', Float),
+    Column('place_name', String),
+    Column('region', String),
+    Column('country', String),
     Column('request_at', TIMESTAMP, default=datetime.utcnow),
 )
