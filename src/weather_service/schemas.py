@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List, Optional
 
 from bson import ObjectId
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 
 
 class CityInDB(BaseModel):
@@ -118,22 +118,25 @@ class PrecipitationType(Enum):
     snow = "Snow"
 
 
-class CitySearchHistory(BaseModel):
+class SearchHistoryCityName(BaseModel):
     id: Optional[int]
     user_id: int
-    city_id: Optional[int]
-    latitude: Optional[float]
-    longitude: Optional[float]
+    city_id: int
     request_at: Optional[datetime.datetime]
 
     class Config:
         orm_mode = True
-        allow_population_by_field_name = True
-        validate_assignment = True
-        extra = 'forbid'
 
-        @validator('id', 'request_at', pre=True)
-        def prevent_assignment(cls, v):
-            if v is not None:
-                raise ValueError('Assignment not allowed for id and request_at fields')
-            return v
+
+class SearchHistoryCoordinates(BaseModel):
+    id: Optional[int]
+    user_id: int
+    latitude: float
+    longitude: float
+    place_name: str
+    region: Optional[str]
+    country: str
+    request_at: Optional[datetime.datetime]
+
+    class Config:
+        orm_mode = True

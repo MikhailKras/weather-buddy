@@ -1,6 +1,7 @@
 import datetime
 import re
-from typing import List
+from enum import Enum
+from typing import List, Optional
 
 from fastapi import HTTPException, status
 
@@ -155,3 +156,34 @@ class PasswordReset(BaseModel):
                 detail='Password must contain at least 7 characters'
             )
         return values
+
+
+class CityNameSearchHistoryPresentation(BaseModel):
+    city_id: int
+    city_name: str
+    region: Optional[str]
+    country: str
+    latitude: float
+    longitude: float
+    search_time: str
+
+    @validator('latitude', 'longitude', pre=True)
+    def round_coordinates(cls, value):
+        if value is not None:
+            return round(value, 2)
+        return value
+
+
+class CoordinatesSearchHistoryPresentation(BaseModel):
+    place_name: Optional[str]
+    region: Optional[str]
+    country: str
+    latitude: float
+    longitude: float
+    search_time: str
+
+    @validator('latitude', 'longitude', pre=True)
+    def round_coordinates(cls, value):
+        if value is not None:
+            return round(value, 2)
+        return value

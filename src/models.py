@@ -16,7 +16,7 @@ city = Table(
     Column('timezone', String),
     Column('alternatenames', ARRAY(String))
 )
-search_history_city_name = Table(
+search_history_city_name_db = Table(
     'search_history_city_name',
     metadata,
     Column('id', Integer, primary_key=True),
@@ -26,7 +26,7 @@ search_history_city_name = Table(
 )
 
 
-search_history_coordinates = Table(
+search_history_coordinates_db = Table(
     'search_history_coordinates',
     metadata,
     Column('id', Integer, primary_key=True),

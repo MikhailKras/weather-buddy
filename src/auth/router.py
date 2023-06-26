@@ -1,6 +1,6 @@
 import time
 from datetime import timedelta
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -14,11 +14,11 @@ from src.auth.jwt import create_access_token, get_current_user, is_authenticated
     create_email_verification_token, get_email_from_token, create_reset_password_token, get_user_id_from_token
 from src.auth.models import user, email_verification
 from src.auth.schemas import UserCreateStep2, Token, UserInDB, UserUpdateData, PasswordChange, UserCreateStep1, UserUpdateCity, \
-    UserEmailVerificationInfo, EmailPasswordReset, PasswordReset
+    UserEmailVerificationInfo, EmailPasswordReset, PasswordReset, CityNameSearchHistoryPresentation, CoordinatesSearchHistoryPresentation
 from src.auth.security import get_password_hash, verify_password
 from src.auth.tasks import task_send_reset_password_mail, task_send_verification_code
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data, \
-    get_user_by_user_id
+    get_user_by_user_id, get_search_history_data
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
 from src.rate_limiter.callback import custom_callback
@@ -491,3 +491,49 @@ async def reset_password(
     await session.commit()
 
     return {"message": "Password updated successfully"}
+
+
+@router.get("/search_history_data")
+async def get_search_data(
+        request: Request,
+        user_data: UserInDB = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session),
+):
+    city_name_search_history_data, coordinates_search_history_data = await get_search_history_data(user_id=user_data.id, session=session)
+    presentation_data = {
+        "city_name_search_history_data": [],
+        "coordinates_search_history_data": []
+    }
+
+    if city_name_search_history_data:
+        for row in city_name_search_history_data:
+            search_time = row.request_at.strftime("%d/%m/%y %H:%M:%S")
+            city_data: CityInDB = await get_user_city_data(row.city_id, session=session)
+            search_history_presentation = CityNameSearchHistoryPresentation(
+                city_id=row.city_id,
+                city_name=city_data.name,
+                region=city_data.region,
+                country=city_data.country,
+                latitude=city_data.latitude,
+                longitude=city_data.longitude,
+                search_time=search_time
+            )
+            presentation_data["city_name_search_history_data"].append(search_history_presentation)
+
+    if coordinates_search_history_data:
+        for row in coordinates_search_history_data:
+            search_time = row.request_at.strftime("%d/%m/%y %H:%M:%S")
+            search_history_presentation = CoordinatesSearchHistoryPresentation(
+                place_name=row.place_name,
+                region=row.region,
+                country=row.country,
+                latitude=row.latitude,
+                longitude=row.longitude,
+                search_time=search_time
+            )
+            presentation_data["coordinates_search_history_data"].append(search_history_presentation)
+
+    return templates.TemplateResponse("auth/search_data.html", {
+        "request": request,
+        "search_history_presentation_data": presentation_data
+    })

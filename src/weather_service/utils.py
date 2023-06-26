@@ -6,10 +6,10 @@ from sqlalchemy import select, insert, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import MONGODB_COLLECTION_NAME
-from src.models import city, city_search_history
+from src.models import city, search_history_city_name_db, search_history_coordinates_db
 from src.database import get_async_session, mongo_db
 from src.weather_service.schemas import CityInDB, TemperatureRange, ClothesDataDocument, PrecipitationClothing, PrecipitationType, \
-    CitySearchHistory
+    SearchHistoryCityName, SearchHistoryCoordinates
 
 
 async def search_cities_db(
@@ -192,18 +192,16 @@ def get_data_from_clothing_document_by_precipitation(
     return data_for_current_precipitation
 
 
-async def insert_search_history(
-        search_history: CitySearchHistory,
+async def insert_search_history_city_name(
+        search_history_city_name: SearchHistoryCityName,
         session: AsyncSession = Depends(get_async_session),
 ) -> None:
-    existing_query = select(city_search_history).where(
+    existing_query = select(search_history_city_name_db).where(
         and_(
-            city_search_history.c.user_id == search_history.user_id,
-            city_search_history.c.city_id == search_history.city_id,
-            city_search_history.c.latitude == search_history.latitude,
-            city_search_history.c.longitude == search_history.longitude,
+            search_history_city_name_db.c.user_id == search_history_city_name.user_id,
+            search_history_city_name_db.c.city_id == search_history_city_name.city_id,
         )
-    ).order_by(city_search_history.c.request_at.desc()).limit(1)
+    ).order_by(search_history_city_name_db.c.request_at.desc()).limit(1)
 
     existing_result = await session.execute(existing_query)
     existing_row = existing_result.fetchone()
@@ -211,16 +209,49 @@ async def insert_search_history(
     diff_time = None
 
     if existing_row:
-        column_names = [column.name for column in city_search_history.columns]
-        existing_data = CitySearchHistory(**{column_name: value for column_name, value in zip(column_names, existing_row.tuple())})
+        column_names = [column.name for column in search_history_city_name_db.columns]
+        existing_data = SearchHistoryCityName(**{column_name: value for column_name, value in zip(column_names, existing_row.tuple())})
         diff_time = datetime.datetime.utcnow() - existing_data.request_at
 
     if existing_row is None or diff_time.seconds > 300:
-        insert_query = insert(city_search_history).values(
-            user_id=search_history.user_id,
-            city_id=search_history.city_id,
-            latitude=search_history.latitude,
-            longitude=search_history.longitude,
+        insert_query = insert(search_history_city_name_db).values(
+            user_id=search_history_city_name.user_id,
+            city_id=search_history_city_name.city_id,
+        )
+        await session.execute(insert_query)
+        await session.commit()
+
+
+async def insert_search_history_coordinates(
+        search_history_coordinates: SearchHistoryCoordinates,
+        session: AsyncSession = Depends(get_async_session),
+) -> None:
+    existing_query = select(search_history_coordinates_db).where(
+        and_(
+            search_history_coordinates_db.c.user_id == search_history_coordinates.user_id,
+            search_history_coordinates_db.c.latitude == search_history_coordinates.latitude,
+            search_history_coordinates_db.c.longitude == search_history_coordinates.longitude,
+        )
+    ).order_by(search_history_coordinates_db.c.request_at.desc()).limit(1)
+
+    existing_result = await session.execute(existing_query)
+    existing_row = existing_result.fetchone()
+
+    diff_time = None
+
+    if existing_row:
+        column_names = [column.name for column in search_history_coordinates_db.columns]
+        existing_data = SearchHistoryCoordinates(**{column_name: value for column_name, value in zip(column_names, existing_row.tuple())})
+        diff_time = datetime.datetime.utcnow() - existing_data.request_at
+
+    if existing_row is None or diff_time.seconds > 300:
+        insert_query = insert(search_history_coordinates_db).values(
+            user_id=search_history_coordinates.user_id,
+            latitude=search_history_coordinates.latitude,
+            longitude=search_history_coordinates.longitude,
+            place_name=search_history_coordinates.place_name,
+            region=search_history_coordinates.region,
+            country=search_history_coordinates.country,
         )
         await session.execute(insert_query)
         await session.commit()

@@ -1,0 +1,146 @@
+{% extends "auth/base.html" %} {% block title %}My History{% endblock %} {%
+block content %}
+<div class="container-fluid h-100" style="padding: 0">
+  <ul class="fs-3 nav nav-tabs border-0" id="searchHistoryTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="cityNameHistoryTab"
+        data-bs-toggle="tab"
+        data-bs-target="#cityNameHistoryTabContent"
+        type="button"
+        role="tab"
+        aria-controls="cityNameHistoryTabContent"
+        aria-selected="true"
+      >
+        City History
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="coordinatesHistoryTab"
+        data-bs-toggle="tab"
+        data-bs-target="#coordinatesHistoryTabContent"
+        type="button"
+        role="tab"
+        aria-controls="coordinatesHistoryTabContent"
+        aria-selected="true"
+      >
+        Coordinates History
+      </button>
+    </li>
+  </ul>
+  <hr
+    class="border-4 opacity-100"
+    style="border-color: #d8d8f6; margin-top: 5px"
+  />
+  <div class="tab-content" id="searchHistoryTabsContent">
+    <div
+      class="tab-pane fade show active"
+      id="cityNameHistoryTabContent"
+      role="tabpanel"
+      aria-labelledby="cityNameTab"
+    >
+      {% if search_history_presentation_data.city_name_search_history_data %}
+      <div class="table-responsive custom-margin-top">
+        <h1 class="d-flex justify-content-center text-center">City History</h1>
+        <table class="table-custom mx-auto table-hover-cursor">
+          <thead>
+            <tr class="table-info">
+              {% for column_name in
+              search_history_presentation_data.city_name_search_history_data[0].__fields__
+              %} {% if column_name != 'city_id' %}
+              <th scope="col">
+                {{ column_name.capitalize().replace('_', ' ') }}
+              </th>
+              {% endif %} {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row_dict in
+            search_history_presentation_data.city_name_search_history_data %}
+            <tr onclick="redirectToCity('{{ row_dict.city_id }}');">
+              {% for value in row_dict %} {% if value[0] != 'city_id' %}
+              <td>
+                {% if value[-1] is none %} No data {% elif value[-1] is string
+                %} {{ value[-1].capitalize().replace('_', ' ') }} {% else %} {{
+                value[-1] }} {% endif %}
+              </td>
+              {% endif %} {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center mt-4">
+        <p class="fs-3">No city history data available yet.</p>
+      </div>
+      {% endif %}
+    </div>
+    <div
+      class="tab-pane fade"
+      id="coordinatesHistoryTabContent"
+      role="tabpanel"
+      aria-labelledby="coordinatesTab"
+    >
+      {% if search_history_presentation_data.coordinates_search_history_data %}
+      <div class="table-responsive custom-margin-top">
+        <h1 class="d-flex justify-content-center text-center">
+          Coordinates History
+        </h1>
+        <table class="table-custom mx-auto table-hover-cursor">
+          <thead>
+            <tr class="table-info">
+              {% for column_name in
+              search_history_presentation_data.coordinates_search_history_data[0].__fields__
+              %}
+              <th scope="col">
+                {{ column_name.capitalize().replace('_', ' ') }}
+              </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row_dict in
+            search_history_presentation_data.coordinates_search_history_data %}
+            <tr
+              onclick="redirectToCoordinates('{{ row_dict.latitude }}', '{{ row_dict.longitude }}');"
+            >
+              {% for value in row_dict %}
+              <td>
+                {% if value[-1] is none %} No data {% elif value[-1] is string
+                %} {{ value[-1].capitalize().replace('_', ' ') }} {% else %} {{
+                value[-1] }} {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center mt-4">
+        <p class="fs-3">No coordinates history data available yet.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  function redirectToCity(cityId) {
+    window.location.href =
+      "/weather/info?city_id=" + encodeURIComponent(cityId);
+  }
+
+  function redirectToCoordinates(latitude, longitude) {
+    window.location.href =
+      "/weather/info/by_coordinates?latitude=" +
+      encodeURIComponent(latitude) +
+      "&longitude=" +
+      encodeURIComponent(longitude);
+  }
+</script>
+{% endblock %}

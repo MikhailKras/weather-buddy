@@ -11,12 +11,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserInDB
-from src.weather_service.utils import insert_search_history
 from src.config import WEATHER_API_KEY
 from src.database import get_async_session
-from src.weather_service.schemas import CityInDB, CitySearchHistory
+from src.weather_service.schemas import CityInDB, SearchHistoryCityName, SearchHistoryCoordinates
 from src.weather_service.utils import search_cities_db, get_city_data_by_id, process_data, \
-    get_data_from_clothing_document_by_precipitation, get_clothing_document, get_temperature_range, get_precipitation_type
+    get_data_from_clothing_document_by_precipitation, get_clothing_document, get_temperature_range, get_precipitation_type, \
+    insert_search_history_city_name, insert_search_history_coordinates
 
 
 class ValidationErrorLoggingRoute(APIRoute):
@@ -114,8 +114,15 @@ async def get_city_id_by_coordinates(
     location_data, weather_data, clothing_data, forecast_data = await process_data(weatherapi_data=data, db_clothing_data=db_clothing_data)
 
     if user_data is not None:
-        search_history = CitySearchHistory(user_id=user_data.id, latitude=latitude, longitude=longitude)
-        await insert_search_history(search_history=search_history, session=session)
+        search_history_coordinates = SearchHistoryCoordinates(
+            user_id=user_data.id,
+            latitude=latitude,
+            longitude=longitude,
+            place_name=location_data['location'],
+            region=location_data['region'],
+            country=location_data['country']
+        )
+        await insert_search_history_coordinates(search_history_coordinates=search_history_coordinates, session=session)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
@@ -163,8 +170,8 @@ async def get_city_weather(
     location_data, weather_data, clothing_data, forecast_data = await process_data(data, city_data, db_clothing_data)
 
     if user_data is not None:
-        search_history = CitySearchHistory(user_id=user_data.id, city_id=city_id)
-        await insert_search_history(search_history=search_history, session=session)
+        search_history_city_name = SearchHistoryCityName(user_id=user_data.id, city_id=city_id)
+        await insert_search_history_city_name(search_history_city_name=search_history_city_name, session=session)
 
     return templates.TemplateResponse(
         'city_weather_present.html', context={
