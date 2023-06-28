@@ -31,6 +31,7 @@ This is a Python web application built with FastAPI that provides current weathe
 - Rate limiter for several endpoints with FastAPI-Limiter (using Redis)
 - CSS styles and Bootstrap 5 framework for frontend
 - JavaScript scripts for sending requests to the API
+- Search history: Track and display user's search history for cities and coordinates
 
 ### Planned Features
 
