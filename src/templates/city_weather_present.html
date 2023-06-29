@@ -165,12 +165,12 @@ content %}
           <li class="nav-item" role="presentation">
             <button
               class="nav-link {% if loop.first %}active{% endif %}"
-              id="{{ day.date|replace('-', '') }}-tab"
+              id="tab-{{ day.date|replace('-', '') }}"
               data-bs-toggle="tab"
-              data-bs-target="#{{ day.date|replace('-', '') }}-tabContent"
+              data-bs-target="#tab-{{ day.date|replace('-', '') }}-content"
               type="button"
               role="tab"
-              aria-controls="{{ day.date|replace('-', '') }}-tabContent"
+              aria-controls="tab-{{ day.date|replace('-', '') }}-content"
               aria-selected="{% if loop.first %}true{% else %}false{% endif %}"
             >
               {{ day.date }}
@@ -182,9 +182,9 @@ content %}
           {% for day in forecast_data %}
           <div
             class="tab-pane fade {% if loop.first %}show active{% endif %}"
-            id="{{ day.date|replace('-', '') }}-tabContent"
+            id="tab-{{ day.date|replace('-', '') }}-content"
             role="tabpanel"
-            aria-labelledby="{{ day.date|replace('-', '') }}-tab"
+            aria-labelledby="tab-{{ day.date|replace('-', '') }}"
           >
             <h1 class="d-flex justify-content-center text-center">
               Forecast for {{ location_data.location }}, {{ day.date[-5:] }}
