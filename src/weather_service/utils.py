@@ -72,7 +72,7 @@ async def process_data(
         'latitude': weatherapi_data['location']['lat'],
         'longitude': weatherapi_data['location']['lon'],
         'timezone': weatherapi_data['location']['tz_id'],
-        'local time': weatherapi_data['location']['localtime'],
+        'localtime': weatherapi_data['location']['localtime'],
     }
     weather_data = {
         'temperature, °C': weatherapi_data['current']['temp_c'],

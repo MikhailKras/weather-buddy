@@ -198,7 +198,25 @@ content %}
                 </tr>
               </thead>
               <tbody>
-                {% for hour in day.hourly_forecast %}
+                {% for hour in day.hourly_forecast %} {% if hour.time[-5:-3]|int
+                < location_data.localtime[-5:-3]|int %}
+                <tr hidden>
+                  <td>{{ hour.time[-5:] }}</td>
+                  <td>{{ hour.temp }}</td>
+                  <td>
+                    <div
+                      class="d-flex align-items-center justify-content-center"
+                    >
+                      <span>{{ hour.condition }}</span>
+                      <img
+                        src="{{ hour.img_url }}"
+                        alt="Weather Icon"
+                        class="weather-icon ml-2"
+                      />
+                    </div>
+                  </td>
+                </tr>
+                {% else %}
                 <tr>
                   <td>{{ hour.time[-5:] }}</td>
                   <td>{{ hour.temp }}</td>
@@ -215,7 +233,7 @@ content %}
                     </div>
                   </td>
                 </tr>
-                {% endfor %}
+                {% endif %} {% endfor %}
               </tbody>
             </table>
           </div>
