@@ -595,3 +595,10 @@ async def test_get_my_city_info(ac: AsyncClient, city_data):
 
     assert response.status_code == 307
     assert response.headers["location"] == f"/weather/info?city_id={city_data['id']}"
+
+
+async def test_get_search_data(ac: AsyncClient):
+    response = await ac.get("/users/search_history_data")
+
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
