@@ -179,7 +179,7 @@ content %}
           {% endfor %}
         </ul>
         <div class="tab-content" id="forecastTabsContent">
-          {% for day in forecast_data %}
+          {% for day in forecast_data %} {% set outer_loop = loop %}
           <div
             class="tab-pane fade {% if loop.first %}show active{% endif %}"
             id="tab-{{ day.date|replace('-', '') }}-content"
@@ -199,7 +199,7 @@ content %}
               </thead>
               <tbody>
                 {% for hour in day.hourly_forecast %} {% if hour.time[-5:-3]|int
-                < location_data.localtime[-5:-3]|int %}
+                < location_data.localtime[-5:-3]|int and outer_loop.first %}
                 <tr hidden>
                   <td>{{ hour.time[-5:] }}</td>
                   <td>{{ hour.temp }}</td>
