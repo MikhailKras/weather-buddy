@@ -1,21 +1,218 @@
-{% if is_auth %}
-  {% extends 'auth/base.html' %}
-{% else %}
-  {% extends 'base.html' %}
-{% endif %}
+{% if is_auth %} {% extends 'auth/base.html' %} {% else %} {% extends
+'base.html' %} {% endif %} {% block title %}WeatherBuddy{% endblock %} {% block
+content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <img
+        src="{{ url_for('static', path='images/logo_weather_buddy.png') }}"
+        alt="WeatherBuddy logo"
+        class="img-fluid img-thumbnail rounded-circle border-0"
+        style="max-width: 200px; height: auto"
+      />
+      <h1 class="mt-3">Welcome to WeatherBuddy</h1>
+      <p class="lead">
+        Discover the current weather and location information for any city in
+        the world!
+      </p>
+    </div>
+  </div>
+</div>
 
-{% block title %}WeatherBuddy{% endblock %}
+<hr class="border-4 opacity-100" style="border-color: #d8d8f6" />
 
-{% block content %}
-  <div class="container my-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <img src="{{ url_for('static', path='images/logo_weather_buddy.png') }}" alt="WeatherBuddy logo" class="img-fluid img-thumbnail rounded mx-auto d-block 
-          d-sm-inline d-md-none d-lg-inline" 
-          style="max-width: 200px; height: auto;">
-        <h1 class="mt-3">Welcome to WeatherBuddy</h1>
-        <p class="lead">Get up-to-date weather information for any city in the world!</p>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+      <div class="card mx-3 border-0" style="background-color: transparent">
+        <div class="card-body">
+          <h4 class="fs-3 feature-text">Your Cities</h4>
+          <p class="fs-4 feature-text">
+            As an authenticated user, you will have access to additional
+            functionality on the navbar. Two new buttons, "My City" and "My
+            History," will be added to provide convenient access to personalized
+            features.
+          </p>
+          <img
+            src="{{ url_for('static', path='images/home/navbar.png') }}"
+            alt="Search by city image"
+            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+            style="border-color: #d8d8f6"
+          />
+          <p class="fs-4 feature-text">
+            My City: By clicking on the "My City" button, you will be directed
+            to your profile page. Here, you can manage and view a list of your
+            saved cities. This feature allows you to keep track of your
+            preferred locations and quickly access weather information for each
+            of them.
+          </p>
+        </div>
       </div>
     </div>
   </div>
+</div>
+
+<hr class="border-4 opacity-100" style="border-color: #d8d8f6" />
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+      <div class="card mx-3 border-0" style="background-color: transparent">
+        <div class="card-body">
+          <h4 class="fs-3 feature-text">Your History</h4>
+          <p class="fs-4 feature-text">
+            My History: The "My History" button will take you to a page
+            displaying your search history. It includes two tabs: "City History"
+            and "Coordinates History." The "City History" tab shows all your
+            past search requests made by city name, while the "Coordinates
+            History" tab displays your search history based on geographical
+            coordinates. This feature helps you revisit and reference previous
+            searches easily.
+          </p>
+          <img
+            src="{{ url_for('static', path='images/home/history.png') }}"
+            alt="Search by city image"
+            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+            style="border-color: #d8d8f6"
+          />
+          <img
+            src="{{ url_for('static', path='images/home/history-coords.png') }}"
+            alt="Search by city image"
+            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+            style="border-color: #d8d8f6"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="border-4 opacity-100" style="border-color: #d8d8f6" />
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+      <div class="card mx-3 border-0" style="background-color: transparent">
+        <div class="card-body">
+          <h4 class="fs-3 feature-text">Search</h4>
+          <p class="fs-4 feature-text">
+            Search for weather and location details for over 25,000 cities in
+            our app database. You can search by city name or enter coordinates
+            for geo places.
+          </p>
+          <img
+            src="{{ url_for('static', path='images/home/search.png') }}"
+            alt="Search by city image"
+            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+            style="border-color: #d8d8f6"
+          />
+          <p class="fs-4 feature-text">
+            If you search by city name, the app provides a list of cities with
+            similar names and additional information such as country, region,
+            latitude, longitude, and population.
+          </p>
+          <img
+            src="{{ url_for('static', path='images/home/choose-city.png') }}"
+            alt="Search by coordinates image"
+            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+            style="border-color: #d8d8f6"
+          />
+          <p class="fs-4 feature-text">
+            If you prefer to search by coordinates, you can directly enter the
+            geographical coordinates to find the corresponding city's weather
+            information.
+          </p>
+          <img
+            src="{{ url_for('static', path='images/home/search-coords.png') }}"
+            alt="Choose similar city image"
+            class="img-fluid img-thumbnail rounded border-2"
+            style="border-color: #d8d8f6"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="border-4 opacity-100" style="border-color: #d8d8f6" />
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+      <div class="card mx-3 border-0" style="background-color: transparent">
+        <div class="card-body">
+          <h4 class="fs-3 feature-text">City Information</h4>
+          <p class="fs-4 feature-text">
+            Get detailed information about a city or place, including clothing
+            recommendations, current weather conditions, hourly forecast, and
+            additional location details.
+          </p>
+          <img
+            src="{{ url_for('static', path='images/home/present-tabs.png') }}"
+            alt="Search by city image"
+            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+            style="border-color: #d8d8f6"
+          />
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <h5 class="fs-4 feature-text">Clothing</h5>
+              <p class="fs-5 feature-text">
+                View clothing recommendations based on the current weather
+                conditions, including temperature and precipitation type.
+              </p>
+              <img
+                src="{{ url_for('static', path='images/home/present-clothes.png') }}"
+                alt="Search by city image"
+                class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+                style="border-color: #d8d8f6"
+              />
+            </div>
+            <div class="col-md-6">
+              <h5 class="fs-4 feature-text">Weather</h5>
+              <p class="fs-5 feature-text">
+                Access detailed information about the current weather, such as
+                temperature, humidity, wind speed, and more.
+              </p>
+              <img
+                src="{{ url_for('static', path='images/home/present-weather.png') }}"
+                alt="Search by city image"
+                class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+                style="border-color: #d8d8f6"
+                height="830px"
+              />
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <h5 class="fs-4 feature-text">Forecast</h5>
+              <p class="fs-5 feature-text">
+                Get an hourly forecast for the next few days, including
+                temperature and precipitation types.
+              </p>
+              <img
+                src="{{ url_for('static', path='images/home/present-forecast.png') }}"
+                alt="Search by city image"
+                class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+                style="border-color: #d8d8f6"
+              />
+            </div>
+            <div class="col-md-6">
+              <h5 class="fs-4 feature-text">Location</h5>
+              <p class="fs-5 feature-text">
+                Explore additional information about the city or place, such as
+                timezone, localtime, and population.
+              </p>
+              <img
+                src="{{ url_for('static', path='images/home/present-location.png') }}"
+                alt="Search by city image"
+                class="img-fluid img-thumbnail rounded border-2 header-margin-top"
+                style="border-color: #d8d8f6"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
