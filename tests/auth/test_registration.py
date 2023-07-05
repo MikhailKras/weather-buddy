@@ -32,7 +32,8 @@ async def test_registration_process(ac: AsyncClient, monkeypatch: pytest.MonkeyP
     user_data = {
         "username": "testuser",
         "email": "testuser@example.com",
-        "password": "password123"
+        "password": "password123",
+        "password_confirm": "password123"
     }
 
     def send_verification_code_mock(*args, **kwargs):

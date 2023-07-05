@@ -112,6 +112,7 @@ async def test_register_step_2_submit(
     response = await ac.post("/users/register/details", json={
         "username": "test_user1",
         "password": "string1",
+        "password_confirm": "string1",
         "email": "test@example.com"
     })
 
@@ -123,6 +124,7 @@ async def test_register_step_2_submit_existing_username(ac: AsyncClient, existin
     response = await ac.post("/users/register/details", json={
         "username": existing_user["username"],
         "password": "string1",
+        "password_confirm": "string1",
         "email": "test@example.com"
     })
 
@@ -134,6 +136,7 @@ async def test_register_step_2_submit_existing_email(ac: AsyncClient, existing_u
     response = await ac.post("/users/register/details", json={
         "username": "test_user2",
         "password": "string1",
+        "password_confirm": "string1",
         "email": existing_user["email"]
     })
 
