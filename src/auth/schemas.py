@@ -19,6 +19,7 @@ class UserCreateStep2(BaseModel):
     username: str
     email: EmailStr
     password: str
+    password_confirm: str
 
     @validator('username')
     def valid_username(cls, username: str):
@@ -30,8 +31,15 @@ class UserCreateStep2(BaseModel):
             )
         return username
 
-    @validator('password')
-    def valid_password(cls, password: str) -> str:
+    @root_validator
+    def check_passwords_match(cls, values):
+        password = values.get('password')
+        password_confirm = values.get('password_confirm')
+        if password != password_confirm:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='The provided passwords do not match'
+            )
         if not re.match(PASSWORD_PATTERN, password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -43,7 +51,7 @@ class UserCreateStep2(BaseModel):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail='Password must contain at least 7 characters'
             )
-        return password
+        return values
 
 
 class UserUpdateData(BaseModel):

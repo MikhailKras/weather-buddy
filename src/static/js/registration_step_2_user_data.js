@@ -8,6 +8,7 @@ form.addEventListener("submit", async (event) => {
   const username = form.elements.username.value;
   const email = form.elements.email.value;
   const password = form.elements.password.value;
+  const confirmPassword = form.elements["repeat-password"].value;
 
   errorMessage.style.display = "none";
 
@@ -21,6 +22,7 @@ form.addEventListener("submit", async (event) => {
         username: username,
         email: email,
         password: password,
+        password_confirm: confirmPassword,
       }),
     });
     const data = await response.json();

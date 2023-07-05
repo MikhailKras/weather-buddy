@@ -31,16 +31,37 @@
             />
             <label for="email" class="text-white">Email address</label>
           </div>
-          <div class="form-floating mb-3">
-            <input
-              type="password"
-              class="form-control bg-dark text-white"
-              name="password"
-              id="password"
-              placeholder="Password"
-              required
-            />
-            <label for="password" class="text-white">Password</label>
+          <div class="input-group mb-3">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control bg-dark text-white"
+                name="password"
+                id="password"
+                placeholder="Password"
+                required
+              />
+              <label for="password" class="text-white">Password</label>
+            </div>
+            <span class="input-group-text"
+              ><i class="bi bi-eye-slash" id="togglePassword"></i
+            ></span>
+          </div>
+          <div class="input-group mb-3">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control bg-dark text-white"
+                name="repeat-password"
+                id="repeat-password"
+                placeholder="Repeat password"
+                required
+              />
+              <label for="repeat-password">Repeat password</label>
+            </div>
+            <span class="input-group-text"
+              ><i class="bi bi-eye-slash" id="toggleRepeatPassword"></i
+            ></span>
           </div>
           <div class="d-grid">
             <button type="submit" class="btn btn-bd-primary btn-lg">
@@ -65,4 +86,29 @@
   </div>
 </div>
 <script src="{{ url_for('static', path='js/registration_step_2_user_data.js') }}"></script>
+<script>
+  const togglePassword = document.querySelector("#togglePassword");
+  const password = document.querySelector("#password");
+  togglePassword.addEventListener("click", () => {
+    // Toggle the type attribute using
+    // getAttribure() method
+    const type =
+      password.getAttribute("type") === "password" ? "text" : "password";
+    password.setAttribute("type", type);
+    // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye");
+  });
+
+  const toggleRepeatPassword = document.querySelector("#toggleRepeatPassword");
+  const repeatPassword = document.querySelector("#repeat-password");
+  toggleRepeatPassword.addEventListener("click", () => {
+    // Toggle the type attribute using
+    // getAttribure() method
+    const type =
+      repeatPassword.getAttribute("type") === "password" ? "text" : "password";
+    repeatPassword.setAttribute("type", type);
+    // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye");
+  });
+</script>
 {% endblock %}
