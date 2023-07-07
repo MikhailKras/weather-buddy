@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_app
+    env_file:
+      - .env-non-dev
+
+  redis:
+    image: redis:7
+    container_name: redis_app
+    env_file:
+      - .env-non-dev
+
+  app:
+    build: .
+    env_file:
+      - .env-non-dev
+    container_name: fastapi_app
+    command:
+      - sh
+      - -c
+      - |
+        sleep 5 && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 1235
+    ports:
+      - 9999:1235
+    depends_on:
+      - db
+      - redis
+
+  mongodb:
+    image: mongo:6.0.6
+    env_file:
+      - .env-non-dev
+    container_name: mongo_app
+    depends_on:
+      - redis
