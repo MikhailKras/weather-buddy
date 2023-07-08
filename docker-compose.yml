@@ -35,3 +35,11 @@ services:
     container_name: mongo_app
     depends_on:
       - redis
+
+  mongo-seed:
+    build: ./mongo_seed
+    env_file:
+      - .env-non-dev
+    container_name: mongo_seed
+    depends_on:
+      - mongodb
