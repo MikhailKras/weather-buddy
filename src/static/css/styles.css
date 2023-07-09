@@ -214,3 +214,7 @@ svg:hover {
 .nav-link {
   white-space: nowrap;
 }
+
+.spinner-border {
+  display: none;
+}
