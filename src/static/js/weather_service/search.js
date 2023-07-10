@@ -2,8 +2,14 @@ function searchByCity(event) {
   event.preventDefault();
   const cityInput = document.getElementById("city").value;
   const errorMessage = document.getElementById("error-message");
+  const spinner = document.querySelector("#submit-button .spinner-border");
+
+  if (cityInput.trim() === "") {
+    return;
+  }
 
   errorMessage.style.display = "none";
+  spinner.style.display = "inline-block";
 
   fetch(`/weather/city_names?city_input=${cityInput}`)
     .then((response) => {
@@ -19,6 +25,9 @@ function searchByCity(event) {
     .catch((error) => {
       errorMessage.textContent = error.message;
       errorMessage.style.display = "block";
+    })
+    .finally(() => {
+      spinner.style.display = "none";
     });
 }
 
@@ -27,8 +36,16 @@ function searchByCoords(event) {
   const latitudeInput = document.getElementById("latitude").value;
   const longitudeInput = document.getElementById("longitude").value;
   const errorMessage = document.getElementById("error-message-coords");
+  const spinner = document.querySelector(
+    "#submit-button-coords .spinner-border"
+  );
+
+  if (latitudeInput.trim() === "" || longitudeInput.trim() === "") {
+    return;
+  }
 
   errorMessage.style.display = "none";
+  spinner.style.display = "inline-block";
 
   redirect_url =
     "/weather/info/by_coordinates?latitude=" +
@@ -47,5 +64,8 @@ function searchByCoords(event) {
     .catch((error) => {
       errorMessage.textContent = error.message;
       errorMessage.style.display = "block";
+    })
+    .finally(() => {
+      spinner.style.display = "none";
     });
 }
