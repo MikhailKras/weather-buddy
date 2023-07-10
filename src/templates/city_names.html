@@ -4,6 +4,13 @@ content %}
 <div class="table-responsive custom-margin-top">
   <h1 class="d-flex justify-content-center header-margin-top">
     Choose your city
+    <span
+      class="spinner-border spinner-border-sm align-middle"
+      style="width: 2.75rem; height: 2.75rem; margin-left: 0.5em"
+      role="status"
+      aria-hidden="true"
+      id="spinner"
+    ></span>
   </h1>
   <table class="table-custom mx-auto table-hover-cursor">
     <thead>
@@ -30,6 +37,13 @@ content %}
 
 <script>
   function redirectToCity(cityId) {
+    const spinner = document.getElementById("spinner");
+    spinner.style.display = "inline-block";
+
+    window.addEventListener("unload", function () {
+      spinner.style.display = "";
+    });
+
     window.location.href =
       "/weather/info?city_id=" + encodeURIComponent(cityId);
   }
