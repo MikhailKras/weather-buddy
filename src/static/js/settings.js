@@ -50,11 +50,9 @@ changeDataForm.addEventListener("submit", (event) => {
       successMessage.style.display = "block";
       successMessage.textContent = data.message;
       errorMessage.style.display = "none";
-      setTimeout(() => {
-        window.location.href = "/users/me";
-      }, 2000);
     })
     .catch((error) => {
+      successMessage.style.display = "none";
       errorMessage.textContent = error.message;
       errorMessage.style.display = "block";
     });

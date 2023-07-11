@@ -349,7 +349,8 @@ async def update_user_data(
 
     for field in new_data.__fields__:
         await update_user_field(field)
-
+    if new_data.email != current_data.email:
+        return {"message": "Data changed successfully! Please verify your email to gain full access."}
     return {"message": "Data changed successfully!"}
 
 
