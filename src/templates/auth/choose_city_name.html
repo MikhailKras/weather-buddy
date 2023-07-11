@@ -2,14 +2,16 @@
 'base.html' %} {% endif %} {% block title %} {% if purpose == 'register' %} Step
 1 - Select City {% elif purpose == 'settings' %} Select City {% endif %} {%
 endblock %} {% block content %}
-<style>
-  .table-hover-cursor:hover {
-    cursor: pointer;
-  }
-</style>
 <div class="table-responsive custom-margin-top">
   <h1 class="d-flex justify-content-center header-margin-top">
     Choose your city
+    <span
+      class="spinner-border spinner-border-sm align-middle"
+      style="width: 2.75rem; height: 2.75rem; margin-left: 0.5em"
+      role="status"
+      aria-hidden="true"
+      id="spinner"
+    ></span>
   </h1>
   <table class="table-custom mx-auto table-hover-cursor">
     <thead>
@@ -52,6 +54,13 @@ endblock %} {% block content %}
   const successMessageCity = document.getElementById("success-message-city");
 
   function redirectToCity(cityId) {
+    const spinner = document.getElementById("spinner");
+    spinner.style.display = "inline-block";
+
+    window.addEventListener("unload", function () {
+      spinner.style.display = "";
+    });
+
     const data = {
       city_id: cityId,
     };
@@ -102,6 +111,9 @@ endblock %} {% block content %}
         .catch((error) => {
           errorMessageCity.textContent = error.message;
           errorMessageCity.style.display = "block";
+        })
+        .finally(() => {
+          spinner.style.display = "none";
         });
     }
   }

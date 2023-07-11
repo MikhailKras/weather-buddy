@@ -17,7 +17,18 @@ block content %}
           <label for="city" class="text-white">City</label>
         </div>
         <div class="d-grid">
-          <button type="submit" class="btn btn-bd-primary btn-lg">Next</button>
+          <button
+            type="submit"
+            class="btn btn-bd-primary btn-lg"
+            id="submit-button"
+          >
+            Next
+            <span
+              class="spinner-border spinner-border-sm align-middle"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          </button>
         </div>
       </form>
       <div class="text-center mt-3 fs-5">

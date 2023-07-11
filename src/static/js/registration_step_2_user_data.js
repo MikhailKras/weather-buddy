@@ -1,41 +1,56 @@
 const form = document.getElementById("user-info-form");
 const errorMessage = document.getElementById("error-message");
 const successMessage = document.getElementById("success-message");
+const spinner = document.querySelector("#submit-button .spinner-border");
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+form
+  .addEventListener("submit", async (event) => {
+    event.preventDefault();
 
-  const username = form.elements.username.value;
-  const email = form.elements.email.value;
-  const password = form.elements.password.value;
-  const confirmPassword = form.elements["repeat-password"].value;
+    const username = form.elements.username.value;
+    const email = form.elements.email.value;
+    const password = form.elements.password.value;
+    const confirmPassword = form.elements["repeat-password"].value;
 
-  errorMessage.style.display = "none";
-
-  try {
-    const response = await fetch("/users/register/details", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        email: email,
-        password: password,
-        password_confirm: confirmPassword,
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(`${data.detail}`);
-    } else {
-      const message = data.message;
-      window.location.href = `/users/register/success?message=${encodeURIComponent(
-        message
-      )}`;
+    if (
+      username.trim() === "" ||
+      email.trim() === "" ||
+      password.trim() === "" ||
+      confirmPassword.trim() === ""
+    ) {
+      return;
     }
-  } catch (error) {
-    errorMessage.textContent = error.message;
-    errorMessage.style.display = "block";
-  }
-});
+
+    errorMessage.style.display = "none";
+    spinner.style.display = "inline-block";
+
+    try {
+      const response = await fetch("/users/register/details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+          password_confirm: confirmPassword,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`${data.detail}`);
+      } else {
+        const message = data.message;
+        window.location.href = `/users/register/success?message=${encodeURIComponent(
+          message
+        )}`;
+      }
+    } catch (error) {
+      errorMessage.textContent = error.message;
+      errorMessage.style.display = "block";
+    }
+  })
+  .finally(() => {
+    spinner.style.display = "none";
+  });
