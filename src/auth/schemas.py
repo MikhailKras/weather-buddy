@@ -58,6 +58,16 @@ class UserUpdateData(BaseModel):
     username: str
     email: EmailStr
 
+    @validator('username')
+    def valid_username(cls, username: str):
+        if not re.match(USERNAME_PATTERN, username):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Username must be between 3 and 20 characters long and '
+                       'can only contain alphanumeric characters, underscores, and hyphens'
+            )
+        return username
+
 
 class UserUpdateCity(BaseModel):
     city_id: int
