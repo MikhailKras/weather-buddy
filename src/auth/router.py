@@ -21,6 +21,7 @@ from src.auth.utils import get_user_by_username, get_user_by_email, authenticate
     get_user_by_user_id, get_search_history_data
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
+from src.models import search_history_city_name_db, search_history_coordinates_db
 from src.rate_limiter.callback import custom_callback
 from src.weather_service.schemas import CityInDB
 from src.weather_service.utils import search_cities_db
@@ -405,6 +406,12 @@ async def delete_user(
 
     delete_verification_query = delete(email_verification).where(email_verification.c.user_id == user_id)
     await session.execute(delete_verification_query)
+
+    delete_search_history_city_name_query = delete(search_history_city_name_db).where(search_history_city_name_db.c.user_id == user_id)
+    await session.execute(delete_search_history_city_name_query)
+
+    delete_search_history_coordinates_query = delete(search_history_coordinates_db).where(search_history_coordinates_db.c.user_id == user_id)
+    await session.execute(delete_search_history_coordinates_query)
 
     delete_user_query = delete(user).where(user.c.id == user_id)
     await session.execute(delete_user_query)
