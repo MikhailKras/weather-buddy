@@ -480,7 +480,8 @@ async def test_get_account_settings(ac: AsyncClient):
 @pytest.mark.parametrize(
     "new_data, expected_status, detail, message",
     [
-        ({"username": "new_username", "email": "new_email@mail.com"}, 200, None, "Data changed successfully!"),
+        ({"username": "new_username", "email": "new_email@mail.com"}, 200, None, "Data changed successfully! Please verify your email to "
+                                                                                 "gain full access."),
         ({"username": "test_user", "email": "new_email@mail.com"}, 422, "This username is already registered!", None),
         ({"username": "new_username", "email": "test_user@gmail.com"}, 422, "This email is already registered!", None),
         ({"username": "my_user", "email": "my_user@gmail.com"}, 400, "No changes detected", None)
