@@ -81,8 +81,17 @@
               <label for="email">Email</label>
             </div>
             <div class="d-grid">
-              <button type="submit" class="btn btn-bd-primary btn-lg">
+              <button
+                type="submit"
+                class="btn btn-bd-primary btn-lg"
+                id="submit-button-username-email"
+              >
                 Save changes
+                <span
+                  class="spinner-border spinner-border-sm align-middle"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
               </button>
             </div>
           </form>
@@ -117,6 +126,7 @@
                 class="form-control bg-dark text-white"
                 id="city"
                 placeholder="City"
+                required
                 value="{{ user_data.city }}"
               />
               <label for="city">City</label>
@@ -166,8 +176,17 @@
               <label for="longitude">Longitude</label>
             </div>
             <div class="d-grid">
-              <button type="submit" class="btn btn-bd-primary btn-lg">
+              <button
+                type="submit"
+                class="btn btn-bd-primary btn-lg"
+                id="submit-button-city"
+              >
                 Go to city selection
+                <span
+                  class="spinner-border spinner-border-sm align-middle"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
               </button>
             </div>
           </form>
@@ -239,8 +258,17 @@
               ></span>
             </div>
             <div class="d-grid">
-              <button type="submit" class="btn btn-bd-primary btn-lg">
+              <button
+                type="submit"
+                class="btn btn-bd-primary btn-lg"
+                id="submit-button-password"
+              >
                 Save changes
+                <span
+                  class="spinner-border spinner-border-sm align-middle"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
               </button>
             </div>
           </form>
@@ -331,6 +359,11 @@
                     class="btn btn-danger"
                   >
                     Delete
+                    <span
+                      class="spinner-border spinner-border-sm align-middle"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
                   </button>
                 </div>
               </div>
