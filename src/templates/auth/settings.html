@@ -380,37 +380,40 @@
     "#toggleCurrentPassword"
   );
   const currentPassword = document.querySelector("#current-password");
-  toggleCurrentPassword.addEventListener("click", () => {
+  toggleCurrentPassword.addEventListener("click", function () {
     // Toggle the type attribute using
     // getAttribure() method
     const type =
       currentPassword.getAttribute("type") === "password" ? "text" : "password";
     currentPassword.setAttribute("type", type);
     // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye-slash");
     this.classList.toggle("bi-eye");
   });
 
   const toggleNewPassword = document.querySelector("#toggleNewPassword");
   const newPassword = document.querySelector("#new-password");
-  toggleNewPassword.addEventListener("click", () => {
+  toggleNewPassword.addEventListener("click", function () {
     // Toggle the type attribute using
     // getAttribure() method
     const type =
       newPassword.getAttribute("type") === "password" ? "text" : "password";
     newPassword.setAttribute("type", type);
     // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye-slash");
     this.classList.toggle("bi-eye");
   });
 
   const toggleRepeatPassword = document.querySelector("#toggleRepeatPassword");
   const repeatPassword = document.querySelector("#repeat-password");
-  toggleRepeatPassword.addEventListener("click", () => {
+  toggleRepeatPassword.addEventListener("click", function () {
     // Toggle the type attribute using
     // getAttribure() method
     const type =
       repeatPassword.getAttribute("type") === "password" ? "text" : "password";
     repeatPassword.setAttribute("type", type);
     // Toggle the eye and bi-eye icon
+    this.classList.toggle("bi-eye-slash");
     this.classList.toggle("bi-eye");
   });
 </script>
