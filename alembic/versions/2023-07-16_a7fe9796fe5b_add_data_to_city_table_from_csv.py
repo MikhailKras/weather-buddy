@@ -22,7 +22,7 @@ depends_on = None
 
 def upgrade() -> None:
     migration_script_dir = os.path.dirname(os.path.realpath(__file__))
-    csv_file_path = os.path.join(migration_script_dir, '..', '..', 'data', 'city.csv')
+    csv_file_path = os.path.join(migration_script_dir, '..', '..', 'city_data', 'city.csv')
 
     with open(csv_file_path, 'r') as csvfile:
         csv_reader = csv.DictReader(csvfile)
