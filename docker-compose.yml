@@ -2,15 +2,30 @@ version: "3.7"
 services:
   db:
     image: postgres:15
+    restart: always
     container_name: postgres_app
     env_file:
       - .env-non-dev
+    environment:
+      - PGUSER=postgres
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - ./data:/data
 
   redis:
     image: redis:7
     container_name: redis_app
     env_file:
       - .env-non-dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   app:
     build: .
@@ -21,12 +36,20 @@ services:
       - sh
       - -c
       - |
-        sleep 5 && alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 1235
+        alembic upgrade head
+        uvicorn src.main:app --host 0.0.0.0 --port 1235
     ports:
       - 9999:1235
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1235"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   mongodb:
     image: mongo:6.0.6
@@ -34,7 +57,14 @@ services:
       - .env-non-dev
     container_name: mongo_app
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   mongo-seed:
     build: ./mongo_seed
@@ -42,4 +72,34 @@ services:
       - .env-non-dev
     container_name: mongo_seed
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
+
+  celery:
+    build: .
+    container_name: celery_app
+    env_file:
+      - .env-non-dev
+    command: celery -A src.celery_app:celery worker -l INFO
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A src.celery_app inspect ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  flower:
+    build: .
+    container_name: flower_app
+    env_file:
+      - .env-non-dev
+    command: celery -A src.celery_app:celery flower
+    depends_on:
+      redis:
+        condition: service_healthy
+      celery:
+        condition: service_healthy
+    ports:
+      - 4444:5555

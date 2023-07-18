@@ -9,5 +9,3 @@ RUN pip install -r requirements.txt
 COPY . .
 
 RUN chmod 777 scripts/*.sh
-
-CMD [ "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "1235" ]
