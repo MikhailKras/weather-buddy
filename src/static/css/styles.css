@@ -2,15 +2,22 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-color: #1c0459;
+  display: flex;
+  flex-direction: column; /* stack the children vertically */
+  margin: 0;
   color: whitesmoke;
   overflow-x: hidden;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: 70px;
 }
 
 [id^="error-message"],
 [id^="success-message"] {
   margin-top: 20px;
+}
+
+.content {
+  flex: 1; /* allows this section to grow and absorb any extra space */
 }
 
 .navbar-nav {
