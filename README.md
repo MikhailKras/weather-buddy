@@ -15,11 +15,24 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-eee06a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS](https://img.shields.io/badge/CSS-3-523f79.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
-
 This is a Python web application built with FastAPI that provides current weather information. The application utilizes a PostgreSQL database that contains a table with 25,000+ cities. Users can retrieve the following information for each city:
 
 - Current clothing recommendations based on weather conditions (clothing information stored in MongoDB)
 - Current weather and location information (from the PostgreSQL database, including population, timezone, region, country, etc.)
+
+### Prerequisites
+
+Before you proceed, please make sure you have the following installed on your machine:
+
+- Docker: [Install Docker](https://docs.docker.com/get-docker/)
+- Docker Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+### Instruction
+
+1. Clone this git repo
+2. Set enviroment variables in `.env-non-dev`
+3. Build docker image: `docker compose build app`
+4. Up docker compose: `docker compose up -d`
 
 ### Features
 
@@ -38,43 +51,43 @@ This is a Python web application built with FastAPI that provides current weathe
 - Docker Compose integration
 - Deployment of the application with Nginx
 
-
 ## Clothing Document Example (MongoDB)
 
 ```json
-{ 
-    "_id": "64834ea1fda0d16eceebf0ca",
-    "temperatureRange": { "min": 10, "max": 15 },
-    "precipitation": {
-        "None": {
-            "UpperBody": {
-                "BaseLayer": { "clothingItems": [ "Light long-sleeve shirt" ] },
-                "MidLayer": { "clothingItems": [ "Light sweater" ] },
-                "OuterLayerShell": { "clothingItems": [] },
-                "Accessories": { "clothingItems": [ "Scarf" ] }
-            },
-            "LowerBody": {
-                "BaseLayer": { "clothingItems": [ "Light pants" ] },
-                "MidLayer": { "clothingItems": [] },
-                "OuterLayerShell": { "clothingItems": [] },
-                "Accessories": { "clothingItems": [] }
-            },
-            "Footwear": { "clothingItems": [ "Sneakers" ] }
-        },
-        "Rain": {
-            "UpperBody": {
-                "BaseLayer": { "clothingItems": [ "Light long-sleeve shirt" ] },
-                "MidLayer": { "clothingItems": [ "Light sweater", "Raincoat" ] },
-                "OuterLayerShell": { "clothingItems": [] },
-                "Accessories": { "clothingItems": [ "Scarf" ] }
-            },
-            "LowerBody": {
-                "BaseLayer": { "clothingItems": [ "Light pants" ] },
-                "MidLayer": { "clothingItems": [] },
-                "OuterLayerShell": { "clothingItems": [] },
-                "Accessories": { "clothingItems": [] }
-            },
-            "Footwear": { "clothingItems": [ "Sneakers", "Rain boots" ] }
-        }
+{
+  "_id": "64834ea1fda0d16eceebf0ca",
+  "temperatureRange": { "min": 10, "max": 15 },
+  "precipitation": {
+    "None": {
+      "UpperBody": {
+        "BaseLayer": { "clothingItems": ["Light long-sleeve shirt"] },
+        "MidLayer": { "clothingItems": ["Light sweater"] },
+        "OuterLayerShell": { "clothingItems": [] },
+        "Accessories": { "clothingItems": ["Scarf"] }
+      },
+      "LowerBody": {
+        "BaseLayer": { "clothingItems": ["Light pants"] },
+        "MidLayer": { "clothingItems": [] },
+        "OuterLayerShell": { "clothingItems": [] },
+        "Accessories": { "clothingItems": [] }
+      },
+      "Footwear": { "clothingItems": ["Sneakers"] }
+    },
+    "Rain": {
+      "UpperBody": {
+        "BaseLayer": { "clothingItems": ["Light long-sleeve shirt"] },
+        "MidLayer": { "clothingItems": ["Light sweater", "Raincoat"] },
+        "OuterLayerShell": { "clothingItems": [] },
+        "Accessories": { "clothingItems": ["Scarf"] }
+      },
+      "LowerBody": {
+        "BaseLayer": { "clothingItems": ["Light pants"] },
+        "MidLayer": { "clothingItems": [] },
+        "OuterLayerShell": { "clothingItems": [] },
+        "Accessories": { "clothingItems": [] }
+      },
+      "Footwear": { "clothingItems": ["Sneakers", "Rain boots"] }
     }
+  }
 }
+```
