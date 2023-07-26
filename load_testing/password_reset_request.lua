@@ -1,5 +1,6 @@
 wrk.method = "POST"
 wrk.headers["Content-Type"] = "application/json"
+wrk.headers["Rate-Limiter-Flag"] = RATE_LIMITER_FLAG
 wrk.body = '{"email": "mikhailkrasovitskiy@gmail.com"}'
 
 local counter = 1
