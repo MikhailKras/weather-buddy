@@ -7,7 +7,8 @@ services:
     env_file:
       - .env-non-dev
     environment:
-      - PGUSER=postgres
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 5s
