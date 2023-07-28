@@ -57,6 +57,7 @@ services:
     env_file:
       - .env-non-dev
     container_name: mongo_app
+    restart: always
     depends_on:
       redis:
         condition: service_healthy
