@@ -1,3 +1,8 @@
+const form = document.getElementById("user-info-form");
+const errorMessage = document.getElementById("error-message");
+const successMessage = document.getElementById("success-message");
+const spinner = document.querySelector("#submit-button .spinner-border");
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
