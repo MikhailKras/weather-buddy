@@ -27,12 +27,27 @@ Before you proceed, please make sure you have the following installed on your ma
 - Docker: [Install Docker](https://docs.docker.com/get-docker/)
 - Docker Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
 
-### Instruction
+### Getting Started
 
-1. Clone this git repo
-2. Set enviroment variables in `.env-non-dev`
-3. Build docker image: `docker compose build app`
-4. Up docker compose: `docker compose up -d`
+- Clone this git repo
+
+```batch
+git clone https://github.com/MikhailKras/weather-buddy.git
+```
+
+- Set enviroment variables in [.env.prod](https://github.com/MikhailKras/weather-buddy/blob/master/.env.prod)
+
+- Build docker image:
+
+```batch
+docker compose --env-file .env.prod build app
+```
+
+- Up docker compose:
+
+```batch
+docker compose --env-file .env.prod up -d
+```
 
 ### Features
 
@@ -45,11 +60,6 @@ Before you proceed, please make sure you have the following installed on your ma
 - CSS styles and Bootstrap 5 framework for frontend
 - JavaScript scripts for sending requests to the API
 - Search history: Track and display user's search history for cities and coordinates
-
-### Planned Features
-
-- Docker Compose integration
-- Deployment of the application with Nginx
 
 ## Clothing Document Example (MongoDB)
 

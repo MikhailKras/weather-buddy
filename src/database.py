@@ -5,7 +5,7 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, MONGODB_HOST, MONGODB_PORT, MONGODB_NAME
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, MONGODB_NAME, MONGODB_URL
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 Base = declarative_base()
@@ -22,15 +22,14 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 class MongoDB:
-    def __init__(self, host, port, db_name):
-        self.host = host
-        self.port = port
+    def __init__(self, mongodb_url, db_name):
+        self.mongodb_url = mongodb_url
         self.db_name = db_name
         self.db = None
         self.client = None
 
     async def connect(self):
-        self.client = motor.motor_asyncio.AsyncIOMotorClient(f"mongodb://{self.host}:{self.port}")
+        self.client = motor.motor_asyncio.AsyncIOMotorClient(self.mongodb_url)
         self.db = self.client[self.db_name]
 
     async def disconnect(self):
@@ -38,4 +37,4 @@ class MongoDB:
             self.client.close()
 
 
-mongo_db = MongoDB(host=MONGODB_HOST, port=MONGODB_PORT, db_name=MONGODB_NAME)
+mongo_db = MongoDB(mongodb_url=MONGODB_URL, db_name=MONGODB_NAME)

@@ -4,24 +4,21 @@ services:
     image: postgres:15
     restart: always
     container_name: postgres_app
-    env_file:
-      - .env-non-dev
     environment:
-      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_USER=${DB_USER} # Default superuser name in PostgreSQL. Change as needed.
       - POSTGRES_PASSWORD=${DB_PASS}
+      - PGUSER=${DB_USER} # The PostgreSQL username to be used by the application and healthcheck.
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 5s
       timeout: 3s
       retries: 5
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ../weatherbuddy_pgdata:/var/lib/postgresql/data # Moved 'pgdata' dir outside the project to avoid unintended code monitoring, enhance security, ease backup & restore, isolate from code conflicts.
 
   redis:
     image: redis:7
     container_name: redis_app
-    env_file:
-      - .env-non-dev
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -31,7 +28,7 @@ services:
   app:
     build: .
     env_file:
-      - .env-non-dev
+      - .env.prod
     container_name: fastapi_app
     command:
       - sh
@@ -54,9 +51,10 @@ services:
 
   mongodb:
     image: mongo:6.0.6
-    env_file:
-      - .env-non-dev
     container_name: mongo_app
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     restart: always
     depends_on:
       redis:
@@ -69,9 +67,11 @@ services:
       start_period: 40s
 
   mongo-seed:
-    build: ./mongo_seed
-    env_file:
-      - .env-non-dev
+    build:
+      context: ./mongo_seed
+      args:
+        - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+        - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     container_name: mongo_seed
     depends_on:
       mongodb:
@@ -79,9 +79,9 @@ services:
 
   celery:
     build: .
-    container_name: celery_app
     env_file:
-      - .env-non-dev
+      - .env.prod
+    container_name: celery_app
     command: celery -A src.celery_app:celery worker -l INFO
     depends_on:
       redis:
@@ -94,9 +94,9 @@ services:
 
   flower:
     build: .
-    container_name: flower_app
     env_file:
-      - .env-non-dev
+      - .env.prod
+    container_name: flower_app
     command: celery -A src.celery_app:celery flower
     depends_on:
       redis:
