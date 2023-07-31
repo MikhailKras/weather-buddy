@@ -2,7 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=False)
 
 CLIENT_ORIGIN = os.getenv('CLIENT_ORIGIN')
 
@@ -42,4 +42,5 @@ SECRET_KEY_RESET_PASSWORD = os.getenv('SECRET_KEY_RESET_PASSWORD')
 
 MONGODB_HOST = os.getenv('MONGODB_HOST')
 MONGODB_NAME = os.getenv('MONGODB_NAME')
+MONGODB_URL = os.getenv('MONGODB_URL')
 MONGODB_COLLECTION_NAME = os.getenv('MONGODB_COLLECTION_NAME')
