@@ -29,6 +29,9 @@ services:
     build: .
     env_file:
       - .env.prod
+    environment:
+      - CLIENT_HOST=${CLIENT_HOST}
+      - CLIENT_PORT=${CLIENT_PORT}
     container_name: fastapi_app
     command:
       - sh
@@ -37,17 +40,17 @@ services:
         alembic upgrade head
         uvicorn src.main:app --host 0.0.0.0 --port 1235
     ports:
-      - 9999:1235
+      - ${CLIENT_PORT}:1235
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1235"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: curl -f http://$$CLIENT_HOST:1235
+      interval: 10s
+      timeout: 5s
+      retries: 1
 
   mongodb:
     image: mongo:6.0.6
@@ -62,9 +65,8 @@ services:
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh
       interval: 10s
-      timeout: 10s
+      timeout: 5s
       retries: 5
-      start_period: 40s
 
   mongo-seed:
     build:
@@ -85,6 +87,8 @@ services:
     command: celery -A src.celery_app:celery worker -l INFO
     depends_on:
       redis:
+        condition: service_healthy
+      app:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "celery -A src.celery_app inspect ping"]

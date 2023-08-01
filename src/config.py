@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 load_dotenv(override=False)
 
 CLIENT_ORIGIN = os.getenv('CLIENT_ORIGIN')
+CLIENT_HOST = os.getenv('CLIENT_HOST')
+CLIENT_PORT = os.getenv('CLIENT_PORT')
 
 WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')
 

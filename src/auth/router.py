@@ -19,7 +19,7 @@ from src.auth.security import get_password_hash, verify_password
 from src.auth.tasks import task_send_reset_password_mail, task_send_verification_code
 from src.auth.utils import get_user_by_username, get_user_by_email, authenticate_user, get_user_email_verification_info, get_user_city_data, \
     get_user_by_user_id, get_search_history_data
-from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
+from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_HOST, CLIENT_PORT
 from src.database import get_async_session
 from src.models import search_history_city_name_db, search_history_coordinates_db
 from src.rate_limiter.callback import custom_callback
@@ -128,7 +128,7 @@ async def register_step_2_submit(
     await session.execute(insert_verification_query)
     await session.commit()
 
-    url = f"{CLIENT_ORIGIN}/users/verify-email-page/{verification_token}"
+    url = f"http://{CLIENT_HOST}:{CLIENT_PORT}/users/verify-email-page/{verification_token}"
     task_send_verification_code.delay(user_data.username, url, [user_data.email])
 
     return {'message': 'Registration successful. Please verify your email to gain full access.'}
@@ -216,7 +216,7 @@ async def send_verification_email(
     await session.execute(update_query)
     await session.commit()
 
-    url = f"{CLIENT_ORIGIN}/users/verify-email-page/{verification_token}"
+    url = f"http://{CLIENT_HOST}:{CLIENT_PORT}/users/verify-email-page/{verification_token}"
 
     try:
         task_send_verification_code.delay(user_data.username, url, [user_data.email])
@@ -458,7 +458,7 @@ async def post_email_for_password_reset(
                             detail="Email not verified")
 
     reset_password_token = create_reset_password_token(user_data.id)
-    url = f"{CLIENT_ORIGIN}/users/password-reset/form/{reset_password_token}"
+    url = f"http://{CLIENT_HOST}:{CLIENT_PORT}/users/password-reset/form/{reset_password_token}"
 
     try:
         task_send_reset_password_mail.delay(user_data.username, url, [user_data.email])
