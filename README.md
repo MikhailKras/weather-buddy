@@ -48,6 +48,7 @@ docker compose --env-file .env.prod build app
 ```batch
 docker compose --env-file .env.prod up -d
 ```
+After the successful process, you can access the Weather Buddy app by going to http://localhost:9999 in your web browser.
 
 ### Features
 
