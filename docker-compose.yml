@@ -109,3 +109,8 @@ services:
         condition: service_healthy
     ports:
       - 4444:5555
+    healthcheck:
+      test: curl -f http://$$CLIENT_HOST:5555
+      interval: 10s
+      timeout: 5s
+      retries: 1
