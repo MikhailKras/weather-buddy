@@ -18,6 +18,7 @@ services:
 
   redis:
     image: redis:7
+    restart: always
     container_name: redis_app
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -27,6 +28,7 @@ services:
 
   app:
     build: .
+    restart: always
     env_file:
       - .env.prod
     environment:
@@ -54,11 +56,11 @@ services:
 
   mongodb:
     image: mongo:6.0.6
+    restart: always
     container_name: mongo_app
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-    restart: always
     depends_on:
       redis:
         condition: service_healthy
@@ -81,6 +83,7 @@ services:
 
   celery:
     build: .
+    restart: always
     env_file:
       - .env.prod
     container_name: celery_app
@@ -98,6 +101,7 @@ services:
 
   flower:
     build: .
+    restart: always
     env_file:
       - .env.prod
     container_name: flower_app
