@@ -14,7 +14,7 @@ services:
       timeout: 3s
       retries: 5
     volumes:
-      - ../weatherbuddy_pgdata:/var/lib/postgresql/data # Moved 'pgdata' dir outside the project to avoid unintended code monitoring, enhance security, ease backup & restore, isolate from code conflicts.
+      - ../weatherbuddy_data/pg_data:/var/lib/postgresql/data # Moved data dir outside the project to avoid unintended code monitoring, enhance security, ease backup & restore, isolate from code conflicts.
 
   redis:
     image: redis:7
@@ -25,6 +25,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    volumes:
+      - ../weatherbuddy_data/redis_data:/data
 
   app:
     build: .
