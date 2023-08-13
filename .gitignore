@@ -22,6 +22,7 @@ docs.zip
 archive.zip
 .venv
 private
+logs/*
 
 # vim temporary files
 *~

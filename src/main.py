@@ -1,9 +1,10 @@
+import time
 from typing import Optional
 
 from redis import asyncio as aioredis
 import uvicorn
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -13,6 +14,7 @@ from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserInDB
 from src.config import REDIS_HOST, REDIS_PORT
 from src.database import mongo_db
+from src.logger import logger
 from src.weather_service.router import router as router_weather
 from src.auth.router import router as router_auth
 
@@ -31,6 +33,27 @@ async def startup():
 async def shutdown():
     await mongo_db.disconnect()
 
+
+@app.middleware('http')
+async def log_request(request: Request, call_next):
+    log_data = {
+        'client_ip': request.client.host,
+        'path': request.url.path,
+        'query_params': request.query_params,
+        'headers': request.headers,
+    }
+    start_time = time.process_time()
+    try:
+        response = await call_next(request)
+    except Exception as e:
+        end_time = time.process_time() - start_time
+        log_data.update(processing_time=round(end_time, 3))
+        logger.error("log_request_error", extra=log_data, exc_info=True)
+        raise
+    end_time = time.process_time() - start_time
+    log_data.update(processing_time=round(end_time, 3), status_code=response.status_code)
+    logger.info("log_request", extra=log_data)
+    return response
 
 app.include_router(router_weather)
 app.include_router(router_auth)
