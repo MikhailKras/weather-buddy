@@ -55,6 +55,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 1
+    volumes:
+      - ../weatherbuddy_data/logs:/fastapi-app/logs
 
   mongodb:
     image: mongo:6.0.6
