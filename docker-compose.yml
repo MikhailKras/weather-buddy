@@ -36,22 +36,23 @@ services:
     environment:
       - CLIENT_HOST=${CLIENT_HOST}
       - CLIENT_PORT=${CLIENT_PORT}
+      - CONTAINER_PORT=${CONTAINER_PORT}
     container_name: fastapi_app
     command:
       - sh
       - -c
       - |
         alembic upgrade head
-        uvicorn src.main:app --host 0.0.0.0 --port 1235
+        gunicorn src.main:app --workers 3 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$$CONTAINER_PORT
     ports:
-      - ${CLIENT_PORT}:1235
+      - ${CLIENT_PORT}:${CONTAINER_PORT}
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: curl -f http://$$CLIENT_HOST:1235
+      test: curl -f http://$$CLIENT_HOST:$$CONTAINER_PORT
       interval: 10s
       timeout: 5s
       retries: 1
