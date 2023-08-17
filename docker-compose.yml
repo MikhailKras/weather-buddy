@@ -43,7 +43,7 @@ services:
       - -c
       - |
         alembic upgrade head
-        gunicorn src.main:app --workers 3 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$$CONTAINER_PORT
+        gunicorn src.main:app --access-logfile logs/gunicorn.log --workers 3 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$$CONTAINER_PORT
     ports:
       - ${CLIENT_PORT}:${CONTAINER_PORT}
     depends_on:
@@ -52,7 +52,13 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: curl -f http://$$CLIENT_HOST:$$CONTAINER_PORT
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "curl -f http://${CLIENT_HOST}:${CONTAINER_PORT} -H 'Healthcheck-Header: healthcheck-message'",
+        ]
       interval: 10s
       timeout: 5s
       retries: 1

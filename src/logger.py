@@ -1,6 +1,5 @@
 import datetime
 import gzip
-import json
 import logging.handlers
 import shutil
 
@@ -9,8 +8,9 @@ from pythonjsonlogger import jsonlogger
 
 class ExcludeDockerHealthCheckFilter(logging.Filter):
     def filter(self, record):
-        client_ip = getattr(record, "client_ip")
-        return client_ip != "127.0.0.1"
+        if hasattr(record, 'headers'):
+            return record.headers.get('healthcheck-header') != 'healthcheck-message'
+        return True
 
 
 def namer(name):
