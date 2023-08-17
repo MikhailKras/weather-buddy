@@ -37,6 +37,7 @@ services:
       - CLIENT_HOST=${CLIENT_HOST}
       - CLIENT_PORT=${CLIENT_PORT}
       - CONTAINER_PORT=${CONTAINER_PORT}
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
     container_name: fastapi_app
     command:
       - sh
