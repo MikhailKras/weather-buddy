@@ -2,7 +2,7 @@ import datetime
 from typing import List, Optional
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy import select, insert, and_
+from sqlalchemy import select, insert, and_, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import MONGODB_COLLECTION_NAME
@@ -17,16 +17,16 @@ async def search_cities_db(
         session: AsyncSession = Depends(get_async_session)
 ) -> List[CityInDB]:
     column_names = [column.name for column in city.columns]
-    select_query = select(city).order_by(city.c.population.desc())
+    select_query = (
+        select(city)
+        .where(or_(city.c.name == city_name, city.c.alternatenames.any(city_name)))
+        .order_by(city.c.population.desc())
+    )
     result = await session.execute(select_query)
     cities_in_db = result.fetchall()
     cities_in_db_with_column_names = [{column_name: value for column_name, value in zip(column_names, row)} for row in cities_in_db]
-
-    result = []
-    for city_dict in cities_in_db_with_column_names:
-        if city_name in (city_dict['name'].title(), *map(lambda name: name.title(), city_dict['alternatenames'])):
-            result.append(CityInDB(**city_dict))
-    return result
+    res = [CityInDB(**city_in_db) for city_in_db in cities_in_db_with_column_names]
+    return res
 
 
 async def get_city_data_by_id(
