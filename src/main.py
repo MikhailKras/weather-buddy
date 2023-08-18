@@ -15,6 +15,7 @@ from src.auth.schemas import UserInDB
 from src.config import REDIS_HOST, REDIS_PORT
 from src.database import mongo_db
 from src.logger import logger
+from src.utils import get_jinja_templates
 from src.weather_service.router import router as router_weather
 from src.auth.router import router as router_auth
 
@@ -60,13 +61,7 @@ app.include_router(router_auth)
 
 app.mount('/static', StaticFiles(directory='src/static'), name='static')
 
-
-def my_url_for(src, path):
-    return f"{src}/{path}"
-
-
-templates = Jinja2Templates(directory='src/templates')
-templates.env.globals['my_url_for'] = my_url_for
+templates = get_jinja_templates()
 
 
 @app.get('/', response_class=HTMLResponse)

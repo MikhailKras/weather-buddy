@@ -13,6 +13,7 @@ from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserInDB
 from src.config import WEATHER_API_KEY
 from src.database import get_async_session
+from src.utils import get_jinja_templates
 from src.weather_service.schemas import CityInDB, SearchHistoryCityName, SearchHistoryCoordinates
 from src.weather_service.utils import search_cities_db, get_city_data_by_id, process_data, \
     get_data_from_clothing_document_by_precipitation, get_clothing_document, get_temperature_range, get_precipitation_type, \
@@ -43,7 +44,7 @@ router = APIRouter(
     route_class=ValidationErrorLoggingRoute
 )
 
-templates = Jinja2Templates(directory='src/templates')
+templates = get_jinja_templates()
 
 
 @router.get('/search', response_class=HTMLResponse)

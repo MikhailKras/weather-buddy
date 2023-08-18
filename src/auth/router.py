@@ -22,6 +22,7 @@ from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, CLIENT_ORIGIN
 from src.database import get_async_session
 from src.models import search_history_city_name_db, search_history_coordinates_db
 from src.rate_limiter.callback import custom_callback
+from src.utils import get_jinja_templates
 from src.weather_service.schemas import CityInDB
 from src.weather_service.utils import search_cities_db
 
@@ -30,7 +31,7 @@ router = APIRouter(
     tags=['Auth']
 )
 
-templates = Jinja2Templates(directory='src/templates')
+templates = get_jinja_templates()
 
 
 @router.get('/register/city', response_class=HTMLResponse)
