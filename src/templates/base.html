@@ -25,27 +25,27 @@
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="{{ url_for('static', path='images/favicon/apple-touch-icon.png') }}"
+      href="{{ my_url_for('static', path='images/favicon/apple-touch-icon.png') }}"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="{{ url_for('static', path='images/favicon/favicon-32x32.png') }}"
+      href="{{ my_url_for('static', path='images/favicon/favicon-32x32.png') }}"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="{{ url_for('static', path='images/favicon/favicon-16x16.png') }}"
+      href="{{ my_url_for('static', path='images/favicon/favicon-16x16.png') }}"
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', path='css/styles.css') }}"
+      href="{{ my_url_for('static', path='css/styles.css') }}"
     />
     <link
       rel="manifest"
-      href="{{ url_for('static', path='images/favicon/site.webmanifest') }}"
+      href="{{ my_url_for('static', path='images/favicon/site.webmanifest') }}"
     />
     {% block head %}{% endblock %}
   </head>
@@ -57,7 +57,7 @@
       <div class="container-fluid">
         <a class="fs-3 navbar-brand p-0" href="/">
           <img
-            src="{{ url_for('static', path='images/logo_weather_buddy.png') }}"
+            src="{{ my_url_for('static', path='images/logo_weather_buddy.png') }}"
             alt="Logo"
             width="50"
             height="50"

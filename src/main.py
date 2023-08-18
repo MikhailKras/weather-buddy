@@ -60,7 +60,13 @@ app.include_router(router_auth)
 
 app.mount('/static', StaticFiles(directory='src/static'), name='static')
 
+
+def my_url_for(src, path):
+    return f"{src}/{path}"
+
+
 templates = Jinja2Templates(directory='src/templates')
+templates.env.globals['my_url_for'] = my_url_for
 
 
 @app.get('/', response_class=HTMLResponse)
