@@ -46,7 +46,7 @@ services:
         alembic upgrade head
         gunicorn src.main:app --access-logfile logs/gunicorn.log --workers 3 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$$CONTAINER_PORT
     ports:
-      - ${CLIENT_PORT}:${CONTAINER_PORT}
+      - 127.0.0.1:${CLIENT_PORT}:${CONTAINER_PORT}
     depends_on:
       db:
         condition: service_healthy
@@ -124,7 +124,7 @@ services:
       celery:
         condition: service_healthy
     ports:
-      - 4444:5555
+      - 127.0.0.1:4444:5555
     healthcheck:
       test: curl -f http://$$CLIENT_HOST:5555
       interval: 10s
