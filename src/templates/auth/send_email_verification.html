@@ -51,6 +51,7 @@ endblock %} {% block content %}
         errorMessage.style.display = "none";
       }
     } catch (error) {
+      successMessage.style.display = "none";
       errorMessage.textContent = error.message;
       errorMessage.style.display = "block";
     }
