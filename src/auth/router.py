@@ -4,7 +4,6 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi.templating import Jinja2Templates
 from fastapi_limiter.depends import RateLimiter
 from sqlalchemy import insert, update, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -196,7 +195,7 @@ async def get_send_verification_email_page(request: Request):
     return templates.TemplateResponse("auth/send_email_verification.html", {"request": request})
 
 
-@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=5, seconds=60, callback=custom_callback))])
+@router.post('/email-verification', dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
 async def send_verification_email(
         user_data: UserInDB = Depends(get_current_user),
         session: AsyncSession = Depends(get_async_session)
@@ -438,7 +437,7 @@ async def get_password_reset_page_with_email(request: Request, user_data: Option
     return templates.TemplateResponse('auth/reset_password/get_email.html', context={"request": request})
 
 
-@router.post("/password-reset", dependencies=[Depends(RateLimiter(times=5, seconds=30, callback=custom_callback))])
+@router.post("/password-reset", dependencies=[Depends(RateLimiter(times=1, seconds=60, callback=custom_callback))])
 async def post_email_for_password_reset(
         email_data: EmailPasswordReset,
         session: AsyncSession = Depends(get_async_session),
