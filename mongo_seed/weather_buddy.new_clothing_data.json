@@ -1,1166 +1,849 @@
-[{
-  "_id": {
-    "$oid": "64834e2dfda0d16eceebf0c9"
-  },
-  "temperatureRange": {
-    "min": 15,
-    "max": 20
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light long-sleeve shirt",
-            "Thin sweater"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Light jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light pants"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sneakers"
-        ]
-      }
+[
+  {
+    "_id": {
+      "$oid": "64834e2dfda0d16eceebf0c9"
     },
-    "Rain": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light long-sleeve shirt",
-            "Thin sweater"
-          ]
+    "temperatureRange": {
+      "min": 15,
+      "max": 20
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Light jacket"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": ["Hat"]
+          }
         },
-        "MidLayer": {
-          "clothingItems": [
-            "Light jacket",
-            "Raincoat"
-          ]
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Light pants"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
         },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf"
-          ]
+        "Footwear": {
+          "clothingItems": ["Sneakers"]
         }
       },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light pants"
-          ]
+      "Rain": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Raincoat"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": ["Umbrella"]
+          }
         },
-        "MidLayer": {
-          "clothingItems": []
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Light pants"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
         },
-        "OuterLayerShell": {
-          "clothingItems": []
+        "Footwear": {
+          "clothingItems": ["Waterproof sneakers"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64834ea1fda0d16eceebf0ca"
+    },
+    "temperatureRange": {
+      "min": 10,
+      "max": 15
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Light long-sleeve shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Light jacket"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": ["Hat"]
+          }
         },
-        "Accessories": {
-          "clothingItems": []
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Light pants"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Sneakers"]
         }
       },
-      "Footwear": {
-        "clothingItems": [
-          "Sneakers",
-          "Rain boots"
-        ]
+      "Rain": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Light long-sleeve shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Raincoat"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": ["Umbrella"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Light pants"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Waterproof sneakers"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64834efffda0d16eceebf0cb"
+    },
+    "temperatureRange": {
+      "min": 20,
+      "max": 25
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Short-sleeve shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Lightweight pants"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Sandals"]
+        }
+      },
+      "Rain": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Short-sleeve shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Light rain jacket"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": ["Umbrella"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Lightweight pants"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Waterproof shoes"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64834f56fda0d16eceebf0cc"
+    },
+    "temperatureRange": {
+      "min": 5,
+      "max": 10
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Light long-sleeve shirt"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Light jacket"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Jeans"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Sneakers"]
+        }
+      },
+      "Rain": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Light long-sleeve shirt"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Raincoat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Umbrella"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Jeans"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Waterproof sneakers"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64835235fda0d16eceebf0cd"
+    },
+    "temperatureRange": {
+      "min": 0,
+      "max": 5
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": []
+          },
+          "MidLayer": {
+            "clothingItems": ["Thick pants"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Winter boots"]
+        }
+      },
+      "Rain": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie", "Umbrella"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": []
+          },
+          "MidLayer": {
+            "clothingItems": ["Thick pants"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Winter boots"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6483525dfda0d16eceebf0ce"
+    },
+    "temperatureRange": {
+      "min": -5,
+      "max": 0
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Thick pants"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      },
+      "Snow": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Thick pants"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6483529ffda0d16eceebf0cf"
+    },
+    "temperatureRange": {
+      "min": -10,
+      "max": -5
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      },
+      "Snow": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "648352d8fda0d16eceebf0d0"
+    },
+    "temperatureRange": {
+      "min": -15,
+      "max": -10
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      },
+      "Snow": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Winter coat"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64835302fda0d16eceebf0d1"
+    },
+    "temperatureRange": {
+      "min": -20,
+      "max": -15
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Down jacket"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      },
+      "Snow": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Down jacket"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64835332fda0d16eceebf0d2"
+    },
+    "temperatureRange": {
+      "min": -25,
+      "max": -20
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Down jacket"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      },
+      "Snow": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["Long-sleeve thermal shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": ["Sweater"]
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Down jacket"]
+          },
+          "Accessories": {
+            "clothingItems": ["Scarf", "Gloves", "Beanie"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Thermal leggings"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Snow pants"]
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Snow boots"]
+        }
+      }
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64835377fda0d16eceebf0d3"
+    },
+    "temperatureRange": {
+      "min": 25,
+      "max": 30
+    },
+    "precipitation": {
+      "None": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": ["Hat"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Shorts"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Sandals"]
+        }
+      },
+      "Rain": {
+        "UpperBody": {
+          "BaseLayer": {
+            "clothingItems": ["T-shirt"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": ["Light rain jacket"]
+          },
+          "Accessories": {
+            "clothingItems": ["Hat", "Umbrella"]
+          }
+        },
+        "LowerBody": {
+          "BaseLayer": {
+            "clothingItems": ["Shorts"]
+          },
+          "MidLayer": {
+            "clothingItems": []
+          },
+          "OuterLayerShell": {
+            "clothingItems": []
+          },
+          "Accessories": {
+            "clothingItems": []
+          }
+        },
+        "Footwear": {
+          "clothingItems": ["Waterproof sneakers"]
+        }
       }
     }
   }
-},
-{
-  "_id": {
-    "$oid": "64834ea1fda0d16eceebf0ca"
-  },
-  "temperatureRange": {
-    "min": 10,
-    "max": 15
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light long-sleeve shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Light sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light pants"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sneakers"
-        ]
-      }
-    },
-    "Rain": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light long-sleeve shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Light sweater",
-            "Raincoat"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Light pants"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sneakers",
-          "Rain boots"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "64834efffda0d16eceebf0cb"
-  },
-  "temperatureRange": {
-    "min": 20,
-    "max": 25
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Short-sleeve shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Lightweight pants"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sandals"
-        ]
-      }
-    },
-    "Rain": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Short-sleeve shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Light rain jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Lightweight pants"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sandals",
-          "Waterproof shoes"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "64834f56fda0d16eceebf0cc"
-  },
-  "temperatureRange": {
-    "min": 5,
-    "max": 10
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Boots"
-        ]
-      }
-    },
-    "Rain": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Raincoat"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Boots",
-          "Waterproof shoes"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "64835235fda0d16eceebf0cd"
-  },
-  "temperatureRange": {
-    "min": 0,
-    "max": 5
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Winter boots"
-        ]
-      }
-    },
-    "Rain": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Raincoat"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Winter boots",
-          "Waterproof shoes"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "6483525dfda0d16eceebf0ce"
-  },
-  "temperatureRange": {
-    "min": -5,
-    "max": 0
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    },
-    "Snow": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Winter jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "6483529ffda0d16eceebf0cf"
-  },
-  "temperatureRange": {
-    "min": -10,
-    "max": -5
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    },
-    "Snow": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Winter jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "648352d8fda0d16eceebf0d0"
-  },
-  "temperatureRange": {
-    "min": -15,
-    "max": -10
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    },
-    "Snow": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Winter jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "64835302fda0d16eceebf0d1"
-  },
-  "temperatureRange": {
-    "min": -20,
-    "max": -15
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    },
-    "Snow": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Winter jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "64835332fda0d16eceebf0d2"
-  },
-  "temperatureRange": {
-    "min": -25,
-    "max": -20
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Winter coat"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    },
-    "Snow": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Long-sleeve thermal shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Sweater",
-            "Winter jacket"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Scarf",
-            "Gloves",
-            "Beanie"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Thermal leggings"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": [
-            "Thick pants"
-          ]
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Snow pants"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Snow boots"
-        ]
-      }
-    }
-  }
-},
-{
-  "_id": {
-    "$oid": "64835377fda0d16eceebf0d3"
-  },
-  "temperatureRange": {
-    "min": 25,
-    "max": 30
-  },
-  "precipitation": {
-    "None": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "T-shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Sunglasses",
-            "Hat"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Shorts"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sandals"
-        ]
-      }
-    },
-    "Rain": {
-      "UpperBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "T-shirt"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": [
-            "Light rain jacket"
-          ]
-        },
-        "Accessories": {
-          "clothingItems": [
-            "Sunglasses",
-            "Hat",
-            "Umbrella"
-          ]
-        }
-      },
-      "LowerBody": {
-        "BaseLayer": {
-          "clothingItems": [
-            "Shorts"
-          ]
-        },
-        "MidLayer": {
-          "clothingItems": []
-        },
-        "OuterLayerShell": {
-          "clothingItems": []
-        },
-        "Accessories": {
-          "clothingItems": []
-        }
-      },
-      "Footwear": {
-        "clothingItems": [
-          "Sandals"
-        ]
-      }
-    }
-  }
-}]
+]
