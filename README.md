@@ -15,6 +15,8 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-eee06a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS](https://img.shields.io/badge/CSS-3-523f79.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
+### Live Demo: [https://weather-buddy.net](https://weather-buddy.net)
+
 This is a Python web application built with FastAPI that provides current weather information. The application utilizes a PostgreSQL database that contains a table with 25,000+ cities. Users can retrieve the following information for each city:
 
 - Current clothing recommendations based on weather conditions (clothing information stored in MongoDB)
@@ -33,6 +35,12 @@ Before you proceed, please make sure you have the following installed on your ma
 
 ```batch
 git clone https://github.com/MikhailKras/weather-buddy.git
+```
+
+- Change your working directory to the `weather-buddy` directory:
+
+```batch
+cd weather-buddy
 ```
 
 - Set enviroment variables in [.env.prod](https://github.com/MikhailKras/weather-buddy/blob/master/.env.prod)
@@ -72,9 +80,9 @@ After the successful process, you can access the Weather Buddy app by going to h
     "None": {
       "UpperBody": {
         "BaseLayer": { "clothingItems": ["Light long-sleeve shirt"] },
-        "MidLayer": { "clothingItems": ["Light sweater"] },
+        "MidLayer": { "clothingItems": ["Light jacket"] },
         "OuterLayerShell": { "clothingItems": [] },
-        "Accessories": { "clothingItems": ["Scarf"] }
+        "Accessories": { "clothingItems": ["Hat"] }
       },
       "LowerBody": {
         "BaseLayer": { "clothingItems": ["Light pants"] },
@@ -87,9 +95,9 @@ After the successful process, you can access the Weather Buddy app by going to h
     "Rain": {
       "UpperBody": {
         "BaseLayer": { "clothingItems": ["Light long-sleeve shirt"] },
-        "MidLayer": { "clothingItems": ["Light sweater", "Raincoat"] },
+        "MidLayer": { "clothingItems": ["Raincoat"] },
         "OuterLayerShell": { "clothingItems": [] },
-        "Accessories": { "clothingItems": ["Scarf"] }
+        "Accessories": { "clothingItems": ["Umbrella"] }
       },
       "LowerBody": {
         "BaseLayer": { "clothingItems": ["Light pants"] },
@@ -97,8 +105,11 @@ After the successful process, you can access the Weather Buddy app by going to h
         "OuterLayerShell": { "clothingItems": [] },
         "Accessories": { "clothingItems": [] }
       },
-      "Footwear": { "clothingItems": ["Sneakers", "Rain boots"] }
+      "Footwear": { "clothingItems": ["Waterproof sneakers"] }
     }
   }
 }
 ```
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/MikhailKras/weather-buddy/blob/master/LICENSE.md) file for details.
