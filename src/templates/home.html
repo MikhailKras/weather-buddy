@@ -26,41 +26,34 @@ content %}
     <div class="col-md-12 text-center">
       <div class="card mx-3 border-0" style="background-color: transparent">
         <div class="card-body">
-          <h4 class="fs-3 feature-text">Search</h4>
-          <p class="fs-4 feature-text">
+          <h2 class="feature-text">Search service</h2>
+          <p class="fs-4 feature-text header-margin-top">
             Search for weather and location details for over 25,000 cities in
             our app database. You can search by city name or enter coordinates
             for geo places.
           </p>
-          <img
-            src="{{ my_url_for('static', path='images/home/search.png') }}"
-            alt="Search by city image"
-            class="img-fluid img-thumbnail rounded border-2 header-margin-top"
-            style="border-color: #d8d8f6"
-          />
+          <h2 class="feature-text">Search by city name demo</h2>
           <p class="fs-4 feature-text">
             If you search by city name, the app provides a list of cities with
             similar names and additional information such as country, region,
             latitude, longitude, and population.
           </p>
           <img
-            src="{{ my_url_for('static', path='images/home/choose-city.png') }}"
-            alt="Search by coordinates image"
+            src="{{ my_url_for('static', path='images/home/search_city_process.gif') }}"
             class="img-fluid img-thumbnail rounded border-2 header-margin-top"
             style="border-color: #d8d8f6"
           />
+          <h2 class="feature-text">Search by coordinates demo</h2>
           <p class="fs-4 feature-text">
             If you prefer to search by coordinates, you can directly enter the
             geographical coordinates to find the corresponding city's weather
             information.
           </p>
           <img
-            src="{{ my_url_for('static', path='images/home/search-coords.png') }}"
-            alt="Choose similar city image"
+            src="{{ my_url_for('static', path='images/home/search_coords_process.gif') }}"
             class="img-fluid img-thumbnail rounded border-2 header-margin-top"
             style="border-color: #d8d8f6"
           />
-
           <div class="d-grid gap-2 col-6 mx-auto">
             <h1 class="feature-text">Search now</h1>
             <a class="btn btn-bd-primary btn-lg fs-3" href="/weather/search">
