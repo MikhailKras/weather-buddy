@@ -17,6 +17,10 @@
 
 ### Live Demo: [https://weather-buddy.net](https://weather-buddy.net)
 
+### Example of search process
+
+![Website Demo](src/static/images/home/search_city_process.gif)
+
 This is a Python web application built with FastAPI that provides current weather information. The application utilizes a PostgreSQL database that contains a table with 25,000+ cities. Users can retrieve the following information for each city:
 
 - Current clothing recommendations based on weather conditions (clothing information stored in MongoDB)
