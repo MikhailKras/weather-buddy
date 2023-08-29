@@ -59,7 +59,8 @@ async def find_city_name_matches(
         session: AsyncSession = Depends(get_async_session),
         user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
-    city_info: List[CityInDB] = await search_cities_db(city_input.title(), session=session)
+    formatted_city_input = city_input.title().strip()
+    city_info: List[CityInDB] = await search_cities_db(formatted_city_input, session=session)
     if not city_info:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
     data = {
