@@ -1,19 +1,16 @@
 import time
 from typing import Optional
 
-from redis import asyncio as aioredis
 import uvicorn
 
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_limiter import FastAPILimiter
 
 from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserInDB
-from src.config import REDIS_HOST, REDIS_PORT
-from src.database import mongo_db
+from src.database import mongo_db, redis_db
 from src.logger import logger
 from src.utils import get_jinja_templates
 from src.weather_service.router import router as router_weather
@@ -24,14 +21,15 @@ app = FastAPI(title='Weather Buddy')
 
 @app.on_event("startup")
 async def startup():
-    redis = aioredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}", encoding="utf8", decode_responses=True)
-    await FastAPILimiter.init(redis)
+    await redis_db.connect()
+    await FastAPILimiter.init(redis_db.redis)
 
     await mongo_db.connect()
 
 
 @app.on_event("shutdown")
 async def shutdown():
+    await redis_db.disconnect()
     await mongo_db.disconnect()
 
 

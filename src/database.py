@@ -1,11 +1,12 @@
 from typing import AsyncGenerator
 
 import motor.motor_asyncio
+from redis import asyncio as aioredis
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, MONGODB_NAME, MONGODB_URL
+from src.config import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, MONGODB_NAME, MONGODB_URL, REDIS_HOST, REDIS_PORT
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 Base = declarative_base()
@@ -38,3 +39,20 @@ class MongoDB:
 
 
 mongo_db = MongoDB(mongodb_url=MONGODB_URL, db_name=MONGODB_NAME)
+
+
+class RedisDB:
+    def __init__(self, redis_url):
+        self.redis_url = redis_url
+        self.redis = None
+
+    async def connect(self):
+        self.redis = await aioredis.from_url(self.redis_url, encoding="utf8", decode_responses=True)
+
+    async def disconnect(self):
+        if self.redis:
+            self.redis.close()
+            await self.redis.wait_closed()
+
+
+redis_db = RedisDB(redis_url=f"redis://{REDIS_HOST}:{REDIS_PORT}")
