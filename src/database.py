@@ -51,8 +51,7 @@ class RedisDB:
 
     async def disconnect(self):
         if self.redis:
-            self.redis.close()
-            await self.redis.wait_closed()
+            await self.redis.close()
 
 
 redis_db = RedisDB(redis_url=f"redis://{REDIS_HOST}:{REDIS_PORT}")
