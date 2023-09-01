@@ -1,18 +1,18 @@
+import json
 from typing import Callable, List, Optional
 
 import aiohttp
 
 from fastapi import APIRouter, Request, Depends, HTTPException, status
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response, JSONResponse
 from fastapi.routing import APIRoute
-from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.jwt import is_authenticated
 from src.auth.schemas import UserInDB
 from src.config import WEATHER_API_KEY
-from src.database import get_async_session
+from src.database import get_async_session, redis_db
 from src.utils import get_jinja_templates
 from src.weather_service.schemas import CityInDB, SearchHistoryCityName, SearchHistoryCoordinates
 from src.weather_service.utils import search_cities_db, get_city_data_by_id, process_data, \
@@ -83,14 +83,20 @@ async def find_city_name_matches(
     )
 
 
-@router.get('/info/by_coordinates', response_class=HTMLResponse)
-async def get_city_id_by_coordinates(
-        request: Request,
+@router.get('/info/by_coordinates', response_class=JSONResponse)
+async def get_weather_data_by_coordinates(
         latitude: float,
         longitude: float,
         session: AsyncSession = Depends(get_async_session),
         user_data: Optional[UserInDB] = Depends(is_authenticated)
 ):
+    key_name = f"{latitude}:{longitude}"
+    cached_data_json = await redis_db.redis.get(key_name)
+
+    if cached_data_json:
+        cached_data = json.loads(cached_data_json)
+        return JSONResponse(content=cached_data)
+
     if not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid coordinates!')
     url = 'http://api.weatherapi.com/v1/forecast.json'
@@ -126,16 +132,38 @@ async def get_city_id_by_coordinates(
         )
         await insert_search_history_coordinates(search_history_coordinates=search_history_coordinates, session=session)
 
+    result_data = {
+        "weather_data": weather_data,
+        "forecast_data": forecast_data,
+        "location_data": location_data,
+        "clothing_data": clothing_data,
+    }
+
+    await redis_db.redis.set(key_name, json.dumps(result_data))
+    await redis_db.redis.expire(key_name, 60)
+
+    return JSONResponse(content=result_data)
+
+
+@router.get('/info/by_coordinates/html', response_class=HTMLResponse)
+async def get_weather_data_by_coordinates_html(
+        request: Request,
+        latitude: float,
+        longitude: float,
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
+):
+    result_data_json = await redis_db.redis.get(f"{latitude}:{longitude}")
+
+    if result_data_json is None:
+        result_data_json_response = await get_weather_data_by_coordinates(latitude, longitude, user_data=user_data)
+        result_data_json = result_data_json_response.body.decode()
+
+    result_data = json.loads(result_data_json)
+
+    result_data.update({"request": request, "is_auth": user_data})
+
     return templates.TemplateResponse(
-        'city_weather_present.html', context={
-            "request": request,
-            "weather_data": weather_data,
-            "forecast_data": forecast_data,
-            "location_data": location_data,
-            "clothing_data": clothing_data,
-            "is_auth": user_data,
-        }
-    )
+        'city_weather_present.html', context=result_data)
 
 
 @router.get('/info', response_class=HTMLResponse)

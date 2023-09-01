@@ -47,40 +47,32 @@ function searchByCoords(event) {
   errorMessage.style.display = "none";
   spinner.style.display = "inline-block";
 
-  const redirect_url =
+  const resource_url =
     "/weather/info/by_coordinates?latitude=" +
     encodeURIComponent(latitudeInput) +
     "&longitude=" +
     encodeURIComponent(longitudeInput);
+  const redirect_url =
+    "/weather/info/by_coordinates/html?latitude=" +
+    encodeURIComponent(latitudeInput) +
+    "&longitude=" +
+    encodeURIComponent(longitudeInput);
 
-  // Use the History API to update the browser's URL
-  history.pushState(null, null, redirect_url);
-
-  // Check if there's an ongoing request
-  if (!searchByCoords.pendingRequest) {
-    searchByCoords.pendingRequest = true;
-
-    fetch(redirect_url)
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((data) => {
-            throw new Error(data.detail);
-          });
-        }
-        // Handle the redirection after the request is successful
-        return response.text();
-      })
-      .then((html) => {
-        // Render the HTML page from the response
-        document.body.innerHTML = html;
-      })
-      .catch((error) => {
-        errorMessage.textContent = error.message;
-        errorMessage.style.display = "block";
-      })
-      .finally(() => {
-        searchByCoords.pendingRequest = false;
-        spinner.style.display = "none";
-      });
-  }
+  fetch(resource_url)
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          throw new Error(data.detail);
+        });
+      }
+      window.location.href = redirect_url;
+    })
+    .catch((error) => {
+      errorMessage.textContent = error.message;
+      errorMessage.style.display = "block";
+    })
+    .finally(() => {
+      searchByCoords.pendingRequest = false;
+      spinner.style.display = "none";
+    });
 }
