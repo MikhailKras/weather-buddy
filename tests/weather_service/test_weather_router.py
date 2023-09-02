@@ -48,7 +48,7 @@ async def test_find_city_name_matches(
         (1, 1, 400, "No information found for given coordinates"),
     ]
 )
-async def test_get_id_by_coordinates(
+async def test_get_weather_data_by_coordinates(
         ac: AsyncClient,
         latitude,
         longitude,
@@ -59,6 +59,14 @@ async def test_get_id_by_coordinates(
     assert response.status_code == expected_status
     if detail:
         assert response.json()["detail"] == detail
+
+
+async def test_get_weather_data_by_coordinates_html(ac: AsyncClient):
+    latitude, longitude = 50.85045, 4.34878
+    content_type = "text/html"
+    response = await ac.get(f"/weather/info/by_coordinates/html", params={"latitude": latitude, "longitude": longitude})
+    assert response.status_code == 200
+    assert content_type in response.headers["content-type"]
 
 
 async def test_get_city_weather(
