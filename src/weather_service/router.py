@@ -52,14 +52,19 @@ async def get_page_weather_search(request: Request, user_data: Optional[UserInDB
     return templates.TemplateResponse('city_weather_search.html', context={"request": request, "is_auth": user_data})
 
 
-@router.get('/city_names', response_class=HTMLResponse)
-async def find_city_name_matches(
-        request: Request,
+@router.get('/validate', response_class=JSONResponse)
+async def validate_city_input(
         city_input: str,
-        session: AsyncSession = Depends(get_async_session),
-        user_data: Optional[UserInDB] = Depends(is_authenticated)
+        session: AsyncSession = Depends(get_async_session)
 ):
     formatted_city_input = city_input.title().strip()
+
+    cached_data_json = await redis_db.redis.get(formatted_city_input)
+
+    if cached_data_json:
+        cached_data = json.loads(cached_data_json)
+        return JSONResponse(content=cached_data)
+
     city_info: List[CityInDB] = await search_cities_db(formatted_city_input, session=session)
     if not city_info:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid city!')
@@ -77,6 +82,27 @@ async def find_city_name_matches(
             for x in range(len(city_info))
         ]
     }
+    await redis_db.redis.set(formatted_city_input, json.dumps(data))
+    await redis_db.redis.expire(formatted_city_input, 3600)
+
+    return JSONResponse(content=data)
+
+
+@router.get('/cities', response_class=HTMLResponse)
+async def get_city_name_matches(
+        request: Request,
+        city_input: str,
+        session: AsyncSession = Depends(get_async_session),
+        user_data: Optional[UserInDB] = Depends(is_authenticated)
+):
+    formatted_city_input = city_input.title().strip()
+    data_json = await redis_db.redis.get(formatted_city_input)
+
+    if data_json is None:
+        data_json_response = await validate_city_input(formatted_city_input, session=session)
+        data_json = data_json_response.body.decode()
+
+    data = json.loads(data_json)
 
     return templates.TemplateResponse(
         'city_names.html', context={"request": request, "data": data, "is_auth": user_data}

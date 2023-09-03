@@ -1,6 +1,6 @@
 function searchByCity(event) {
   event.preventDefault();
-  const cityInput = document.getElementById("city").value;
+  const cityInput = document.getElementById("city").value.trim();
   const errorMessage = document.getElementById("error-message");
   const spinner = document.querySelector("#submit-button .spinner-border");
 
@@ -10,23 +10,25 @@ function searchByCity(event) {
 
   errorMessage.style.display = "none";
   spinner.style.display = "inline-block";
-
-  fetch(`/weather/city_names?city_input=${cityInput}`)
+  resource_url = `/weather/validate?city_input=${encodeURIComponent(
+    cityInput
+  )}`;
+  redirect_url = `/weather/cities?city_input=${encodeURIComponent(cityInput)}`;
+  fetch(resource_url)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((data) => {
           throw new Error(data.detail);
         });
       }
-      window.location.href = `/weather/city_names?city_input=${encodeURIComponent(
-        cityInput
-      )}`;
+      window.location.href = redirect_url;
     })
     .catch((error) => {
       errorMessage.textContent = error.message;
       errorMessage.style.display = "block";
     })
     .finally(() => {
+      searchByCoords.pendingRequest = false;
       spinner.style.display = "none";
     });
 }
