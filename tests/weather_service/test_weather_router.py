@@ -13,11 +13,11 @@ async def test_get_page_weather_search(ac: AsyncClient):
 @pytest.mark.parametrize(
     "city_input, expected_status, detail, content_type",
     [
-        ("Brussels", 200, None, "text/html"),
+        ("Brussels", 200, None, "application/json"),
         ("Invalid_city", 400, "Invalid city!", None)
     ]
 )
-async def test_find_city_name_matches(
+async def test_validate_city_input(
         ac: AsyncClient,
         city_input,
         expected_status,
@@ -25,7 +25,7 @@ async def test_find_city_name_matches(
         content_type,
         fill_city_table_with_custom_data
 ):
-    response = await ac.get(f"/weather/city_names", params={"city_input": city_input})
+    response = await ac.get(f"/weather/validate", params={"city_input": city_input})
 
     assert response.status_code == expected_status
 
@@ -34,6 +34,14 @@ async def test_find_city_name_matches(
 
     if content_type:
         assert content_type in response.headers["content-type"]
+
+
+async def test_get_city_name_matches(ac: AsyncClient):
+    city_input = "Brussels"
+    content_type = "text/html"
+    response = await ac.get(f"/weather/cities", params={"city_input": city_input})
+    assert response.status_code == 200
+    assert content_type in response.headers["content-type"]
 
 
 @pytest.mark.parametrize(
