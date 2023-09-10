@@ -8,6 +8,8 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-6.0.6-419053.svg)](https://www.mongodb.com/)
 [![Redis](https://img.shields.io/badge/Redis-7.0.11-c84126.svg)](https://redis.io/)
 [![Celery](https://img.shields.io/badge/Celery-5.3.1-b0ca60.svg)](https://docs.celeryproject.org/)
+[![Pytest](https://img.shields.io/badge/Pytest-7.3.1-0E7FBF.svg)](https://docs.pytest.org/en/stable/)
+
 
 ### Frontend Technologies
 
