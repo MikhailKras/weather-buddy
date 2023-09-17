@@ -1,3 +1,5 @@
+<img src="src/static/images/logo_weather_buddy_rounded.png" alt="WeatherBuddy Logo" width="200" height="200">
+
 # WeatherBuddy
 
 ### Backend Technologies
