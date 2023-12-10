@@ -128,8 +128,8 @@ def get_temperature_range(temperature: int) -> TemperatureRange:
         temperature_min = 25
         temperature_max = 30
     elif temperature <= -25:
-        temperature_min = -20
-        temperature_max = -25
+        temperature_min = -25
+        temperature_max = -20
     else:
         temperature_min = (temperature // 5) * 5
         temperature_max = temperature_min + 5
