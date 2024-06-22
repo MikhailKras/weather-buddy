@@ -19,8 +19,6 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES6-eee06a.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS](https://img.shields.io/badge/CSS-3-523f79.svg)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
-### Live Demo: [https://weather-buddy.net](https://weather-buddy.net)
-
 ### Example of search process
 
 ![Website Demo](src/static/images/home/search_city_process.webp)
